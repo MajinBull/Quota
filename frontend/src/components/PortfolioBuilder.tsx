@@ -367,12 +367,12 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
   return (
     <div className="space-y-8">
       {/* STRATEGIA E PARAMETRI */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-8">
-        <h2 className="text-xl font-bold mb-6 text-slate-900 uppercase tracking-wide text-sm">
+      <div className="bg-white border border-slate-200 rounded-2xl p-4 md:p-8">
+        <h2 className="text-xl font-bold mb-4 md:mb-6 text-slate-900 uppercase tracking-wide text-sm">
           Strategia e Parametri
         </h2>
 
-        <div className="flex flex-col lg:flex-row gap-6">
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
           {/* Left side: Strategy explanation */}
           <div className="lg:w-80 bg-slate-50 border border-slate-200 rounded-xl p-4">
             {portfolio.investmentStrategy === 'lump_sum' ? (
@@ -403,9 +403,9 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
           </div>
 
           {/* Right side: Strategy selector and parameters */}
-          <div className="flex-1 flex gap-6">
+          <div className="flex-1 flex flex-col md:flex-row gap-4 md:gap-6">
             {/* Strategy Radio Buttons */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-row md:flex-col gap-2 md:gap-3">
               <label className={`cursor-pointer px-4 py-2 rounded-lg font-medium text-sm transition-all whitespace-nowrap ${
                 portfolio.investmentStrategy === 'lump_sum'
                   ? 'bg-indigo-600 text-white'
@@ -523,13 +523,13 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
       </div>
 
       {/* AGGIUNGI ASSET */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-8">
-        <h2 className="text-xl font-bold mb-6 text-slate-900 uppercase tracking-wide text-sm">
+      <div className="bg-white border border-slate-200 rounded-2xl p-4 md:p-8">
+        <h2 className="text-xl font-bold mb-4 md:mb-6 text-slate-900 uppercase tracking-wide text-sm">
           Aggiungi Asset
         </h2>
 
         {/* Category Selector */}
-        <div className="flex gap-2 mb-6 flex-wrap">
+        <div className="flex gap-2 mb-4 md:mb-6 flex-wrap">
           {getAllCategories().map((category) => (
             <button
               key={category}
@@ -598,8 +598,8 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
       </div>
 
       {/* ALLOCAZIONE PORTFOLIO */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-8">
-        <div className="flex items-center justify-between mb-6">
+      <div className="bg-white border border-slate-200 rounded-2xl p-4 md:p-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 md:mb-6">
           <h2 className="text-xl font-bold text-slate-900 uppercase tracking-wide text-sm">
             Allocazione Portfolio
           </h2>
