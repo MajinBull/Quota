@@ -8,6 +8,7 @@ import { usePortfolioStore } from './stores/portfolioStore';
 import { runBacktest } from './engine/backtester';
 import type { BacktestResult } from './types';
 import logoQuota from './assets/logo-quota.png';
+import { Analytics } from '@vercel/analytics/react';
 
 type ActiveView = 'configuration' | 'risultati' | 'backtest_salvati';
 
@@ -245,6 +246,9 @@ function App() {
 
       {/* Toast Notifications */}
       <ToastContainer />
+
+      {/* Vercel Analytics */}
+      <Analytics />
     </div>
   );
 }
