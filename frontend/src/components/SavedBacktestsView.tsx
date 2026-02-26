@@ -49,8 +49,8 @@ export function SavedBacktestsView({ onLoadBacktest }: Props) {
       />
 
       {/* BOTTONE CONFRONTA STICKY (sempre visibile) */}
-      <div className="fixed bottom-4 right-5 z-10">
-        <div className="bg-white border border-slate-200 rounded-2xl shadow-xl p-4 w-96">
+      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 md:left-auto md:right-5 md:translate-x-0 z-10 w-[calc(100%-2rem)] max-w-sm md:w-96">
+        <div className="bg-white border border-slate-200 rounded-2xl shadow-xl p-4">
           <button
             onClick={handleCompareClick}
             disabled={selectedForComparison.length < 2}
