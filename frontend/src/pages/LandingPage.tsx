@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import logoQuota from '../assets/logo-quota.png';
+import { Analytics } from '@vercel/analytics/react';
 
 export function LandingPage() {
   const navigate = useNavigate();
@@ -212,6 +213,9 @@ export function LandingPage() {
           </div>
         </div>
       </footer>
+
+      {/* Vercel Analytics */}
+      <Analytics />
     </div>
   );
 }
