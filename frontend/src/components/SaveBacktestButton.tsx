@@ -1,0 +1,143 @@
+import { useState } from 'react';
+import { createPortal } from 'react-dom';
+import { useComparisonStore } from '../stores/comparisonStore';
+import { useToastStore } from '../stores/toastStore';
+import type { Portfolio, BacktestResult } from '../types';
+
+interface Props {
+  portfolio: Portfolio;
+  result: BacktestResult;
+}
+
+export function SaveBacktestButton({ portfolio, result }: Props) {
+  const [showModal, setShowModal] = useState(false);
+  const [name, setName] = useState('');
+  const [isFavorite, setIsFavorite] = useState(false);
+  const { saveBacktest, savedBacktests } = useComparisonStore();
+  const { addToast } = useToastStore();
+
+  // Genera nome automatico quando si apre il modal
+  const handleOpenModal = () => {
+    const nextNumber = savedBacktests.length + 1;
+    setName(`Strategy #${nextNumber}`);
+    setIsFavorite(false);
+    setShowModal(true);
+  };
+
+  const handleSave = () => {
+    if (name.trim().length < 3) {
+      addToast('Il nome deve contenere almeno 3 caratteri', 'warning');
+      return;
+    }
+
+    const success = saveBacktest(name, portfolio, result, isFavorite);
+
+    if (success) {
+      setShowModal(false);
+      setName('');
+      setIsFavorite(false);
+      addToast(`Backtest "${name}" salvato con successo!`, 'success');
+    }
+  };
+
+  return (
+    <>
+      {/* Sticky Bottom-Right Button */}
+      <div className="fixed bottom-4 right-5 z-10">
+        <div className="bg-white border border-slate-200 rounded-2xl shadow-xl p-4 w-96">
+          <button
+            onClick={handleOpenModal}
+            className="w-full py-4 px-6 rounded-xl font-semibold text-base transition-all duration-200 bg-emerald-600 text-white hover:bg-emerald-700 shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40"
+          >
+            💾 Salva Backtest
+          </button>
+
+          <div className="mt-3 p-3 bg-slate-50 border border-slate-200 rounded-lg">
+            <p className="text-xs text-slate-600 text-center">
+              💡 Salva questo backtest per confrontarlo con altri
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Modal - Versione Semplificata */}
+      {showModal && createPortal(
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full">
+            {/* Header */}
+            <div className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+              <h2 className="text-xl font-bold text-slate-900">💾 Salva Backtest</h2>
+              <button
+                onClick={() => setShowModal(false)}
+                className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+              >
+                <svg className="w-6 h-6 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-6 space-y-5">
+              {/* Nome Input */}
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Nome della strategia:
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-base"
+                  autoFocus
+                />
+              </div>
+
+              {/* Checkbox Preferiti */}
+              <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                <input
+                  type="checkbox"
+                  id="add-to-favorites"
+                  checked={isFavorite}
+                  onChange={(e) => setIsFavorite(e.target.checked)}
+                  className="w-5 h-5 text-emerald-600 rounded focus:ring-2 focus:ring-emerald-500"
+                />
+                <label htmlFor="add-to-favorites" className="text-sm font-medium text-slate-700 cursor-pointer">
+                  Aggiungi ai preferiti ⭐
+                </label>
+              </div>
+
+              {/* Counter */}
+              <div className="flex items-center justify-center gap-2 text-sm text-slate-600 pt-2">
+                <span>💾 Backtest salvati:</span>
+                <span className="font-bold text-slate-900">{savedBacktests.length}/100</span>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="bg-slate-50 border-t border-slate-200 px-6 py-4 flex items-center justify-end gap-3 rounded-b-2xl">
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-6 py-2.5 border border-slate-300 text-slate-700 rounded-lg font-semibold hover:bg-slate-100 transition-colors"
+              >
+                Annulla
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={name.trim().length < 3}
+                className={`px-6 py-2.5 rounded-lg font-semibold transition-colors ${
+                  name.trim().length >= 3
+                    ? 'bg-emerald-600 text-white hover:bg-emerald-700'
+                    : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                }`}
+              >
+                Salva ✓
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+    </>
+  );
+}
