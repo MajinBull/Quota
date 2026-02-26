@@ -439,8 +439,8 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
             {/* Parameters Column */}
             <div className="flex-1 space-y-3">
               {/* Capitale */}
-              <div className="flex items-center gap-3">
-                <label className="text-sm text-slate-600 w-32 flex-shrink-0">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                <label className="text-sm font-medium text-slate-600 sm:w-32 sm:flex-shrink-0">
                   {portfolio.investmentStrategy === 'pac' ? 'Primo versamento:' : 'Capitale:'}
                 </label>
                 <div className="relative flex-1">
@@ -459,35 +459,37 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
               {/* PAC Parameters (conditional) */}
               {portfolio.investmentStrategy === 'pac' && (
                 <>
-                  <div className="flex items-center gap-3">
-                    <label className="text-sm text-slate-600 w-32 flex-shrink-0">Importo PAC:</label>
-                    <div className="relative flex-1">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">€</span>
-                      <input
-                        type="number"
-                        value={portfolio.pacAmount || 500}
-                        onChange={(e) => setPACAmount(parseFloat(e.target.value) || 0)}
-                        className="w-full pl-7 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
-                        min="1"
-                        step="100"
-                      />
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-medium text-slate-600">Importo PAC:</label>
+                    <div className="flex gap-2">
+                      <div className="relative flex-1">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">€</span>
+                        <input
+                          type="number"
+                          value={portfolio.pacAmount || 500}
+                          onChange={(e) => setPACAmount(parseFloat(e.target.value) || 0)}
+                          className="w-full pl-7 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                          min="1"
+                          step="100"
+                        />
+                      </div>
+                      <select
+                        value={portfolio.pacFrequency || 'monthly'}
+                        onChange={(e) => setPACFrequency(e.target.value as any)}
+                        className="w-32 sm:w-36 px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm appearance-none bg-white"
+                      >
+                        <option value="monthly">Mensile</option>
+                        <option value="quarterly">Trimestrale</option>
+                        <option value="yearly">Annuale</option>
+                      </select>
                     </div>
-                    <select
-                      value={portfolio.pacFrequency || 'monthly'}
-                      onChange={(e) => setPACFrequency(e.target.value as any)}
-                      className="w-32 px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm appearance-none bg-white"
-                    >
-                      <option value="monthly">Mensile</option>
-                      <option value="quarterly">Trimestrale</option>
-                      <option value="yearly">Annuale</option>
-                    </select>
                   </div>
                 </>
               )}
 
               {/* Rebilanciamento */}
-              <div className="flex items-center gap-3">
-                <label className="text-sm text-slate-600 w-32 flex-shrink-0">Rebilanciamento:</label>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                <label className="text-sm font-medium text-slate-600 sm:w-32 sm:flex-shrink-0">Rebilanciamento:</label>
                 <select
                   value={portfolio.rebalanceFrequency}
                   onChange={(e) => setRebalanceFrequency(e.target.value as any)}
@@ -501,8 +503,8 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
               </div>
 
               {/* Anno Inizio */}
-              <div className="flex items-center gap-3">
-                <label className="text-sm text-slate-600 w-32 flex-shrink-0">Anno Inizio:</label>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                <label className="text-sm font-medium text-slate-600 sm:w-32 sm:flex-shrink-0">Anno Inizio:</label>
                 <select
                   value={portfolio.startYear || 'auto'}
                   onChange={(e) => setStartYear(e.target.value === 'auto' ? undefined : parseInt(e.target.value))}
@@ -544,7 +546,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
         </div>
 
         {/* Asset Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {availableAssets.map((asset) => {
             const isAdded = portfolio.allocations.some((a) => a.symbol === asset.symbol);
 
@@ -622,7 +624,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
         </div>
 
         {portfolio.allocations.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {portfolio.allocations.map((allocation) => {
               const assetInfo = ASSET_METADATA[allocation.symbol];
               const isLocked = lockedAssets.has(allocation.symbol);

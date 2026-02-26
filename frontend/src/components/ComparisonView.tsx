@@ -179,12 +179,13 @@ export function ComparisonView({ backtests, onClose }: Props) {
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-8">
+        <div className="p-4 md:p-6 space-y-6 md:space-y-8">
           {/* METRICHE A CONFRONTO */}
           <div>
-            <h3 className="text-lg font-bold text-slate-900 uppercase tracking-wide text-sm mb-4">
+            <h3 className="text-lg font-bold text-slate-900 uppercase tracking-wide text-sm mb-3">
               📊 Metriche a Confronto
             </h3>
+            <p className="text-xs text-slate-500 mb-3 md:hidden">Scorri lateralmente per vedere tutti i portfolio →</p>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-slate-200 border border-slate-200 rounded-xl">
                 <thead className="bg-slate-50">

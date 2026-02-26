@@ -48,29 +48,30 @@ function App() {
     <div className="min-h-screen bg-stone-50">
       {/* Header */}
       <header className="border-b border-slate-200 bg-white sticky top-0 z-40">
-        <div className="px-8 py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo a sinistra */}
+        <div className="px-4 py-3 md:px-8 md:py-4">
+          <div className="flex flex-col md:flex-row items-center md:justify-between gap-3 md:gap-0">
+            {/* Logo */}
             <div className="flex-shrink-0">
-              <img src={logoQuota} alt="QUOTA" className="h-12" />
+              <img src={logoQuota} alt="QUOTA" className="h-10 md:h-12" />
             </div>
 
-            {/* Tab Switcher al centro */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 flex gap-3">
+            {/* Tab Switcher - responsive layout */}
+            <div className="flex gap-2 w-full md:w-auto md:absolute md:left-1/2 md:transform md:-translate-x-1/2 md:gap-3">
               <button
                 onClick={() => setActiveView('configuration')}
-                className={`px-8 py-3 rounded-xl font-semibold text-base transition-all ${
+                className={`flex-1 md:flex-none px-3 py-2 md:px-8 md:py-3 rounded-xl font-semibold text-xs md:text-base transition-all ${
                   activeView === 'configuration'
                     ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
-                Configuration
+                Config
+                <span className="hidden md:inline">uration</span>
               </button>
               <button
                 onClick={() => setActiveView('risultati')}
                 disabled={!result}
-                className={`px-8 py-3 rounded-xl font-semibold text-base transition-all ${
+                className={`flex-1 md:flex-none px-3 py-2 md:px-8 md:py-3 rounded-xl font-semibold text-xs md:text-base transition-all ${
                   activeView === 'risultati' && result
                     ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30'
                     : result
@@ -78,28 +79,30 @@ function App() {
                     : 'bg-slate-100 text-slate-400 cursor-not-allowed'
                 }`}
               >
-                Risultati Backtest
+                Risultati
+                <span className="hidden md:inline"> Backtest</span>
               </button>
               <button
                 onClick={() => setActiveView('backtest_salvati')}
-                className={`px-8 py-3 rounded-xl font-semibold text-base transition-all ${
+                className={`flex-1 md:flex-none px-3 py-2 md:px-8 md:py-3 rounded-xl font-semibold text-xs md:text-base transition-all ${
                   activeView === 'backtest_salvati'
                     ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
-                Backtest Salvati
+                Salvati
+                <span className="hidden md:inline"> Backtest</span>
               </button>
             </div>
 
-            {/* Spazio a destra (vuoto per bilanciare) */}
-            <div className="flex-shrink-0 w-12"></div>
+            {/* Spazio a destra (vuoto per bilanciare) - solo desktop */}
+            <div className="hidden md:block flex-shrink-0 w-12"></div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-[1800px] mx-auto p-8">
+      <main className="max-w-[1800px] mx-auto p-4 md:p-8">
         {error && (
           <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
             <div className="flex items-start gap-3">
@@ -119,9 +122,9 @@ function App() {
           <div className="space-y-8">
             <PortfolioBuilder onOpenTemplates={() => setIsTemplatesModalOpen(true)} />
 
-            {/* Run Backtest Button - Sticky Bottom Right */}
-            <div className="fixed bottom-4 right-5 z-10">
-              <div className="bg-white border border-slate-200 rounded-2xl shadow-xl p-4 w-96">
+            {/* Run Backtest Button - Sticky Bottom */}
+            <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-5 z-10">
+              <div className="bg-white border border-slate-200 rounded-2xl shadow-xl p-4 w-full md:w-96">
                 <button
                   onClick={handleRunBacktest}
                   disabled={!isValidPortfolio || isLoading}

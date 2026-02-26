@@ -81,8 +81,8 @@ export function BacktestResults({ result }: Props) {
           </div>
         </div>
 
-        {/* Key Metrics Grid - 6 columns */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        {/* Key Metrics Grid - responsive */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           <MetricCard
             label="Valore Finale"
             value={formatCurrency(metrics.finalValue)}
@@ -250,9 +250,10 @@ export function BacktestResults({ result }: Props) {
       {/* BREAKDOWN ANNO PER ANNO */}
       {yearlyBreakdown.length > 0 && (
         <div className="bg-white border border-slate-200 rounded-2xl p-8">
-          <h3 className="text-xl font-bold mb-6 text-slate-900 uppercase tracking-wide text-sm">
+          <h3 className="text-xl font-bold mb-4 text-slate-900 uppercase tracking-wide text-sm">
             Breakdown Anno per Anno
           </h3>
+          <p className="text-xs text-slate-500 mb-4 md:hidden">Scorri lateralmente per vedere tutte le colonne →</p>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-slate-200">
               <thead className="bg-slate-50">
