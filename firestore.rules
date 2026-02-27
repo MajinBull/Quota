@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Users collection - users can only read/write their own document
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+
+      // Prevent users from modifying isPremium field directly
+      allow update: if request.auth != null
+                    && request.auth.uid == userId
+                    && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['isPremium']));
+    }
+
+    // Backtests collection - users can only access their own backtests
+    match /backtests/{backtestId} {
+      // Allow read if the backtest belongs to the authenticated user
+      allow read: if request.auth != null
+                  && resource.data.userId == request.auth.uid;
+
+      // Allow delete if the backtest belongs to the authenticated user
+      allow delete: if request.auth != null
+                    && resource.data.userId == request.auth.uid;
+
+      // Allow create only if userId matches authenticated user
+      allow create: if request.auth != null
+                    && request.resource.data.userId == request.auth.uid;
+
+      // Allow update only if the backtest belongs to the authenticated user
+      // and they're not trying to change the userId
+      allow update: if request.auth != null
+                    && resource.data.userId == request.auth.uid
+                    && request.resource.data.userId == request.auth.uid;
+    }
+  }
+}

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useComparisonStore } from '../stores/comparisonStore';
 import { useToastStore } from '../stores/toastStore';
+import { useAuth } from '../contexts/AuthContext';
 import type { Portfolio, BacktestResult } from '../types';
 
 interface Props {
@@ -13,8 +14,10 @@ export function SaveBacktestButton({ portfolio, result }: Props) {
   const [showModal, setShowModal] = useState(false);
   const [name, setName] = useState('');
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const { saveBacktest, savedBacktests } = useComparisonStore();
   const { addToast } = useToastStore();
+  const { user } = useAuth();
 
   // Genera nome automatico quando si apre il modal
   const handleOpenModal = () => {
@@ -24,19 +27,31 @@ export function SaveBacktestButton({ portfolio, result }: Props) {
     setShowModal(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (name.trim().length < 3) {
       addToast('Il nome deve contenere almeno 3 caratteri', 'warning');
       return;
     }
 
-    const success = saveBacktest(name, portfolio, result, isFavorite);
+    if (!user) {
+      addToast('Devi essere autenticato per salvare', 'error');
+      return;
+    }
 
-    if (success) {
-      setShowModal(false);
-      setName('');
-      setIsFavorite(false);
-      addToast(`Backtest "${name}" salvato con successo!`, 'success');
+    setIsSaving(true);
+    try {
+      const success = await saveBacktest(user.uid, name, portfolio, result, isFavorite);
+
+      if (success) {
+        setShowModal(false);
+        setName('');
+        setIsFavorite(false);
+        addToast(`Backtest "${name}" salvato con successo!`, 'success');
+      }
+    } catch (error) {
+      console.error('Error in handleSave:', error);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -124,14 +139,24 @@ export function SaveBacktestButton({ portfolio, result }: Props) {
               </button>
               <button
                 onClick={handleSave}
-                disabled={name.trim().length < 3}
+                disabled={name.trim().length < 3 || isSaving}
                 className={`px-6 py-2.5 rounded-lg font-semibold transition-colors ${
-                  name.trim().length >= 3
+                  name.trim().length >= 3 && !isSaving
                     ? 'bg-emerald-600 text-white hover:bg-emerald-700'
                     : 'bg-slate-200 text-slate-400 cursor-not-allowed'
                 }`}
               >
-                Salva ✓
+                {isSaving ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Salvataggio...
+                  </span>
+                ) : (
+                  'Salva ✓'
+                )}
               </button>
             </div>
           </div>

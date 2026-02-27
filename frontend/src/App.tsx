@@ -4,6 +4,11 @@ import { PortfolioTemplates } from './components/PortfolioTemplates';
 import { BacktestResults } from './components/BacktestResults';
 import { SavedBacktestsView } from './components/SavedBacktestsView';
 import { ToastContainer } from './components/ToastContainer';
+import { AuthProvider } from './contexts/AuthContext';
+import { useAuth } from './contexts/AuthContext';
+import { AuthModal } from './components/auth/AuthModal';
+import { UserProfileButton } from './components/auth/UserProfileButton';
+import { UpgradeModal } from './components/auth/UpgradeModal';
 import { usePortfolioStore } from './stores/portfolioStore';
 import { runBacktest } from './engine/backtester';
 import type { BacktestResult } from './types';
@@ -12,23 +17,54 @@ import { Analytics } from '@vercel/analytics/react';
 
 type ActiveView = 'configuration' | 'risultati' | 'backtest_salvati';
 
-function App() {
+function AppContent() {
+  const { user, loading, canRunBacktest, incrementBacktestCount } = useAuth();
   const { portfolio, getTotalAllocation } = usePortfolioStore();
   const [result, setResult] = useState<BacktestResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<ActiveView>('configuration');
   const [isTemplatesModalOpen, setIsTemplatesModalOpen] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   const totalAllocation = getTotalAllocation();
   const isValidPortfolio = totalAllocation === 100 && portfolio.allocations.length > 0;
 
+  // Loading state during auth check
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-stone-50 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <svg className="animate-spin h-12 w-12 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <p className="text-slate-600 font-medium">Caricamento...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Force login - show AuthModal if not authenticated
+  if (!user) {
+    return <AuthModal />;
+  }
+
   const handleRunBacktest = async () => {
+    // Check free tier limit BEFORE running backtest
+    if (!canRunBacktest()) {
+      setShowUpgradeModal(true);
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
     setResult(null);
 
     try {
+      // Increment counter BEFORE running backtest (critical for free tier enforcement)
+      await incrementBacktestCount();
+
       const backtestResult = await runBacktest(portfolio);
 
       if (backtestResult) {
@@ -51,9 +87,15 @@ function App() {
       <header className="border-b border-slate-200 bg-white sticky top-0 z-40">
         <div className="px-4 py-3 md:px-8 md:py-4">
           <div className="flex flex-col md:flex-row items-center md:justify-between gap-3 md:gap-0">
-            {/* Logo */}
-            <div className="flex-shrink-0">
-              <img src={logoQuota} alt="QUOTA" className="h-10 md:h-12" />
+            {/* Logo + Profile (Mobile) */}
+            <div className="flex items-center justify-between w-full md:w-auto">
+              <div className="flex-shrink-0">
+                <img src={logoQuota} alt="QUOTA" className="h-10 md:h-12" />
+              </div>
+              {/* User Profile Button - Mobile */}
+              <div className="md:hidden">
+                <UserProfileButton />
+              </div>
             </div>
 
             {/* Tab Switcher - responsive layout */}
@@ -96,8 +138,10 @@ function App() {
               </button>
             </div>
 
-            {/* Spazio a destra (vuoto per bilanciare) - solo desktop */}
-            <div className="hidden md:block flex-shrink-0 w-12"></div>
+            {/* User Profile Button - Desktop */}
+            <div className="hidden md:block flex-shrink-0">
+              <UserProfileButton />
+            </div>
           </div>
         </div>
       </header>
@@ -249,7 +293,21 @@ function App() {
 
       {/* Vercel Analytics */}
       <Analytics />
+
+      {/* Upgrade Modal */}
+      {showUpgradeModal && (
+        <UpgradeModal onClose={() => setShowUpgradeModal(false)} />
+      )}
     </div>
+  );
+}
+
+// Main App component wrapped with AuthProvider
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 

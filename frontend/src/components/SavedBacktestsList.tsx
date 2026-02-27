@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useComparisonStore } from '../stores/comparisonStore';
 import { useToastStore } from '../stores/toastStore';
 import { formatDate, formatPercentage, formatCurrency, getValueColor } from '../utils/formatters';
@@ -23,6 +24,7 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
 
   const [renameId, setRenameId] = useState<string | null>(null);
   const [renameName, setRenameName] = useState('');
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
 
   const sortedBacktests = getSortedBacktests();
 
@@ -31,9 +33,9 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
     setRenameName(currentName);
   };
 
-  const handleRenameSave = () => {
+  const handleRenameSave = async () => {
     if (renameId && renameName.trim().length >= 3) {
-      renameBacktest(renameId, renameName);
+      await renameBacktest(renameId, renameName);
       setRenameId(null);
       setRenameName('');
       addToast('Backtest rinominato con successo', 'success');
@@ -42,10 +44,20 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
     }
   };
 
-  const handleDelete = (id: string, name: string) => {
-    if (confirm(`Eliminare "${name}"? Questa azione è irreversibile.`)) {
-      deleteBacktest(id);
-    }
+  const handleDeleteClick = (id: string, name: string) => {
+    setDeleteTarget({ id, name });
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteTarget) return;
+
+    await deleteBacktest(deleteTarget.id);
+    setDeleteTarget(null);
+    addToast(`Backtest "${deleteTarget.name}" eliminato`, 'success');
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteTarget(null);
   };
 
   return (
@@ -232,7 +244,7 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
                     Visualizza
                   </button>
                   <button
-                    onClick={() => handleDelete(backtest.id, backtest.name)}
+                    onClick={() => handleDeleteClick(backtest.id, backtest.name)}
                     className="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap"
                   >
                     Elimina
@@ -385,7 +397,7 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
                     Visualizza
                   </button>
                   <button
-                    onClick={() => handleDelete(backtest.id, backtest.name)}
+                    onClick={() => handleDeleteClick(backtest.id, backtest.name)}
                     className="flex-1 px-4 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-sm font-semibold transition-colors"
                   >
                     Elimina
@@ -395,6 +407,66 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
             </div>
           ))}
         </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteTarget && createPortal(
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full">
+            {/* Header */}
+            <div className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+              <h2 className="text-xl font-bold text-slate-900">🗑️ Elimina Backtest</h2>
+              <button
+                onClick={handleDeleteCancel}
+                className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+              >
+                <svg className="w-6 h-6 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-6">
+              {/* Warning Icon */}
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              </div>
+
+              {/* Message */}
+              <div className="text-center mb-6">
+                <p className="text-slate-900 font-semibold text-lg mb-2">
+                  Sei sicuro di voler eliminare questo backtest?
+                </p>
+                <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 mb-3">
+                  <p className="text-slate-700 font-medium">"{deleteTarget.name}"</p>
+                </div>
+                <p className="text-sm text-red-600 font-medium">
+                  ⚠️ Questa azione è irreversibile
+                </p>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="bg-slate-50 border-t border-slate-200 px-6 py-4 flex items-center justify-end gap-3 rounded-b-2xl">
+              <button
+                onClick={handleDeleteCancel}
+                className="px-6 py-2.5 border border-slate-300 text-slate-700 rounded-lg font-semibold hover:bg-slate-100 transition-colors"
+              >
+                Annulla
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                className="px-6 py-2.5 rounded-lg font-semibold transition-colors bg-red-600 text-white hover:bg-red-700"
+              >
+                Elimina Definitivamente
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
       )}
     </div>
   );
