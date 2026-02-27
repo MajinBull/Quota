@@ -18,7 +18,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         try {
-          const userData = await authService.getUserData(firebaseUser.uid);
+          let userData = await authService.getUserData(firebaseUser.uid);
+
+          // If user document doesn't exist, create it (recovery from failed signup)
+          if (!userData) {
+            console.warn('User document missing, creating it now...');
+            await authService.createMissingUserDocument(
+              firebaseUser.uid,
+              firebaseUser.email || '',
+              firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'User'
+            );
+            userData = await authService.getUserData(firebaseUser.uid);
+          }
+
           setUser(userData);
 
           // Clear localStorage on first login (data migration)
@@ -30,6 +42,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
         } catch (error) {
           console.error('Error loading user data:', error);
+          // Even if Firestore fails, keep user authenticated
+          // They can still use the app, but data won't persist
           setUser(null);
         }
       } else {
@@ -57,6 +71,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await authService.signup(email, password, displayName);
       addToast('Account creato con successo!', 'success');
     } catch (error: any) {
+      // Handle Firestore blocked by adblocker
+      if (error.message === 'FIRESTORE_BLOCKED') {
+        addToast(
+          'Account creato! Però il tuo adblocker sta bloccando alcune funzionalità. Prova a disabilitarlo per quota-ochre.vercel.app',
+          'warning'
+        );
+        // Don't throw - user is authenticated, just Firestore is blocked
+        return;
+      }
+
       const errorMessage = getFirebaseErrorMessage(error.code);
       addToast(errorMessage, 'error');
       throw error;
@@ -157,7 +181,7 @@ function getFirebaseErrorMessage(errorCode: string): string {
     case 'auth/wrong-password':
       return 'Email o password non corretti';
     case 'auth/email-already-in-use':
-      return 'Email già registrata. Prova a fare login.';
+      return 'Email già registrata. Ricarica la pagina per accedere.';
     case 'auth/weak-password':
       return 'Password troppo debole. Usa almeno 6 caratteri.';
     case 'auth/too-many-requests':
