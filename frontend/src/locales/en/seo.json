@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "title": "Quota - Free ETF Backtest | Portfolio Analysis and Investment Strategy",
+    "titleShort": "Quota - Free ETF Backtest",
+    "description": "Simulate and analyze ETF investment strategies with 20 free backtests. Compare portfolios, visualize historical performance, and optimize your investments.",
+    "keywords": "ETF backtest, portfolio analysis, investment strategy, free ETF, portfolio simulation, quota backtesting",
+    "author": "Quota",
+    "language": "English"
+  },
+  "og": {
+    "title": "Quota - Free ETF Backtest | Portfolio Analysis",
+    "description": "Simulate and analyze ETF investment strategies with 20 free backtests. Compare portfolios and optimize your investments.",
+    "siteName": "Quota",
+    "locale": "en_US"
+  },
+  "twitter": {
+    "title": "Quota - Free ETF Backtest",
+    "description": "Simulate and analyze ETF investment strategies with 20 free backtests."
+  }
+}

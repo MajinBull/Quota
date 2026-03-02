@@ -27,3 +27,67 @@ body {
 .animate-slide-in-right {
   animation: slide-in-right 0.3s ease-out;
 }
+
+/* Custom Scrollbar - Sottile e moderna */
+* {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+/* Webkit browsers (Chrome, Safari, Edge) */
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Touch Device Optimizations */
+/* Rimuovi highlight touch su dispositivi mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* Previeni selezione testo non intenzionale */
+button,
+a,
+[role="button"],
+.cursor-pointer {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Rimuovi outline su touch, mantieni per keyboard */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}
+
+/* Grafici: nessuna selezione */
+svg,
+canvas,
+.recharts-wrapper,
+.recharts-surface {
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-x pan-y;
+}

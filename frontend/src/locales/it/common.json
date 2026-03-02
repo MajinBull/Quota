@@ -1,0 +1,38 @@
+{
+  "actions": {
+    "close": "Chiudi",
+    "cancel": "Annulla",
+    "confirm": "Conferma",
+    "save": "Salva",
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "back": "Indietro",
+    "next": "Avanti",
+    "search": "Cerca",
+    "filter": "Filtra",
+    "sort": "Ordina"
+  },
+  "status": {
+    "loading": "Caricamento...",
+    "saving": "Salvataggio...",
+    "error": "Errore",
+    "success": "Successo",
+    "warning": "Attenzione"
+  },
+  "validation": {
+    "required": "Campo obbligatorio",
+    "minLength": "Minimo {{count}} caratteri",
+    "maxLength": "Massimo {{count}} caratteri",
+    "invalidEmail": "Email non valida",
+    "invalidFormat": "Formato non valido"
+  },
+  "currency": {
+    "symbol": "€",
+    "format": "{{value}} €"
+  },
+  "footer": {
+    "brand": "Portfolio Intelligence",
+    "subtitle": "Backtest platform multi-asset",
+    "disclaimer": "I rendimenti passati non garantiscono risultati futuri"
+  }
+}

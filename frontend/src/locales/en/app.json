@@ -1,0 +1,279 @@
+{
+  "navigation": {
+    "tabs": {
+      "configuration": "Configuration",
+      "configurationShort": "Config",
+      "results": "Backtest Results",
+      "resultsShort": "Results",
+      "saved": "Saved Backtests",
+      "savedShort": "Saved"
+    }
+  },
+  "strategy": {
+    "title": "Strategy and Parameters",
+    "lumpSum": {
+      "name": "Lump Sum",
+      "description": "Invest all capital in one go at the start. Suitable if you have immediate availability and want to maximize market exposure right away."
+    },
+    "pac": {
+      "name": "DCA (Dollar Cost Averaging)",
+      "description": "Invest fixed amounts at regular intervals. Reduces volatility impact through dollar-cost averaging and allows gradual portfolio building."
+    },
+    "fields": {
+      "capital": "Capital:",
+      "firstPayment": "Initial Investment:",
+      "pacAmount": "DCA Amount:",
+      "rebalance": "Rebalancing:",
+      "startYear": "Start Year:"
+    },
+    "frequency": {
+      "monthly": "Monthly",
+      "quarterly": "Quarterly",
+      "yearly": "Yearly",
+      "none": "None"
+    },
+    "startYear": {
+      "auto": "Automatic"
+    }
+  },
+  "portfolio": {
+    "addAssets": {
+      "title": "Add Assets",
+      "searchPlaceholder": "Search SPY, Bitcoin, Tech...",
+      "sortBy": "Sort by:",
+      "sortOptions": {
+        "nameAZ": "Name A-Z",
+        "nameZA": "Name Z-A",
+        "favorites": "Favorites",
+        "popularity": "Popularity"
+      }
+    },
+    "categories": {
+      "etf": "ETF",
+      "crypto": "Crypto",
+      "commodities": "Commodities",
+      "bonds": "Bonds",
+      "realEstate": "Real Estate"
+    },
+    "allocation": {
+      "title": "Portfolio Allocation",
+      "total": "Total:",
+      "useTemplate": "Use Template",
+      "emptyState": {
+        "title": "No assets selected",
+        "subtitle": "Add assets from the section above"
+      },
+      "locked": "Percentage locked - Click to unlock",
+      "unlocked": "Click to lock percentage",
+      "remove": "Remove",
+      "addToFavorites": "Add to favorites",
+      "removeFromFavorites": "Remove from favorites",
+      "viewDetails": "View asset details"
+    }
+  },
+  "backtest": {
+    "run": {
+      "button": "Run Backtest →",
+      "running": "Analysis in progress...",
+      "warning": "⚠️ Allocation: {{percentage}}% (must be 100%)",
+      "emptyHint": "Add assets or use a template to start"
+    },
+    "save": {
+      "button": "💾 Save Backtest",
+      "hint": "💡 Save this backtest to compare it with others",
+      "modalTitle": "💾 Save Backtest",
+      "strategyName": "Strategy name:",
+      "addToFavorites": "Add to favorites ⭐",
+      "counter": "💾 Saved backtests:",
+      "saving": "Saving...",
+      "saveConfirm": "Save ✓",
+      "defaultName": "Strategy #{{number}}"
+    },
+    "results": {
+      "title": "Key Metrics",
+      "period": "Period:",
+      "metrics": {
+        "finalValue": "Final Value",
+        "invested": "Invested",
+        "totalReturn": "Total Return",
+        "annualizedReturn": "Annual Avg",
+        "maxDrawdown": "Max Drawdown",
+        "volatility": "Annual Volatility",
+        "bestAsset": "Best Asset"
+      },
+      "charts": {
+        "portfolioGrowth": "Portfolio Growth",
+        "allocation": "Allocation",
+        "assetPerformance": "Asset Performance (Base Index 100)",
+        "tooltipDate": "Date:",
+        "indexLabel": "Index (Base 100)",
+        "portfolioValue": "Portfolio Value",
+        "investedCapital": "Invested Capital"
+      },
+      "yearlyBreakdown": {
+        "title": "Year-by-Year Breakdown",
+        "scrollHint": "Scroll horizontally to see all columns →",
+        "columns": {
+          "year": "Year",
+          "portfolioValue": "Portfolio Value",
+          "invested": "Invested",
+          "yearlyReturn": "Yearly Return",
+          "cumulativeReturn": "Cumulative Return"
+        }
+      }
+    }
+  },
+  "templates": {
+    "modalTitle": "Portfolio Templates",
+    "description": "Start quickly with a pre-configured portfolio and customize it to your needs",
+    "risk": {
+      "low": "Low Risk",
+      "medium": "Medium Risk",
+      "high": "High Risk"
+    },
+    "list": [
+      {
+        "name": "Conservative",
+        "description": "Low risk, focus on stability and capital protection"
+      },
+      {
+        "name": "Balanced",
+        "description": "Balanced mix of growth and security"
+      },
+      {
+        "name": "Aggressive",
+        "description": "High risk, high potential return"
+      }
+    ],
+    "loadButton": "Use This Template"
+  },
+  "savedBacktests": {
+    "title": "Saved Backtests ({{count}}/100)",
+    "sortBy": "Sort by:",
+    "sortOptions": {
+      "favorites": "⭐ Favorites first",
+      "date": "📅 Most recent",
+      "name": "🔤 Name (A-Z)",
+      "return": "📈 Return"
+    },
+    "emptyState": {
+      "title": "No saved backtests",
+      "subtitle": "Run a backtest and save it to compare with others"
+    },
+    "actions": {
+      "rename": "Rename",
+      "delete": "Delete",
+      "view": "View",
+      "rebalance": "Rebalance",
+      "compare": "Compare",
+      "addToFavorites": "Add to favorites",
+      "removeFromFavorites": "Remove from favorites"
+    },
+    "columns": {
+      "invested": "Invested",
+      "finalValue": "Final Val.",
+      "return": "Return",
+      "drawdown": "Drawdown"
+    },
+    "deleteConfirm": {
+      "title": "Confirm Deletion",
+      "message": "Are you sure you want to delete the backtest \"{{name}}\"?",
+      "warning": "This action cannot be undone.",
+      "confirm": "Yes, Delete",
+      "cancel": "Cancel"
+    },
+    "renameSuccess": "Backtest renamed successfully",
+    "deleteSuccess": "Backtest \"{{name}}\" deleted",
+    "minLengthWarning": "Name must contain at least 3 characters"
+  },
+  "rebalance": {
+    "title": "Rebalancing {{name}}",
+    "subtitle": "Enter current values",
+    "inputLabel": "Target: {{percentage}}%",
+    "placeholder": "0.00",
+    "calculateButton": "Calculate Rebalancing",
+    "notNecessary": {
+      "title": "Rebalancing not necessary",
+      "description": "Maximum difference between current allocation and target is less than 1% ({{difference}}%). Portfolio is already well balanced."
+    },
+    "resultsTitle": "Rebalancing Results",
+    "totalValue": "Total Value",
+    "sections": {
+      "sells": "1. Sells",
+      "buys": "2. Buys",
+      "holds": "No Action Needed"
+    },
+    "actions": {
+      "sell": "Sell €{{amount}}",
+      "buy": "Buy €{{amount}}",
+      "from": "From €{{from}} to €{{to}}",
+      "alreadyBalanced": "Already balanced"
+    },
+    "newCalculation": "New Calculation",
+    "alert": "Enter at least one valid value",
+    "close": "Close"
+  },
+  "assetDetails": {
+    "title": "Asset Details",
+    "loading": "Loading data...",
+    "error": "Unable to load asset data",
+    "errorGeneric": "Error loading data",
+    "fields": {
+      "symbol": "Symbol",
+      "fullName": "Full Name",
+      "availablePeriod": "Available Period",
+      "dataPoints": "Available Data"
+    },
+    "chart": {
+      "title": "Price Performance",
+      "subtitle": "Last 5 years chart (weekly sampling - use the bar below to navigate)",
+      "tooltip": "Date:",
+      "closingPrice": "Closing Price"
+    },
+    "info": {
+      "title": "Information",
+      "inceptionDate": "Inception Date",
+      "provider": "Provider",
+      "expenseRatio": "Expense Ratio",
+      "aum": "Assets Under Management",
+      "website": "Visit Official Website"
+    }
+  },
+  "errors": {
+    "backtestError": "Error during backtest. Verify that all assets have valid data.",
+    "unknownError": "Unknown error",
+    "authRequired": "You must be authenticated to save"
+  },
+  "compare": {
+    "button": "📊 Compare Selected ({{count}})",
+    "hint": {
+      "min": "Select at least 2 backtests to compare them",
+      "max": "Compare up to 3 backtests at once"
+    }
+  },
+  "comparison": {
+    "title": "📊 Backtest Comparison",
+    "metricsTitle": "📊 Metrics Comparison",
+    "scrollHint": "Scroll horizontally to see all portfolios →",
+    "metricColumn": "Metric",
+    "metrics": {
+      "totalReturn": "Total Return",
+      "averageAnnualReturn": "Annual Average",
+      "maxDrawdown": "Max Drawdown",
+      "finalValue": "Final Value",
+      "bestAsset": "Best Asset"
+    },
+    "growthTitle": "📈 Normalized Growth (Base 100)",
+    "growthAxisLabel": "Value (Base 100)",
+    "growthTooltipDate": "Date:",
+    "allocationsTitle": "🥧 Allocations",
+    "configurationsTitle": "📋 Configurations",
+    "config": {
+      "strategy": "Strategy:",
+      "capital": "Capital:",
+      "rebalance": "Rebalance:",
+      "period": "Period:",
+      "perMonth": "/month"
+    }
+  }
+}

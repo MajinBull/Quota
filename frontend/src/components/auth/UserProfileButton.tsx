@@ -1,7 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 
-export function UserProfileButton() {
+interface Props {
+  onUpgrade?: () => void;
+}
+
+export function UserProfileButton({ onUpgrade }: Props) {
+  const { t } = useTranslation('auth');
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { user, logout } = useAuth();
@@ -28,8 +34,8 @@ export function UserProfileButton() {
   };
 
   const usedBacktests = user.backtestExecutionCount;
-  const maxBacktests = user.isPremium ? '∞' : '5';
-  const progressPercentage = user.isPremium ? 0 : Math.min((usedBacktests / 5) * 100, 100);
+  const maxBacktests = user.isPremium ? '∞' : '20';
+  const progressPercentage = user.isPremium ? 0 : Math.min((usedBacktests / 20) * 100, 100);
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -46,7 +52,7 @@ export function UserProfileButton() {
         {/* User Info - Hidden on mobile */}
         <div className="hidden md:block text-left">
           <p className="text-sm font-semibold text-slate-900 leading-tight">
-            {user.displayName || 'Utente'}
+            {user.displayName || t('profile.button.user')}
           </p>
           <p className="text-xs text-slate-500">
             {user.isPremium ? (
@@ -78,7 +84,7 @@ export function UserProfileButton() {
                 {user.displayName?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase() || 'U'}
               </div>
               <div className="flex-1">
-                <p className="text-white font-semibold">{user.displayName || 'Utente'}</p>
+                <p className="text-white font-semibold">{user.displayName || t('profile.button.user')}</p>
                 <p className="text-indigo-100 text-xs truncate">{user.email}</p>
               </div>
             </div>
@@ -88,14 +94,14 @@ export function UserProfileButton() {
           <div className="p-4 bg-slate-50 border-b border-slate-200">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-slate-700">
-                {user.isPremium ? 'Piano Premium' : 'Piano Gratuito'}
+                {user.isPremium ? t('profile.dropdown.planPremium') : t('profile.dropdown.planFree')}
               </span>
               {user.isPremium ? (
                 <span className="px-2 py-1 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-semibold">
-                  ✓ Attivo
+                  {t('profile.dropdown.active')}
                 </span>
               ) : (
-                <span className="text-sm font-bold text-slate-900">{usedBacktests}/5</span>
+                <span className="text-sm font-bold text-slate-900">{t('profile.dropdown.backtestsUsed', { used: usedBacktests })}</span>
               )}
             </div>
 
@@ -114,9 +120,9 @@ export function UserProfileButton() {
                   />
                 </div>
                 <p className="text-xs text-slate-600">
-                  {usedBacktests >= 5
-                    ? 'Limite raggiunto! Passa a Premium per backtest illimitati.'
-                    : `${5 - usedBacktests} backtest rimanenti`}
+                  {usedBacktests >= 20
+                    ? t('profile.dropdown.limitReached')
+                    : t('profile.dropdown.backtestsRemaining', { remaining: 20 - usedBacktests })}
                 </p>
               </>
             )}
@@ -129,7 +135,7 @@ export function UserProfileButton() {
                 className="w-full text-left px-4 py-3 rounded-lg hover:bg-indigo-50 transition-colors group"
                 onClick={() => {
                   setIsOpen(false);
-                  // TODO: Show upgrade modal
+                  onUpgrade?.();
                 }}
               >
                 <div className="flex items-center gap-3">
@@ -140,9 +146,9 @@ export function UserProfileButton() {
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-slate-900 group-hover:text-emerald-600 transition-colors">
-                      Passa a Premium
+                      {t('profile.dropdown.upgrade')}
                     </p>
-                    <p className="text-xs text-slate-600">Backtest illimitati e molto altro</p>
+                    <p className="text-xs text-slate-600">{t('profile.dropdown.upgradeSubtitle')}</p>
                   </div>
                   <svg className="w-5 h-5 text-slate-400 group-hover:text-emerald-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -163,7 +169,7 @@ export function UserProfileButton() {
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-semibold text-slate-900 group-hover:text-red-600 transition-colors">
-                    Logout
+                    {t('profile.dropdown.logout')}
                   </p>
                 </div>
               </div>

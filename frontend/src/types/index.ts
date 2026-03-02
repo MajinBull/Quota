@@ -1,5 +1,5 @@
 // Asset categories
-export type AssetCategory = 'etf' | 'crypto' | 'metals' | 'bonds' | 'real_estate';
+export type AssetCategory = 'etf' | 'crypto' | 'commodities' | 'bonds' | 'real_estate';
 
 // Single candlestick data point
 export interface Candle {
@@ -27,6 +27,14 @@ export interface AssetInfo {
   category: AssetCategory;
   name: string;
   description?: string;
+  popularity_rank?: number; // Lower = more popular (1 is most popular)
+  // Extended info for modal
+  inceptionDate?: string; // Data di lancio
+  provider?: string; // Gestore/Emittente
+  expenseRatio?: string; // Costo annuo (per ETF)
+  aum?: string; // Assets Under Management
+  website?: string; // Link al sito ufficiale
+  longDescription?: string; // Descrizione estesa
 }
 
 // Portfolio allocation (user input)

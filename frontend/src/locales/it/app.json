@@ -1,0 +1,279 @@
+{
+  "navigation": {
+    "tabs": {
+      "configuration": "Configuration",
+      "configurationShort": "Config",
+      "results": "Risultati Backtest",
+      "resultsShort": "Risultati",
+      "saved": "Backtest Salvati",
+      "savedShort": "Salvati"
+    }
+  },
+  "strategy": {
+    "title": "Strategia e Parametri",
+    "lumpSum": {
+      "name": "Lump Sum",
+      "description": "Investi tutto il capitale in un'unica soluzione all'inizio del periodo. Strategia adatta se hai disponibilità immediata e vuoi massimizzare l'esposizione al mercato da subito."
+    },
+    "pac": {
+      "name": "PAC (Piano di Accumulo)",
+      "description": "Investi importi fissi a intervalli regolari nel tempo. Riduce l'impatto della volatilità attraverso il dollar-cost averaging e permette di costruire il portafoglio gradualmente."
+    },
+    "fields": {
+      "capital": "Capitale:",
+      "firstPayment": "Primo versamento:",
+      "pacAmount": "Importo PAC:",
+      "rebalance": "Rebilanciamento:",
+      "startYear": "Anno Inizio:"
+    },
+    "frequency": {
+      "monthly": "Mensile",
+      "quarterly": "Trimestrale",
+      "yearly": "Annuale",
+      "none": "Nessuno"
+    },
+    "startYear": {
+      "auto": "Automatico"
+    }
+  },
+  "portfolio": {
+    "addAssets": {
+      "title": "Aggiungi Asset",
+      "searchPlaceholder": "Cerca SPY, Bitcoin, Tech...",
+      "sortBy": "Ordina per:",
+      "sortOptions": {
+        "nameAZ": "Nome A-Z",
+        "nameZA": "Nome Z-A",
+        "favorites": "Preferiti",
+        "popularity": "Popolarità"
+      }
+    },
+    "categories": {
+      "etf": "ETF",
+      "crypto": "Crypto",
+      "commodities": "Commodities",
+      "bonds": "Obbligazioni",
+      "realEstate": "Immobiliare"
+    },
+    "allocation": {
+      "title": "Allocazione Portfolio",
+      "total": "Total:",
+      "useTemplate": "Usa Template",
+      "emptyState": {
+        "title": "Nessun asset selezionato",
+        "subtitle": "Aggiungi asset dalla sezione qui sopra"
+      },
+      "locked": "Percentuale bloccata - Click per sbloccare",
+      "unlocked": "Click per bloccare percentuale",
+      "remove": "Rimuovi",
+      "addToFavorites": "Aggiungi ai preferiti",
+      "removeFromFavorites": "Rimuovi dai preferiti",
+      "viewDetails": "Visualizza dettagli asset"
+    }
+  },
+  "backtest": {
+    "run": {
+      "button": "Esegui Backtest →",
+      "running": "Analisi in corso...",
+      "warning": "⚠️ Allocazione: {{percentage}}% (deve essere 100%)",
+      "emptyHint": "Aggiungi asset o usa un template per iniziare"
+    },
+    "save": {
+      "button": "💾 Salva Backtest",
+      "hint": "💡 Salva questo backtest per confrontarlo con altri",
+      "modalTitle": "💾 Salva Backtest",
+      "strategyName": "Nome della strategia:",
+      "addToFavorites": "Aggiungi ai preferiti ⭐",
+      "counter": "💾 Backtest salvati:",
+      "saving": "Salvataggio...",
+      "saveConfirm": "Salva ✓",
+      "defaultName": "Strategia #{{number}}"
+    },
+    "results": {
+      "title": "Metriche Chiave",
+      "period": "Periodo:",
+      "metrics": {
+        "finalValue": "Valore Finale",
+        "invested": "Investito",
+        "totalReturn": "Rendimento Totale",
+        "annualizedReturn": "Media Annua",
+        "maxDrawdown": "Max Drawdown",
+        "volatility": "Volatilità Annuale",
+        "bestAsset": "Best Asset"
+      },
+      "charts": {
+        "portfolioGrowth": "Crescita Portfolio",
+        "allocation": "Allocazione",
+        "assetPerformance": "Performance per Asset (Indice Base 100)",
+        "tooltipDate": "Data:",
+        "indexLabel": "Indice (Base 100)",
+        "portfolioValue": "Valore Portfolio",
+        "investedCapital": "Capitale Investito"
+      },
+      "yearlyBreakdown": {
+        "title": "Breakdown Anno per Anno",
+        "scrollHint": "Scorri lateralmente per vedere tutte le colonne →",
+        "columns": {
+          "year": "Anno",
+          "portfolioValue": "Valore Portfolio",
+          "invested": "Investito",
+          "yearlyReturn": "Rend. Anno",
+          "cumulativeReturn": "Rend. Cumulativo"
+        }
+      }
+    }
+  },
+  "templates": {
+    "modalTitle": "Template Portfolio",
+    "description": "Inizia rapidamente con un portfolio preconfigurato e personalizzalo secondo le tue esigenze",
+    "risk": {
+      "low": "Basso Rischio",
+      "medium": "Medio Rischio",
+      "high": "Alto Rischio"
+    },
+    "list": [
+      {
+        "name": "Conservativo",
+        "description": "Basso rischio, focus su stabilità e protezione del capitale"
+      },
+      {
+        "name": "Bilanciato",
+        "description": "Mix equilibrato tra crescita e sicurezza"
+      },
+      {
+        "name": "Aggressivo",
+        "description": "Alto rischio, alto potenziale rendimento"
+      }
+    ],
+    "loadButton": "Usa questo Template"
+  },
+  "savedBacktests": {
+    "title": "Backtest Salvati ({{count}}/100)",
+    "sortBy": "Ordina per:",
+    "sortOptions": {
+      "favorites": "⭐ Preferiti prima",
+      "date": "📅 Più recenti",
+      "name": "🔤 Nome (A-Z)",
+      "return": "📈 Rendimento"
+    },
+    "emptyState": {
+      "title": "Nessun backtest salvato",
+      "subtitle": "Esegui un backtest e salvalo per confrontarlo con altri"
+    },
+    "actions": {
+      "rename": "Rinomina",
+      "delete": "Elimina",
+      "view": "Visualizza",
+      "rebalance": "Ribilancia",
+      "compare": "Confronta",
+      "addToFavorites": "Aggiungi ai preferiti",
+      "removeFromFavorites": "Rimuovi dai preferiti"
+    },
+    "columns": {
+      "invested": "Investito",
+      "finalValue": "Val. Finale",
+      "return": "Rendimento",
+      "drawdown": "Drawdown"
+    },
+    "deleteConfirm": {
+      "title": "Conferma Eliminazione",
+      "message": "Sei sicuro di voler eliminare il backtest \"{{name}}\"?",
+      "warning": "Questa azione non può essere annullata.",
+      "confirm": "Sì, Elimina",
+      "cancel": "Annulla"
+    },
+    "renameSuccess": "Backtest rinominato con successo",
+    "deleteSuccess": "Backtest \"{{name}}\" eliminato",
+    "minLengthWarning": "Il nome deve contenere almeno 3 caratteri"
+  },
+  "rebalance": {
+    "title": "Ribilanciamento {{name}}",
+    "subtitle": "Inserisci valori attuali",
+    "inputLabel": "Target: {{percentage}}%",
+    "placeholder": "0.00",
+    "calculateButton": "Calcola Ribilanciamento",
+    "notNecessary": {
+      "title": "Ribilanciamento non necessario",
+      "description": "La differenza massima tra allocazione attuale e target è inferiore a 1% ({{difference}}%). Il portfolio è già ben bilanciato."
+    },
+    "resultsTitle": "Risultati Ribilanciamento",
+    "totalValue": "Valore Totale",
+    "sections": {
+      "sells": "1. Vendite",
+      "buys": "2. Acquisti",
+      "holds": "Nessuna Azione Necessaria"
+    },
+    "actions": {
+      "sell": "Vendi €{{amount}}",
+      "buy": "Acquista €{{amount}}",
+      "from": "Da €{{from}} a €{{to}}",
+      "alreadyBalanced": "Già bilanciato"
+    },
+    "newCalculation": "Nuovo Calcolo",
+    "alert": "Inserisci almeno un valore valido",
+    "close": "Chiudi"
+  },
+  "assetDetails": {
+    "title": "Dettagli Asset",
+    "loading": "Caricamento dati...",
+    "error": "Impossibile caricare i dati dell'asset",
+    "errorGeneric": "Errore durante il caricamento dei dati",
+    "fields": {
+      "symbol": "Simbolo",
+      "fullName": "Nome Completo",
+      "availablePeriod": "Periodo Disponibile",
+      "dataPoints": "Dati Disponibili"
+    },
+    "chart": {
+      "title": "Andamento Prezzo",
+      "subtitle": "Grafico ultimi 5 anni (campionamento settimanale - usa la barra sottostante per navigare)",
+      "tooltip": "Data:",
+      "closingPrice": "Prezzo di Chiusura"
+    },
+    "info": {
+      "title": "Informazioni",
+      "inceptionDate": "Data di Lancio",
+      "provider": "Gestore",
+      "expenseRatio": "Commissioni Annue",
+      "aum": "Patrimonio Gestito",
+      "website": "Visita Sito Ufficiale"
+    }
+  },
+  "errors": {
+    "backtestError": "Errore durante il backtest. Verifica che tutti gli asset abbiano dati validi.",
+    "unknownError": "Errore sconosciuto",
+    "authRequired": "Devi essere autenticato per salvare"
+  },
+  "compare": {
+    "button": "📊 Confronta Selezionati ({{count}})",
+    "hint": {
+      "min": "Seleziona almeno 2 backtest per confrontarli",
+      "max": "Confronta fino a 3 backtest contemporaneamente"
+    }
+  },
+  "comparison": {
+    "title": "📊 Confronto Backtest",
+    "metricsTitle": "📊 Metriche a Confronto",
+    "scrollHint": "Scorri lateralmente per vedere tutti i portfolio →",
+    "metricColumn": "Metrica",
+    "metrics": {
+      "totalReturn": "Rendimento Totale",
+      "averageAnnualReturn": "Media Annua",
+      "maxDrawdown": "Max Drawdown",
+      "finalValue": "Valore Finale",
+      "bestAsset": "Best Asset"
+    },
+    "growthTitle": "📈 Crescita Normalizzata (Base 100)",
+    "growthAxisLabel": "Valore (Base 100)",
+    "growthTooltipDate": "Data:",
+    "allocationsTitle": "🥧 Allocazioni",
+    "configurationsTitle": "📋 Configurazioni",
+    "config": {
+      "strategy": "Strategia:",
+      "capital": "Capitale:",
+      "rebalance": "Rebalance:",
+      "period": "Periodo:",
+      "perMonth": "/mese"
+    }
+  }
+}

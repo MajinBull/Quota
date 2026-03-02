@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { PortfolioBuilder } from './components/PortfolioBuilder';
 import { PortfolioTemplates } from './components/PortfolioTemplates';
 import { BacktestResults } from './components/BacktestResults';
@@ -9,6 +10,7 @@ import { useAuth } from './contexts/AuthContext';
 import { AuthModal } from './components/auth/AuthModal';
 import { UserProfileButton } from './components/auth/UserProfileButton';
 import { UpgradeModal } from './components/auth/UpgradeModal';
+import { LanguageSwitcher } from './components/LanguageSwitcher';
 import { usePortfolioStore } from './stores/portfolioStore';
 import { runBacktest } from './engine/backtester';
 import type { BacktestResult } from './types';
@@ -18,6 +20,7 @@ import { Analytics } from '@vercel/analytics/react';
 type ActiveView = 'configuration' | 'risultati' | 'backtest_salvati';
 
 function AppContent() {
+  const { t } = useTranslation(['app', 'common']);
   const { user, loading, canRunBacktest, incrementBacktestCount } = useAuth();
   const { portfolio, getTotalAllocation } = usePortfolioStore();
   const [result, setResult] = useState<BacktestResult | null>(null);
@@ -39,7 +42,7 @@ function AppContent() {
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <p className="text-slate-600 font-medium">Caricamento...</p>
+          <p className="text-slate-600 font-medium">{t('common:status.loading')}</p>
         </div>
       </div>
     );
@@ -72,10 +75,10 @@ function AppContent() {
         // Switch to results view after successful backtest
         setActiveView('risultati');
       } else {
-        setError('Errore durante il backtest. Verifica che tutti gli asset abbiano dati validi.');
+        setError(t('app:errors.backtestError'));
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Errore sconosciuto');
+      setError(err instanceof Error ? err.message : t('app:errors.unknownError'));
     } finally {
       setIsLoading(false);
     }
@@ -92,9 +95,10 @@ function AppContent() {
               <div className="flex-shrink-0">
                 <img src={logoQuota} alt="QUOTA" className="h-10 md:h-12" />
               </div>
-              {/* User Profile Button - Mobile */}
-              <div className="md:hidden">
-                <UserProfileButton />
+              {/* User Profile Button + Language - Mobile */}
+              <div className="md:hidden flex items-center gap-2">
+                <LanguageSwitcher />
+                <UserProfileButton onUpgrade={() => setShowUpgradeModal(true)} />
               </div>
             </div>
 
@@ -108,8 +112,8 @@ function AppContent() {
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
-                Config
-                <span className="hidden md:inline">uration</span>
+                <span className="md:hidden">{t('app:navigation.tabs.configurationShort')}</span>
+                <span className="hidden md:inline">{t('app:navigation.tabs.configuration')}</span>
               </button>
               <button
                 onClick={() => setActiveView('risultati')}
@@ -122,8 +126,8 @@ function AppContent() {
                     : 'bg-slate-100 text-slate-400 cursor-not-allowed'
                 }`}
               >
-                Risultati
-                <span className="hidden md:inline"> Backtest</span>
+                <span className="md:hidden">{t('app:navigation.tabs.resultsShort')}</span>
+                <span className="hidden md:inline">{t('app:navigation.tabs.results')}</span>
               </button>
               <button
                 onClick={() => setActiveView('backtest_salvati')}
@@ -133,14 +137,15 @@ function AppContent() {
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
-                Salvati
-                <span className="hidden md:inline"> Backtest</span>
+                <span className="md:hidden">{t('app:navigation.tabs.savedShort')}</span>
+                <span className="hidden md:inline">{t('app:navigation.tabs.saved')}</span>
               </button>
             </div>
 
-            {/* User Profile Button - Desktop */}
-            <div className="hidden md:block flex-shrink-0">
-              <UserProfileButton />
+            {/* User Profile Button + Language - Desktop */}
+            <div className="hidden md:flex items-center gap-3 flex-shrink-0">
+              <LanguageSwitcher />
+              <UserProfileButton onUpgrade={() => setShowUpgradeModal(true)} />
             </div>
           </div>
         </div>
@@ -155,7 +160,7 @@ function AppContent() {
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
               </svg>
               <div>
-                <h3 className="text-red-900 font-semibold text-sm">Errore</h3>
+                <h3 className="text-red-900 font-semibold text-sm">{t('common:status.error')}</h3>
                 <p className="text-red-700 mt-1 text-xs">{error}</p>
               </div>
             </div>
@@ -201,17 +206,17 @@ function AppContent() {
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         ></path>
                       </svg>
-                      Analisi in corso...
+                      {t('app:backtest.run.running')}
                     </span>
                   ) : (
-                    'Esegui Backtest →'
+                    t('app:backtest.run.button')
                   )}
                 </button>
 
                 {!isValidPortfolio && portfolio.allocations.length > 0 && (
                   <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
                     <p className="text-xs text-amber-900 font-medium text-center">
-                      ⚠️ Allocazione: {totalAllocation.toFixed(1)}% (deve essere 100%)
+                      {t('app:backtest.run.warning', { percentage: totalAllocation.toFixed(1) })}
                     </p>
                   </div>
                 )}
@@ -219,7 +224,7 @@ function AppContent() {
                 {portfolio.allocations.length === 0 && (
                   <div className="mt-3 p-3 bg-slate-50 border border-slate-200 rounded-lg">
                     <p className="text-xs text-slate-600 text-center">
-                      Aggiungi asset o usa un template per iniziare
+                      {t('app:backtest.run.emptyHint')}
                     </p>
                   </div>
                 )}
@@ -256,7 +261,7 @@ function AppContent() {
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-slate-900">Portfolio Templates</h2>
+              <h2 className="text-2xl font-bold text-slate-900">{t('app:templates.modalTitle')}</h2>
               <button
                 onClick={() => setIsTemplatesModalOpen(false)}
                 className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
@@ -278,11 +283,11 @@ function AppContent() {
         <div className="px-6 py-6">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
             <div className="text-slate-600 text-sm">
-              <span className="font-semibold text-slate-900">Portfolio Intelligence</span>
-              {' · '}Backtest platform multi-asset
+              <span className="font-semibold text-slate-900">{t('common:footer.brand')}</span>
+              {' · '}{t('common:footer.subtitle')}
             </div>
             <div className="text-slate-500 text-xs">
-              I rendimenti passati non garantiscono risultati futuri
+              {t('common:footer.disclaimer')}
             </div>
           </div>
         </div>

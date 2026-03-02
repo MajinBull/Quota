@@ -1,16 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { usePortfolioStore } from '../stores/portfolioStore';
 import { ASSET_METADATA, getAllCategories } from '../utils/dataLoader';
 import type { AssetCategory, PortfolioAllocation } from '../types';
 import { AssetDetailsModal } from './AssetDetailsModal';
-
-const CATEGORY_LABELS: Record<AssetCategory, string> = {
-  etf: 'ETF',
-  crypto: 'Crypto',
-  metals: 'Metalli',
-  bonds: 'Obbligazioni',
-  real_estate: 'Immobiliare'
-};
 
 interface AllocationSliderProps {
   value: number;
@@ -58,11 +51,16 @@ function AllocationSlider({ value, onChange }: AllocationSliderProps) {
     });
   };
 
-  const handleSliderClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isEditing || !sliderRef.current) return;
+  const calculatePercentage = (clientX: number) => {
+    if (!sliderRef.current) return 0;
     const rect = sliderRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const percentage = Math.min(100, Math.max(0, (x / rect.width) * 100));
+    const x = clientX - rect.left;
+    return Math.min(100, Math.max(0, (x / rect.width) * 100));
+  };
+
+  const handleSliderClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isEditing) return;
+    const percentage = calculatePercentage(e.clientX);
     updateValue(percentage);
   };
 
@@ -72,27 +70,45 @@ function AllocationSlider({ value, onChange }: AllocationSliderProps) {
     handleSliderClick(e);
   };
 
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (isEditing) return;
+    setIsDragging(true);
+    const touch = e.touches[0];
+    const percentage = calculatePercentage(touch.clientX);
+    updateValue(percentage);
+  };
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isDragging || !sliderRef.current) return;
-      const rect = sliderRef.current.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const percentage = Math.min(100, Math.max(0, (x / rect.width) * 100));
+      const percentage = calculatePercentage(e.clientX);
       updateValue(percentage);
     };
 
-    const handleMouseUp = () => {
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isDragging || !sliderRef.current) return;
+      e.preventDefault(); // Prevent scrolling while dragging
+      const touch = e.touches[0];
+      const percentage = calculatePercentage(touch.clientX);
+      updateValue(percentage);
+    };
+
+    const handleEnd = () => {
       setIsDragging(false);
     };
 
     if (isDragging) {
       document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('mouseup', handleEnd);
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
+      document.addEventListener('touchend', handleEnd);
     }
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('mouseup', handleEnd);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleEnd);
       // Clean up any pending animation frame
       if (rafRef.current !== null) {
         cancelAnimationFrame(rafRef.current);
@@ -130,7 +146,8 @@ function AllocationSlider({ value, onChange }: AllocationSliderProps) {
       <div
         ref={sliderRef}
         onMouseDown={handleMouseDown}
-        className="relative h-10 bg-slate-200 rounded-lg overflow-hidden cursor-pointer select-none"
+        onTouchStart={handleTouchStart}
+        className="relative h-10 bg-slate-200 rounded-lg overflow-hidden cursor-pointer select-none touch-none"
       >
         {/* Barra di riempimento */}
         <div
@@ -172,6 +189,7 @@ interface Props {
 }
 
 export function PortfolioBuilder({ onOpenTemplates }: Props) {
+  const { t } = useTranslation('app');
   const {
     portfolio,
     addAsset,
@@ -186,16 +204,100 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
     getTotalAllocation
   } = usePortfolioStore();
 
+  // Category label helper
+  const getCategoryLabel = (category: AssetCategory): string => {
+    const categoryMap: Record<AssetCategory, string> = {
+      etf: t('portfolio.categories.etf'),
+      crypto: t('portfolio.categories.crypto'),
+      commodities: t('portfolio.categories.commodities'),
+      bonds: t('portfolio.categories.bonds'),
+      real_estate: t('portfolio.categories.realEstate')
+    };
+    return categoryMap[category] || category;
+  };
+
   const [selectedCategory, setSelectedCategory] = useState<AssetCategory>('etf');
   const [lockedAssets, setLockedAssets] = useState<Set<string>>(new Set());
   const [detailsModalAsset, setDetailsModalAsset] = useState<string | null>(null);
 
+  // Search and filter state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<'favorites' | 'popularity' | 'name-az' | 'name-za'>('name-az');
+  const [favorites, setFavorites] = useState<Record<AssetCategory, string[]>>(() => {
+    // Load favorites from localStorage
+    const stored = localStorage.getItem('assetFavorites');
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch {
+        return { etf: [], crypto: [], commodities: [], bonds: [], real_estate: [] };
+      }
+    }
+    return { etf: [], crypto: [], commodities: [], bonds: [], real_estate: [] };
+  });
+
   const totalAllocation = getTotalAllocation();
   const isValid = totalAllocation === 100;
 
-  const availableAssets = Object.values(ASSET_METADATA).filter(
-    (asset) => asset.category === selectedCategory
-  );
+  // Toggle favorite
+  const toggleFavorite = (symbol: string, category: AssetCategory) => {
+    setFavorites(prev => {
+      const categoryFavorites = prev[category] || [];
+      const isFavorite = categoryFavorites.includes(symbol);
+
+      const updated = {
+        ...prev,
+        [category]: isFavorite
+          ? categoryFavorites.filter(s => s !== symbol)
+          : [...categoryFavorites, symbol]
+      };
+
+      // Save to localStorage
+      localStorage.setItem('assetFavorites', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  // Filter and sort assets
+  const availableAssets = Object.values(ASSET_METADATA)
+    .filter((asset) => asset.category === selectedCategory)
+    .filter((asset) => {
+      // Search filter
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase();
+        return (
+          asset.symbol.toLowerCase().includes(query) ||
+          asset.name.toLowerCase().includes(query) ||
+          asset.description?.toLowerCase().includes(query)
+        );
+      }
+      return true;
+    })
+    .filter((asset) => {
+      // Favorites filter
+      if (sortBy === 'favorites') {
+        const categoryFavorites = favorites[selectedCategory] || [];
+        return categoryFavorites.includes(asset.symbol);
+      }
+      return true;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'favorites':
+        case 'name-az':
+          return a.name.localeCompare(b.name);
+        case 'name-za':
+          return b.name.localeCompare(a.name);
+        case 'popularity':
+          // Sort by popularity_rank (lower number = more popular)
+          // Assets without rank go to the end
+          const rankA = a.popularity_rank ?? 9999;
+          const rankB = b.popularity_rank ?? 9999;
+          return rankA - rankB;
+        default:
+          return 0;
+      }
+    });
 
   const handleAddAsset = (symbol: string) => {
     addAsset(symbol);
@@ -369,7 +471,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
       {/* STRATEGIA E PARAMETRI */}
       <div className="bg-white border border-slate-200 rounded-2xl p-4 md:p-8">
         <h2 className="text-xl font-bold mb-4 md:mb-6 text-slate-900 uppercase tracking-wide text-sm">
-          Strategia e Parametri
+          {t('strategy.title')}
         </h2>
 
         <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
@@ -379,24 +481,20 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
               <>
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-2 h-2 bg-indigo-600 rounded-full"></div>
-                  <h3 className="font-semibold text-slate-900 text-sm">Lump Sum</h3>
+                  <h3 className="font-semibold text-slate-900 text-sm">{t('strategy.lumpSum.name')}</h3>
                 </div>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Investi tutto il capitale in un'unica soluzione all'inizio del periodo.
-                  Strategia adatta se hai disponibilità immediata e vuoi massimizzare
-                  l'esposizione al mercato da subito.
+                  {t('strategy.lumpSum.description')}
                 </p>
               </>
             ) : (
               <>
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-2 h-2 bg-indigo-600 rounded-full"></div>
-                  <h3 className="font-semibold text-slate-900 text-sm">PAC (Piano di Accumulo)</h3>
+                  <h3 className="font-semibold text-slate-900 text-sm">{t('strategy.pac.name')}</h3>
                 </div>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Investi importi fissi a intervalli regolari nel tempo. Riduce l'impatto
-                  della volatilità attraverso il dollar-cost averaging e permette di
-                  costruire il portafoglio gradualmente.
+                  {t('strategy.pac.description')}
                 </p>
               </>
             )}
@@ -418,7 +516,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                   onChange={(e) => setInvestmentStrategy(e.target.value as any)}
                   className="sr-only"
                 />
-                Lump Sum
+                {t('strategy.lumpSum.name')}
               </label>
               <label className={`cursor-pointer px-4 py-2 rounded-lg font-medium text-sm transition-all whitespace-nowrap ${
                 portfolio.investmentStrategy === 'pac'
@@ -432,7 +530,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                   onChange={(e) => setInvestmentStrategy(e.target.value as any)}
                   className="sr-only"
                 />
-                PAC
+                {t('strategy.pac.name')}
               </label>
             </div>
 
@@ -441,7 +539,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
               {/* Capitale */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                 <label className="text-sm font-medium text-slate-600 sm:w-32 sm:flex-shrink-0">
-                  {portfolio.investmentStrategy === 'pac' ? 'Primo versamento:' : 'Capitale:'}
+                  {portfolio.investmentStrategy === 'pac' ? t('strategy.fields.firstPayment') : t('strategy.fields.capital')}
                 </label>
                 <div className="relative flex-1">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">€</span>
@@ -459,9 +557,9 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
               {/* PAC Parameters (conditional) */}
               {portfolio.investmentStrategy === 'pac' && (
                 <>
-                  <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium text-slate-600">Importo PAC:</label>
-                    <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                    <label className="text-sm font-medium text-slate-600 sm:w-32 sm:flex-shrink-0">{t('strategy.fields.pacAmount')}</label>
+                    <div className="flex flex-1 gap-2">
                       <div className="relative flex-1">
                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">€</span>
                         <input
@@ -478,9 +576,9 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                         onChange={(e) => setPACFrequency(e.target.value as any)}
                         className="w-32 sm:w-36 px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm appearance-none bg-white"
                       >
-                        <option value="monthly">Mensile</option>
-                        <option value="quarterly">Trimestrale</option>
-                        <option value="yearly">Annuale</option>
+                        <option value="monthly">{t('strategy.frequency.monthly')}</option>
+                        <option value="quarterly">{t('strategy.frequency.quarterly')}</option>
+                        <option value="yearly">{t('strategy.frequency.yearly')}</option>
                       </select>
                     </div>
                   </div>
@@ -489,28 +587,28 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
 
               {/* Rebilanciamento */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                <label className="text-sm font-medium text-slate-600 sm:w-32 sm:flex-shrink-0">Rebilanciamento:</label>
+                <label className="text-sm font-medium text-slate-600 sm:w-32 sm:flex-shrink-0">{t('strategy.fields.rebalance')}</label>
                 <select
                   value={portfolio.rebalanceFrequency}
                   onChange={(e) => setRebalanceFrequency(e.target.value as any)}
                   className="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm appearance-none bg-white"
                 >
-                  <option value="none">Nessuno</option>
-                  <option value="monthly">Mensile</option>
-                  <option value="quarterly">Trimestrale</option>
-                  <option value="yearly">Annuale</option>
+                  <option value="none">{t('strategy.frequency.none')}</option>
+                  <option value="monthly">{t('strategy.frequency.monthly')}</option>
+                  <option value="quarterly">{t('strategy.frequency.quarterly')}</option>
+                  <option value="yearly">{t('strategy.frequency.yearly')}</option>
                 </select>
               </div>
 
               {/* Anno Inizio */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                <label className="text-sm font-medium text-slate-600 sm:w-32 sm:flex-shrink-0">Anno Inizio:</label>
+                <label className="text-sm font-medium text-slate-600 sm:w-32 sm:flex-shrink-0">{t('strategy.fields.startYear')}</label>
                 <select
                   value={portfolio.startYear || 'auto'}
                   onChange={(e) => setStartYear(e.target.value === 'auto' ? undefined : parseInt(e.target.value))}
                   className="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm appearance-none bg-white"
                 >
-                  <option value="auto">Automatico</option>
+                  <option value="auto">{t('strategy.startYear.auto')}</option>
                   <option value="2005">2005</option>
                   <option value="2010">2010</option>
                   <option value="2015">2015</option>
@@ -524,59 +622,92 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
 
       {/* AGGIUNGI ASSET */}
       <div className="bg-white border border-slate-200 rounded-2xl p-4 md:p-8">
-        <h2 className="text-xl font-bold mb-4 md:mb-6 text-slate-900 uppercase tracking-wide text-sm">
-          Aggiungi Asset
-        </h2>
+        {/* Header with Title and Search */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4 md:mb-6">
+          <h2 className="text-xl font-bold text-slate-900 uppercase tracking-wide text-sm">
+            {t('portfolio.addAssets.title')}
+          </h2>
 
-        {/* Category Selector */}
-        <div className="flex gap-2 mb-4 md:mb-6 flex-wrap">
-          {getAllCategories().map((category) => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
-                selectedCategory === category
-                  ? 'bg-indigo-600 text-white shadow-md'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-              }`}
+          {/* Search Bar */}
+          <div className="relative w-full md:w-80">
+            <input
+              type="text"
+              placeholder={t('portfolio.addAssets.searchPlaceholder')}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+            />
+            <svg
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              {CATEGORY_LABELS[category]}
-            </button>
-          ))}
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+        </div>
+
+        {/* Category Selector + Sort on same row */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 md:mb-6">
+          {/* Category Selector - left */}
+          <div className="flex gap-2 flex-wrap">
+            {getAllCategories().map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+                  selectedCategory === category
+                    ? 'bg-indigo-600 text-white shadow-md'
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                }`}
+              >
+                {getCategoryLabel(category)}
+              </button>
+            ))}
+          </div>
+
+          {/* Sort Dropdown - right */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <label className="text-sm font-medium text-slate-600">{t('portfolio.addAssets.sortBy')}</label>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm appearance-none bg-white"
+            >
+              <option value="name-az">{t('portfolio.addAssets.sortOptions.nameAZ')}</option>
+              <option value="name-za">{t('portfolio.addAssets.sortOptions.nameZA')}</option>
+              <option value="favorites">{t('portfolio.addAssets.sortOptions.favorites')}</option>
+              <option value="popularity">{t('portfolio.addAssets.sortOptions.popularity')}</option>
+            </select>
+          </div>
         </div>
 
         {/* Asset Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {availableAssets.map((asset) => {
             const isAdded = portfolio.allocations.some((a) => a.symbol === asset.symbol);
+            const categoryFavorites = favorites[selectedCategory] || [];
+            const isFavorite = categoryFavorites.includes(asset.symbol);
 
             return (
               <div
                 key={asset.symbol}
                 className={`rounded-xl p-4 transition-all relative cursor-pointer group ${
                   isAdded
-                    ? 'bg-slate-200 border-2 border-slate-300 hover:border-red-300 hover:bg-red-50'
-                    : 'bg-slate-50 border border-slate-200 hover:border-indigo-300 hover:bg-indigo-50'
+                    ? 'bg-green-50 border border-green-500 hover:border-red-400 hover:bg-red-50'
+                    : 'bg-slate-50 border border-slate-200 hover:border-green-400 hover:bg-green-50'
                 }`}
                 onClick={() => isAdded ? handleRemoveAsset(asset.symbol) : handleAddAsset(asset.symbol)}
               >
-                {/* Bollino con spunta quando selezionato */}
-                {isAdded && (
-                  <div className="absolute top-2 right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                    <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                )}
-
-                {/* Info button - appears on hover */}
+                {/* Info button - bottom right - always visible on mobile, hover on desktop */}
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     setDetailsModalAsset(asset.symbol);
                   }}
-                  className="absolute bottom-2 right-2 w-7 h-7 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10"
-                  title="Visualizza dettagli asset"
+                  className="absolute bottom-2 right-2 w-7 h-7 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full flex items-center justify-center opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity shadow-lg z-10"
+                  title={t('portfolio.allocation.viewDetails')}
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -584,8 +715,27 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                 </button>
 
                 <div>
-                  <div className={`font-semibold text-sm mb-1 ${isAdded ? 'text-slate-600' : 'text-slate-900'}`}>
-                    {asset.symbol}
+                  {/* Symbol with favorite star inline */}
+                  <div className={`font-semibold text-sm mb-1 flex items-center gap-1.5 ${isAdded ? 'text-slate-600' : 'text-slate-900'}`}>
+                    <span>{asset.symbol}</span>
+                    {/* Favorite Star - inline after symbol */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFavorite(asset.symbol, selectedCategory);
+                      }}
+                      className="flex items-center justify-center transition-transform hover:scale-110"
+                      title={isFavorite ? t('portfolio.allocation.removeFromFavorites') : t('portfolio.allocation.addToFavorites')}
+                    >
+                      <svg
+                        className={`w-4 h-4 ${isFavorite ? 'text-yellow-400 fill-yellow-400' : 'text-slate-300 fill-none hover:text-yellow-400'}`}
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                      </svg>
+                    </button>
                   </div>
                   <div className={`text-xs line-clamp-2 ${isAdded ? 'text-slate-500' : 'text-slate-600'}`}>
                     {asset.name}
@@ -601,7 +751,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
       <div className="bg-white border border-slate-200 rounded-2xl p-4 md:p-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 md:mb-6">
           <h2 className="text-xl font-bold text-slate-900 uppercase tracking-wide text-sm">
-            Allocazione Portfolio
+            {t('portfolio.allocation.title')}
           </h2>
           <div className="flex items-center gap-3">
             <span className={`text-sm font-semibold px-3 py-1.5 rounded-full ${
@@ -609,7 +759,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                 ? 'bg-green-100 text-green-700'
                 : 'bg-amber-100 text-amber-700'
             }`}>
-              Total: {totalAllocation.toFixed(1)}%
+              {t('portfolio.allocation.total')} {totalAllocation.toFixed(1)}%
             </span>
             <button
               onClick={onOpenTemplates}
@@ -618,7 +768,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              Usa Template
+              {t('portfolio.allocation.useTemplate')}
             </button>
           </div>
         </div>
@@ -642,7 +792,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                         ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200'
                         : 'text-slate-400 hover:text-slate-600 hover:bg-slate-200'
                     }`}
-                    title={isLocked ? 'Percentuale bloccata - Click per sbloccare' : 'Click per bloccare percentuale'}
+                    title={isLocked ? t('portfolio.allocation.locked') : t('portfolio.allocation.unlocked')}
                   >
                     {isLocked ? (
                       // Lucchetto chiuso
@@ -669,7 +819,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                     <button
                       onClick={() => handleRemoveAsset(allocation.symbol)}
                       className="p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
-                      title="Rimuovi"
+                      title={t('portfolio.allocation.remove')}
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -686,8 +836,8 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
           </div>
         ) : (
           <div className="text-center py-12 bg-slate-50 rounded-xl border-2 border-dashed border-slate-300">
-            <p className="text-slate-600 mb-2">Nessun asset selezionato</p>
-            <p className="text-xs text-slate-500">Aggiungi asset dalla sezione qui sopra</p>
+            <p className="text-slate-600 mb-2">{t('portfolio.allocation.emptyState.title')}</p>
+            <p className="text-xs text-slate-500">{t('portfolio.allocation.emptyState.subtitle')}</p>
           </div>
         )}
       </div>

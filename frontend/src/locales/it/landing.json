@@ -1,0 +1,65 @@
+{
+  "header": {
+    "cta": "Inizia →"
+  },
+  "hero": {
+    "badge": "70+ Asset • Prova Gratuita • Dati Storici Reali",
+    "title": "Scopri come sarebbero andati",
+    "titleHighlight": "i tuoi investimenti",
+    "subtitle": "Simula strategie di investimento con dati storici reali fino a 30+ anni. Visualizza quanto avresti guadagnato (o perso) investendo nel passato.",
+    "description": "Registrati e inizia subito con backtest gratuiti per testare le tue prime strategie. Poi scegli il piano che fa per te per accedere a funzionalità avanzate e backtest illimitati.",
+    "cta": "Registrati e Inizia →"
+  },
+  "features": {
+    "title": "Cosa Puoi Fare",
+    "subtitle": "Strumenti professionali per prendere decisioni informate sui tuoi investimenti",
+    "list": [
+      {
+        "title": "70+ Asset tra 5 Categorie",
+        "description": "Combina ETF, criptovalute, commodities (oro, argento, rame), obbligazioni e immobiliare. Crea portafogli diversificati come fanno i professionisti, scegliendo tra i principali asset globali."
+      },
+      {
+        "title": "Lump Sum vs PAC",
+        "description": "Confronta investimento in un'unica soluzione (Lump Sum) con il Piano di Accumulo Capitale (PAC). Scopri quale strategia avrebbe performato meglio nel periodo storico che scegli."
+      },
+      {
+        "title": "Ribilanciamento Automatico",
+        "description": "Simula il ribilanciamento periodico del portafoglio (mensile, trimestrale, annuale) per mantenerlo sempre allineato alle percentuali target che hai impostato."
+      },
+      {
+        "title": "Dati Storici fino a 30+ Anni",
+        "description": "Usa prezzi reali con storico fino al 1993 per alcuni asset. Testa strategie su crisi finanziarie passate, bull market e periodi di alta volatilità per capire i rischi reali."
+      },
+      {
+        "title": "Metriche Avanzate",
+        "description": "Analizza rendimento totale, media annua, max drawdown, volatilità e Sharpe ratio. Scopri quale asset ha contribuito di più e visualizza l'evoluzione del portafoglio con grafici interattivi."
+      },
+      {
+        "title": "Salva e Confronta",
+        "description": "Salva i tuoi backtest preferiti e confronta fino a 4 strategie diverse fianco a fianco. Visualizza metriche, allocazioni e performance in un'unica schermata per decisioni più consapevoli."
+      }
+    ]
+  },
+  "howItWorks": {
+    "title": "Come Funziona",
+    "steps": [
+      {
+        "title": "Costruisci il Portfolio",
+        "description": "Scegli tra 70+ asset (ETF S&P 500, Bitcoin, oro, bonds...) e imposta le percentuali di allocazione. Oppure usa portafogli predefiniti come 60/40 o All Weather."
+      },
+      {
+        "title": "Configura la Strategia",
+        "description": "Seleziona periodo storico, capitale iniziale, strategia (Lump Sum o PAC) e frequenza di ribilanciamento. Poi premi \"Esegui Backtest\" e ottieni i risultati in pochi secondi."
+      },
+      {
+        "title": "Analizza e Confronta",
+        "description": "Studia le metriche, visualizza i grafici interattivi e salva le simulazioni interessanti. Confronta strategie diverse per trovare quella che si adatta meglio ai tuoi obiettivi."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Pronto a testare la tua strategia di investimento?",
+    "subtitle": "Registrati in 30 secondi e inizia subito a creare il tuo primo portafoglio. Backtest gratuiti per iniziare.",
+    "button": "Registrati e Inizia →"
+  }
+}

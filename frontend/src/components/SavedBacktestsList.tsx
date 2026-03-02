@@ -1,14 +1,17 @@
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import { useComparisonStore } from '../stores/comparisonStore';
 import { useToastStore } from '../stores/toastStore';
 import { formatDate, formatPercentage, formatCurrency, getValueColor } from '../utils/formatters';
 
 interface Props {
   onViewBacktest: (backtest: any) => void;
+  onRebalance: (backtest: any) => void;
 }
 
-export function SavedBacktestsList({ onViewBacktest }: Props) {
+export function SavedBacktestsList({ onViewBacktest, onRebalance }: Props) {
+  const { t } = useTranslation('app');
   const {
     sortBy,
     setSortBy,
@@ -38,9 +41,9 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
       await renameBacktest(renameId, renameName);
       setRenameId(null);
       setRenameName('');
-      addToast('Backtest rinominato con successo', 'success');
+      addToast(t('savedBacktests.renameSuccess'), 'success');
     } else {
-      addToast('Il nome deve contenere almeno 3 caratteri', 'warning');
+      addToast(t('savedBacktests.minLengthWarning'), 'warning');
     }
   };
 
@@ -53,7 +56,7 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
 
     await deleteBacktest(deleteTarget.id);
     setDeleteTarget(null);
-    addToast(`Backtest "${deleteTarget.name}" eliminato`, 'success');
+    addToast(t('savedBacktests.deleteSuccess', { name: deleteTarget.name }), 'success');
   };
 
   const handleDeleteCancel = () => {
@@ -65,21 +68,21 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <h2 className="text-xl font-bold text-slate-900 uppercase tracking-wide text-sm">
-          Backtest Salvati ({sortedBacktests.length}/100)
+          {t('savedBacktests.title', { count: sortedBacktests.length })}
         </h2>
 
         {/* Sort Dropdown */}
         <div className="flex items-center gap-2">
-          <span className="text-sm text-slate-600">Ordina per:</span>
+          <span className="text-sm text-slate-600">{t('savedBacktests.sortBy')}</span>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
             className="px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
-            <option value="favorites">⭐ Preferiti prima</option>
-            <option value="date">📅 Più recenti</option>
-            <option value="name">🔤 Nome (A-Z)</option>
-            <option value="return">📈 Rendimento</option>
+            <option value="favorites">{t('savedBacktests.sortOptions.favorites')}</option>
+            <option value="date">{t('savedBacktests.sortOptions.date')}</option>
+            <option value="name">{t('savedBacktests.sortOptions.name')}</option>
+            <option value="return">{t('savedBacktests.sortOptions.return')}</option>
           </select>
         </div>
       </div>
@@ -87,9 +90,9 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
       {/* Lista Backtest - Layout Tabulare Finale */}
       {sortedBacktests.length === 0 ? (
         <div className="text-center py-12 bg-slate-50 rounded-xl border-2 border-dashed border-slate-300">
-          <p className="text-slate-500 text-sm">Nessun backtest salvato</p>
+          <p className="text-slate-500 text-sm">{t('savedBacktests.emptyState.title')}</p>
           <p className="text-slate-400 text-xs mt-2">
-            Esegui un backtest e salvalo per confrontarlo con altri
+            {t('savedBacktests.emptyState.subtitle')}
           </p>
         </div>
       ) : (
@@ -108,7 +111,7 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
                     className={`text-2xl hover:scale-110 transition-all flex-shrink-0 ${
                       backtest.isFavorite ? 'text-yellow-400' : 'text-slate-300'
                     }`}
-                    title={backtest.isFavorite ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}
+                    title={backtest.isFavorite ? t('savedBacktests.actions.removeFromFavorites') : t('savedBacktests.actions.addToFavorites')}
                   >
                     ★
                   </button>
@@ -147,7 +150,7 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
                       <button
                         onClick={() => handleRenameStart(backtest.id, backtest.name)}
                         className="p-1 hover:bg-slate-100 text-slate-400 hover:text-slate-600 rounded transition-colors flex-shrink-0"
-                        title="Rinomina"
+                        title={t('savedBacktests.actions.rename')}
                       >
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -183,7 +186,7 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
                 {/* Colonna 4: INVESTITO */}
                 <div className="text-center border-l border-slate-200 pl-3">
                   <div className="text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">
-                    Investito
+                    {t('app:savedBacktests.columns.invested')}
                   </div>
                   <div className="text-xl font-bold text-slate-900">
                     {formatCurrency(backtest.result.metrics.totalInvested)}
@@ -193,7 +196,7 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
                 {/* Colonna 5: VALORE FINALE */}
                 <div className="text-center border-l border-slate-200 pl-3">
                   <div className="text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">
-                    Val. Finale
+                    {t('app:savedBacktests.columns.finalValue')}
                   </div>
                   <div className="text-xl font-bold text-slate-900">
                     {formatCurrency(backtest.result.metrics.finalValue)}
@@ -203,7 +206,7 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
                 {/* Colonna 6: RENDIMENTO */}
                 <div className="text-center border-l border-slate-200 pl-3">
                   <div className="text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">
-                    Rendimento
+                    {t('app:savedBacktests.columns.return')}
                   </div>
                   <div className={`text-xl font-bold ${getValueColor(backtest.result.metrics.totalReturn)}`}>
                     {formatPercentage(backtest.result.metrics.totalReturn)}
@@ -213,7 +216,7 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
                 {/* Colonna 7: DRAWDOWN */}
                 <div className="text-center border-l border-slate-200 pl-3">
                   <div className="text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">
-                    Drawdown
+                    {t('app:savedBacktests.columns.drawdown')}
                   </div>
                   <div className={`text-xl font-bold ${getValueColor(backtest.result.metrics.maxDrawdown)}`}>
                     {formatPercentage(backtest.result.metrics.maxDrawdown)}
@@ -223,7 +226,7 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
                 {/* Colonna 8: CHECKBOX CONFRONTA (allineato con metriche) */}
                 <div className="text-center border-l border-slate-200 pl-3">
                   <div className="text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">
-                    Confronta
+                    {t('savedBacktests.actions.compare')}
                   </div>
                   <input
                     type="checkbox"
@@ -235,19 +238,25 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
                   />
                 </div>
 
-                {/* Colonna 9: AZIONI (Visualizza ed Elimina affiancati) */}
+                {/* Colonna 9: AZIONI (Visualizza, Ribilancia ed Elimina affiancati) */}
                 <div className="flex items-center gap-2 border-l border-slate-200 pl-3">
                   <button
                     onClick={() => onViewBacktest(backtest)}
                     className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold transition-colors whitespace-nowrap"
                   >
-                    Visualizza
+                    {t('savedBacktests.actions.view')}
+                  </button>
+                  <button
+                    onClick={() => onRebalance(backtest)}
+                    className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs font-semibold transition-colors whitespace-nowrap"
+                  >
+                    {t('savedBacktests.actions.rebalance')}
                   </button>
                   <button
                     onClick={() => handleDeleteClick(backtest.id, backtest.name)}
                     className="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap"
                   >
-                    Elimina
+                    {t('savedBacktests.actions.delete')}
                   </button>
                 </div>
               </div>
@@ -263,7 +272,7 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
                       className={`text-2xl hover:scale-110 transition-all flex-shrink-0 ${
                         backtest.isFavorite ? 'text-yellow-400' : 'text-slate-300'
                       }`}
-                      title={backtest.isFavorite ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}
+                      title={backtest.isFavorite ? t('savedBacktests.actions.removeFromFavorites') : t('savedBacktests.actions.addToFavorites')}
                     >
                       ★
                     </button>
@@ -300,7 +309,7 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
                           <button
                             onClick={() => handleRenameStart(backtest.id, backtest.name)}
                             className="p-1 hover:bg-slate-100 text-slate-400 hover:text-slate-600 rounded transition-colors flex-shrink-0"
-                            title="Rinomina"
+                            title={t('savedBacktests.actions.rename')}
                           >
                             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -324,7 +333,7 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
                   {/* Checkbox Confronta */}
                   <div className="flex flex-col items-center gap-1.5 flex-shrink-0">
                     <div className="text-xs font-bold text-slate-600 uppercase tracking-wide">
-                      Confronta
+                      {t('savedBacktests.actions.compare')}
                     </div>
                     <input
                       type="checkbox"
@@ -353,7 +362,7 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center">
                     <div className="text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">
-                      Investito
+                      {t('app:savedBacktests.columns.invested')}
                     </div>
                     <div className="text-base font-bold text-slate-900">
                       {formatCurrency(backtest.result.metrics.totalInvested)}
@@ -362,7 +371,7 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
 
                   <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center">
                     <div className="text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">
-                      Val. Finale
+                      {t('app:savedBacktests.columns.finalValue')}
                     </div>
                     <div className="text-base font-bold text-slate-900">
                       {formatCurrency(backtest.result.metrics.finalValue)}
@@ -371,7 +380,7 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
 
                   <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center">
                     <div className="text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">
-                      Rendimento
+                      {t('app:savedBacktests.columns.return')}
                     </div>
                     <div className={`text-base font-bold ${getValueColor(backtest.result.metrics.totalReturn)}`}>
                       {formatPercentage(backtest.result.metrics.totalReturn)}
@@ -380,7 +389,7 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
 
                   <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center">
                     <div className="text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">
-                      Drawdown
+                      {t('app:savedBacktests.columns.drawdown')}
                     </div>
                     <div className={`text-base font-bold ${getValueColor(backtest.result.metrics.maxDrawdown)}`}>
                       {formatPercentage(backtest.result.metrics.maxDrawdown)}
@@ -389,18 +398,26 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
                 </div>
 
                 {/* Azioni */}
-                <div className="flex gap-2 pt-2 border-t border-slate-200">
-                  <button
-                    onClick={() => onViewBacktest(backtest)}
-                    className="flex-1 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition-colors"
-                  >
-                    Visualizza
-                  </button>
+                <div className="flex flex-col gap-2 pt-2 border-t border-slate-200">
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => onViewBacktest(backtest)}
+                      className="flex-1 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition-colors"
+                    >
+                      {t('savedBacktests.actions.view')}
+                    </button>
+                    <button
+                      onClick={() => onRebalance(backtest)}
+                      className="flex-1 px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-semibold transition-colors"
+                    >
+                      {t('savedBacktests.actions.rebalance')}
+                    </button>
+                  </div>
                   <button
                     onClick={() => handleDeleteClick(backtest.id, backtest.name)}
-                    className="flex-1 px-4 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-sm font-semibold transition-colors"
+                    className="w-full px-4 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-sm font-semibold transition-colors"
                   >
-                    Elimina
+                    {t('savedBacktests.actions.delete')}
                   </button>
                 </div>
               </div>
@@ -415,7 +432,7 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
           <div className="bg-white rounded-2xl max-w-md w-full">
             {/* Header */}
             <div className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
-              <h2 className="text-xl font-bold text-slate-900">🗑️ Elimina Backtest</h2>
+              <h2 className="text-xl font-bold text-slate-900">{t('savedBacktests.deleteConfirm.title')}</h2>
               <button
                 onClick={handleDeleteCancel}
                 className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
@@ -438,13 +455,13 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
               {/* Message */}
               <div className="text-center mb-6">
                 <p className="text-slate-900 font-semibold text-lg mb-2">
-                  Sei sicuro di voler eliminare questo backtest?
+                  {t('savedBacktests.deleteConfirm.message', { name: deleteTarget.name })}
                 </p>
                 <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 mb-3">
                   <p className="text-slate-700 font-medium">"{deleteTarget.name}"</p>
                 </div>
                 <p className="text-sm text-red-600 font-medium">
-                  ⚠️ Questa azione è irreversibile
+                  {t('savedBacktests.deleteConfirm.warning')}
                 </p>
               </div>
             </div>
@@ -455,13 +472,13 @@ export function SavedBacktestsList({ onViewBacktest }: Props) {
                 onClick={handleDeleteCancel}
                 className="px-6 py-2.5 border border-slate-300 text-slate-700 rounded-lg font-semibold hover:bg-slate-100 transition-colors"
               >
-                Annulla
+                {t('savedBacktests.deleteConfirm.cancel')}
               </button>
               <button
                 onClick={handleDeleteConfirm}
                 className="px-6 py-2.5 rounded-lg font-semibold transition-colors bg-red-600 text-white hover:bg-red-700"
               >
-                Elimina Definitivamente
+                {t('savedBacktests.deleteConfirm.confirm')}
               </button>
             </div>
           </div>

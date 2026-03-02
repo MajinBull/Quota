@@ -1,0 +1,352 @@
+{
+  "SPY": {
+    "longDescription": "The SPDR S&P 500 ETF Trust was the first ETF listed in the United States and remains one of the world's largest by assets under management. It tracks the S&P 500 index, providing exposure to the 500 largest U.S. companies by market capitalization. It is the preferred instrument for institutional and retail investors seeking diversified exposure to the U.S. stock market with low costs.",
+    "inceptionDate": "January 22, 1993",
+    "aum": "~$500 billion"
+  },
+  "QQQ": {
+    "longDescription": "The Invesco QQQ Trust tracks the Nasdaq-100 index, which includes the 100 largest non-financial companies listed on the Nasdaq. Heavily concentrated in the technology sector with companies like Apple, Microsoft, Amazon, and Meta, it offers targeted exposure to U.S. tech innovation and growth.",
+    "inceptionDate": "March 10, 1999",
+    "aum": "~$200 billion"
+  },
+  "VTI": {
+    "longDescription": "The Vanguard Total Stock Market ETF offers exposure to the entire U.S. stock market, from mega-cap to small-cap. With over 3,500 stocks, it represents approximately 100% of the investable U.S. equity market. Ultra-low fees and broad diversification make it ideal for long-term buy-and-hold strategies.",
+    "inceptionDate": "May 24, 2001",
+    "aum": "~$350 billion"
+  },
+  "VOO": {
+    "longDescription": "The Vanguard S&P 500 ETF tracks the S&P 500 index with extremely low costs. It is a low-cost alternative to SPY, ideal for investors who prioritize tax efficiency and minimal fees. It offers the same S&P 500 performance but with one of the lowest expense ratios on the market.",
+    "inceptionDate": "September 7, 2010",
+    "aum": "~$350 billion"
+  },
+  "IVV": {
+    "longDescription": "The iShares Core S&P 500 ETF is one of the most liquid and traded S&P 500 ETFs in the world. Managed by BlackRock, the world's largest asset manager, it combines very low management costs with high trading volumes. Ideal for institutional and retail investors seeking cost efficiency and ease of trading.",
+    "inceptionDate": "May 15, 2000",
+    "aum": "~$380 billion"
+  },
+  "SPLG": {
+    "longDescription": "The SPDR Portfolio S&P 500 ETF offers S&P 500 exposure with one of the lowest cost ratios available on the market. Part of State Street's Portfolio lineup, it is designed for long-term investors who want to minimize the impact of fees on overall returns.",
+    "inceptionDate": "November 25, 2005",
+    "aum": "~$25 billion"
+  },
+  "DIA": {
+    "longDescription": "The SPDR Dow Jones Industrial Average ETF tracks the Dow Jones Industrial Average, the oldest and most recognized stock market index in the U.S. Composed of 30 selected American blue-chip companies, it offers concentrated exposure to the country's most stable and established industrial and service companies.",
+    "inceptionDate": "January 14, 1998",
+    "aum": "~$30 billion"
+  },
+  "VTV": {
+    "longDescription": "The Vanguard Value ETF focuses on U.S. large-cap value stocks, meaning mature companies with valuations below the market average. Ideal for investors who believe in value investing, historically a strong performer over the long term. It includes companies from the financial, healthcare, and energy sectors.",
+    "inceptionDate": "January 26, 2004",
+    "aum": "~$120 billion"
+  },
+  "IWM": {
+    "longDescription": "The iShares Russell 2000 ETF provides exposure to U.S. small-cap stocks through the Russell 2000 index. With approximately 2,000 small companies, it represents a market segment with high growth potential but also higher volatility. Ideal for diversifying beyond large-caps and capturing innovation in smaller businesses.",
+    "inceptionDate": "May 22, 2000",
+    "aum": "~$60 billion"
+  },
+  "VB": {
+    "longDescription": "The Vanguard Small-Cap ETF tracks the CRSP US Small Cap index, offering broad exposure to small U.S. companies. With very competitive fees, it is ideal for investors who want to benefit from the historical small-cap premium while keeping costs low.",
+    "inceptionDate": "January 26, 2004",
+    "aum": "~$50 billion"
+  },
+  "IJH": {
+    "longDescription": "The iShares Core S&P Mid-Cap ETF tracks the S&P MidCap 400 index, composed of approximately 400 mid-sized companies. Mid-caps offer an interesting balance between the stability of large-caps and the growth potential of small-caps, with intermediate volatility.",
+    "inceptionDate": "May 22, 2000",
+    "aum": "~$80 billion"
+  },
+  "VEA": {
+    "longDescription": "The Vanguard Developed Markets ETF offers exposure to international developed markets excluding the U.S. It includes Europe, Japan, Canada, Australia, and other developed countries. Ideal for geographic diversification and reducing concentration risk on the U.S. market.",
+    "inceptionDate": "July 20, 2007",
+    "aum": "~$120 billion"
+  },
+  "VWO": {
+    "longDescription": "The Vanguard Emerging Markets ETF invests in global emerging markets, including China, India, Brazil, Taiwan, and South Korea. It offers exposure to economic growth in developing countries at low cost, balancing opportunities for higher returns with greater volatility.",
+    "inceptionDate": "March 4, 2005",
+    "aum": "~$90 billion"
+  },
+  "EFA": {
+    "longDescription": "The iShares MSCI EAFE ETF tracks the MSCI EAFE index (Europe, Australasia, Far East), excluding the U.S. and Canada. With a strong presence in Europe and Japan, it is one of the most widely used instruments for international diversification in non-North American developed markets.",
+    "inceptionDate": "August 14, 2001",
+    "aum": "~$70 billion"
+  },
+  "IEFA": {
+    "longDescription": "The iShares Core MSCI EAFE ETF is the low-cost version of EFA, with a significantly lower expense ratio. It offers the same exposure to international developed markets but with greater cost efficiency, ideal for buy-and-hold investors.",
+    "inceptionDate": "October 18, 2012",
+    "aum": "~$110 billion"
+  },
+  "XLK": {
+    "longDescription": "The Technology Select Sector SPDR invests in S&P 500 technology companies, including giants like Apple, Microsoft, and Nvidia. It offers concentrated exposure to the tech sector, with high growth potential but also higher volatility. Ideal for investors optimistic about technological innovation.",
+    "inceptionDate": "December 16, 1998",
+    "aum": "~$55 billion"
+  },
+  "XLE": {
+    "longDescription": "The Energy Select Sector SPDR focuses on the S&P 500 energy sector, including oil, gas, and energy services companies. Used as an inflation hedge and for sector diversification, it benefits from rising energy commodity prices.",
+    "inceptionDate": "December 16, 1998",
+    "aum": "~$35 billion"
+  },
+  "XLF": {
+    "longDescription": "The Financial Select Sector SPDR invests in S&P 500 financial companies, including banks, insurance companies, and investment firms. Sensitive to interest rates, it tends to perform well in rising rate environments. It includes leaders like JPMorgan, Bank of America, and Berkshire Hathaway.",
+    "inceptionDate": "December 16, 1998",
+    "aum": "~$45 billion"
+  },
+  "XLV": {
+    "longDescription": "The Health Care Select Sector SPDR offers exposure to the S&P 500 healthcare sector, including pharmaceuticals, biotechnology, and medical devices. Considered a defensive sector with structural growth linked to aging populations and medical innovation.",
+    "inceptionDate": "December 16, 1998",
+    "aum": "~$40 billion"
+  },
+  "XLI": {
+    "longDescription": "The Industrial Select Sector SPDR invests in S&P 500 industrial companies, including manufacturers, transportation services, and aerospace companies. Cyclical by nature, it tends to perform well during economic expansions and infrastructure projects.",
+    "inceptionDate": "December 16, 1998",
+    "aum": "~$20 billion"
+  },
+  "XLP": {
+    "longDescription": "The Consumer Staples Select Sector SPDR focuses on essential consumer goods companies such as food, beverages, and household products. A defensive sector with stable demand regardless of economic cycles, ideal for reducing portfolio volatility.",
+    "inceptionDate": "December 16, 1998",
+    "aum": "~$18 billion"
+  },
+  "XLY": {
+    "longDescription": "The Consumer Discretionary Select Sector SPDR invests in non-essential consumer goods companies such as retail, automobiles, and entertainment. It includes giants like Amazon and Tesla. A cyclical sector that benefits from economic growth and increased consumer spending.",
+    "inceptionDate": "December 16, 1998",
+    "aum": "~$20 billion"
+  },
+  "BTC-USD": {
+    "longDescription": "Bitcoin is the first and largest cryptocurrency by market capitalization, created by Satoshi Nakamoto. It functions as a decentralized peer-to-peer payment network and a digital store of value. With a fixed maximum supply of 21 million coins, Bitcoin is often called \"digital gold\" for its deflationary properties and role as an inflation hedge.",
+    "inceptionDate": "January 3, 2009",
+    "aum": "Market Cap ~$1.3 trillion"
+  },
+  "ETH-USD": {
+    "longDescription": "Ethereum is a decentralized blockchain platform that enables the creation of smart contracts and decentralized applications (dApps). Created by Vitalik Buterin, it is the foundation for much of decentralized finance (DeFi) and NFTs. Since 2022, it uses the Proof-of-Stake mechanism, drastically reducing energy consumption.",
+    "inceptionDate": "July 30, 2015",
+    "aum": "Market Cap ~$400 billion"
+  },
+  "BNB-USD": {
+    "longDescription": "Binance Coin is the native cryptocurrency of Binance, the world's largest cryptocurrency exchange by volume. BNB is used for trading fee discounts, payments, and as a utility token on Binance Smart Chain. It has multiple use cases within the Binance ecosystem and beyond.",
+    "inceptionDate": "July 2017",
+    "aum": "Market Cap ~$90 billion"
+  },
+  "SOL-USD": {
+    "longDescription": "Solana is a high-performance blockchain designed for decentralized applications and cryptocurrencies. It uses an innovative consensus mechanism called Proof-of-History along with Proof-of-Stake to achieve high transaction speeds (up to 65,000 TPS) with very low fees, making it competitive with traditional networks.",
+    "inceptionDate": "March 2020",
+    "aum": "Market Cap ~$70 billion"
+  },
+  "ADA-USD": {
+    "longDescription": "Cardano is a third-generation Proof-of-Stake blockchain founded by Charles Hoskinson, co-founder of Ethereum. It is distinguished by its academic approach based on peer-reviewed research and formal development. It aims to provide a secure and scalable platform for smart contracts, with a particular focus on sustainability and decentralized governance.",
+    "inceptionDate": "September 2017",
+    "aum": "Market Cap ~$35 billion"
+  },
+  "XRP-USD": {
+    "longDescription": "XRP is the native cryptocurrency of the Ripple payment protocol, designed to facilitate fast and low-cost cross-border payments for financial institutions. Unlike Bitcoin, XRP is not mined and all coins (100 billion) were pre-mined. Ripple Labs works with global banks and payment providers to modernize international money transfers.",
+    "inceptionDate": "2012",
+    "aum": "Market Cap ~$120 billion"
+  },
+  "DOGE-USD": {
+    "longDescription": "Dogecoin was born as a meme cryptocurrency based on the popular \"Doge\" meme featuring a Shiba Inu dog. Despite its humorous origins, it has developed a strong community and is used for micropayments and online tipping. It gained mainstream notoriety thanks to support from personalities like Elon Musk and has controlled inflation with no maximum supply limit.",
+    "inceptionDate": "December 2013",
+    "aum": "Market Cap ~$25 billion"
+  },
+  "TRX-USD": {
+    "longDescription": "TRON is a decentralized blockchain founded by Justin Sun, focused on digital entertainment and content sharing. It aims to build a free global content entertainment system using blockchain technology. TRON supports smart contracts, dApps, and acquired BitTorrent to expand its ecosystem.",
+    "inceptionDate": "September 2017",
+    "aum": "Market Cap ~$15 billion"
+  },
+  "AVAX-USD": {
+    "longDescription": "Avalanche is a Layer 1 blockchain platform designed for high-speed, low-cost smart contracts. It uses a unique consensus mechanism that enables sub-second transaction finality. Avalanche is compatible with the Ethereum Virtual Machine (EVM), facilitating dApp migration from Ethereum, and positions itself as a scalable alternative for DeFi and enterprise applications.",
+    "inceptionDate": "September 2020",
+    "aum": "Market Cap ~$14 billion"
+  },
+  "MATIC-USD": {
+    "longDescription": "Polygon (formerly Matic Network) is a Layer 2 scaling solution for Ethereum that offers faster and cheaper transactions. It provides a framework for building and connecting Ethereum-compatible blockchain networks. Polygon is widely adopted for DeFi, gaming, and NFT applications thanks to its low fees and high throughput.",
+    "inceptionDate": "October 2017",
+    "aum": "Market Cap ~$8 billion"
+  },
+  "LINK-USD": {
+    "longDescription": "Chainlink is a decentralized oracle network that enables smart contracts on blockchains to securely access real-world data, external APIs, and payment systems. It solves the \"oracle problem\" by connecting blockchains with off-chain data. It is fundamental for many DeFi applications that require reliable price feeds and other external data.",
+    "inceptionDate": "September 2017",
+    "aum": "Market Cap ~$16 billion"
+  },
+  "DOT-USD": {
+    "longDescription": "Polkadot is a multi-chain protocol that allows different blockchains to transfer messages and value in a trust-free manner, sharing unique security features. Founded by Gavin Wood, co-founder of Ethereum, Polkadot aims to facilitate a decentralized web (Web3) by connecting public and private blockchains. It uses a parachain system for scalability and interoperability.",
+    "inceptionDate": "May 2020",
+    "aum": "Market Cap ~$9 billion"
+  },
+  "ATOM-USD": {
+    "longDescription": "Cosmos calls itself the \"Internet of blockchains,\" providing an ecosystem of interconnected blockchains. It uses the Inter-Blockchain Communication (IBC) protocol to allow different blockchains to communicate and transfer assets. Cosmos SDK makes it easy for developers to build custom blockchains, and the Cosmos hub coordinates interoperability among all connected zones.",
+    "inceptionDate": "March 2019",
+    "aum": "Market Cap ~$4 billion"
+  },
+  "GLD": {
+    "longDescription": "SPDR Gold Shares is the world's largest gold ETF, with physical reserves of gold bullion stored in secure vaults. Each share represents approximately 1/10 of an ounce of gold. It is a popular instrument for hedging against inflation, geopolitical instability, and stock market volatility, offering direct exposure to the gold price without the need for physical custody.",
+    "inceptionDate": "November 18, 2004",
+    "aum": "~$60 billion"
+  },
+  "SLV": {
+    "longDescription": "The iShares Silver Trust offers exposure to the price of physical silver through deposited silver reserves. Silver has significant industrial uses beyond its role as a precious metal, making it sensitive to both safe-haven demand and economic cycles. Often used as a more volatile and accessible alternative to gold.",
+    "inceptionDate": "April 21, 2006",
+    "aum": "~$12 billion"
+  },
+  "PPLT": {
+    "longDescription": "The Aberdeen Platinum Shares ETF invests in physical platinum. Platinum is a rare precious metal used primarily in the automotive industry for catalytic converters, jewelry, and industrial applications. Its price is influenced by industrial demand, making this ETF interesting for diversification in precious metals with unique characteristics.",
+    "inceptionDate": "January 8, 2010",
+    "aum": "~$1 billion"
+  },
+  "PALL": {
+    "longDescription": "The Aberdeen Palladium Shares ETF holds physical palladium. Palladium is a platinum group metal used primarily in catalytic converters for gasoline automobiles. Rarer than platinum, it has seen growing demand with tightening emissions regulations. It offers exposure to a critical industrial metal with limited supply.",
+    "inceptionDate": "January 8, 2010",
+    "aum": "~$300 million"
+  },
+  "IAU": {
+    "longDescription": "The iShares Gold Trust is a low-cost alternative to GLD for investing in physical gold. With a lower expense ratio and the same direct gold exposure through physical reserves, it is ideal for investors who want inflation protection and diversification while keeping costs to a minimum.",
+    "inceptionDate": "January 21, 2005",
+    "aum": "~$30 billion"
+  },
+  "COPX": {
+    "longDescription": "The Global X Copper Miners ETF invests in global copper mining companies. Copper is a fundamental industrial metal for electrification, renewable energy, and infrastructure. With the energy transition and adoption of electric vehicles, copper demand is expected to grow strongly, making this ETF interesting for thematic investors in the green economy.",
+    "inceptionDate": "April 28, 2010",
+    "aum": "~$1.5 billion"
+  },
+  "CPER": {
+    "longDescription": "The United States Copper Index Fund offers exposure to copper futures, directly tracking the metal's price. Unlike COPX which invests in mining companies, CPER offers pure commodity exposure. Copper is considered a key economic indicator thanks to its multiple industrial uses.",
+    "inceptionDate": "November 28, 2011",
+    "aum": "~$100 million"
+  },
+  "USO": {
+    "longDescription": "The United States Oil Fund tracks the price of WTI (West Texas Intermediate) crude oil through futures contracts. It offers retail investors a way to gain exposure to oil prices without direct futures contracts. Used for speculation on energy prices or as a hedge against rising energy costs, but subject to contango and backwardation.",
+    "inceptionDate": "April 10, 2006",
+    "aum": "~$2 billion"
+  },
+  "UNG": {
+    "longDescription": "The United States Natural Gas Fund offers exposure to natural gas prices through futures. Natural gas is a volatile energy commodity influenced by seasonal, weather, and geopolitical factors. Used as fuel for electricity and heating, it is considered a transition source toward renewable energy.",
+    "inceptionDate": "April 18, 2007",
+    "aum": "~$800 million"
+  },
+  "DBA": {
+    "longDescription": "The Invesco DB Agriculture Fund invests in a basket of agricultural commodity futures including corn, wheat, soybeans, and sugar. It offers diversified exposure to the agricultural sector, used as a hedge against food inflation and for portfolio diversification. Agricultural prices are influenced by weather, global demand, and trade policies.",
+    "inceptionDate": "January 5, 2007",
+    "aum": "~$600 million"
+  },
+  "CORN": {
+    "longDescription": "The Teucrium Corn Fund tracks corn prices through futures contracts. Corn is one of the most important agricultural commodities, used for human food, animal feed, ethanol, and industrial applications. Investing in corn offers exposure to demographic trends and global food demand.",
+    "inceptionDate": "June 9, 2010",
+    "aum": "~$150 million"
+  },
+  "DBC": {
+    "longDescription": "The Invesco DB Commodity Index Tracking Fund offers diversified exposure to a basket of commodities including energy, precious metals, industrial metals, and agriculture. Used as an inflation hedge and for diversification beyond stocks and bonds. Commodities have historically had low correlation with traditional financial assets.",
+    "inceptionDate": "February 3, 2006",
+    "aum": "~$1.5 billion"
+  },
+  "AGG": {
+    "longDescription": "The iShares Core US Aggregate Bond ETF tracks the Bloomberg US Aggregate Bond index, representing the entire U.S. investment-grade bond market. It includes treasury, corporate, mortgage-backed, and asset-backed securities. It is the most popular core bond holding for diversified portfolios, offering balanced fixed-income exposure at very low costs.",
+    "inceptionDate": "September 22, 2003",
+    "aum": "~$100 billion"
+  },
+  "BND": {
+    "longDescription": "The Vanguard Total Bond Market ETF offers exposure to the entire U.S. investment-grade bond market. Similar to AGG but managed by Vanguard, it is ideal for buy-and-hold investors seeking stable income, capital preservation, and diversification from equities. It includes thousands of bonds with an average duration of about 6-7 years.",
+    "inceptionDate": "April 3, 2007",
+    "aum": "~$95 billion"
+  },
+  "VTEB": {
+    "longDescription": "The Vanguard Tax-Exempt Bond ETF invests in municipal bonds (muni bonds) issued by U.S. states, cities, and local governments. Interest is exempt from federal taxes and, in some cases, state taxes. Ideal for investors in high tax brackets seeking tax-efficient income, offering competitive after-tax returns despite lower nominal yields.",
+    "inceptionDate": "August 21, 2015",
+    "aum": "~$12 billion"
+  },
+  "TLT": {
+    "longDescription": "The iShares 20+ Year Treasury Bond ETF invests in U.S. treasury bonds with maturities over 20 years. High duration means high interest rate sensitivity: it appreciates significantly when rates fall and vice versa. Used as a deflationary hedge, for rate speculation, or as a defensive component in risk-parity portfolios.",
+    "inceptionDate": "July 22, 2002",
+    "aum": "~$50 billion"
+  },
+  "TIP": {
+    "longDescription": "The iShares TIPS Bond ETF invests in Treasury Inflation-Protected Securities, U.S. government bonds whose principal value adjusts with CPI inflation. They offer direct inflation protection, making this ETF ideal for preserving purchasing power. Particularly useful in environments of rising or uncertain inflation.",
+    "inceptionDate": "December 4, 2003",
+    "aum": "~$40 billion"
+  },
+  "SHY": {
+    "longDescription": "The iShares 1-3 Year Treasury Bond ETF invests in short-term U.S. treasury bonds with 1-3 year maturities. Low duration means low volatility and minimal interest rate risk. Ideal for parking cash with yields slightly higher than money markets, or as a conservative component to balance riskier portfolios.",
+    "inceptionDate": "July 22, 2002",
+    "aum": "~$25 billion"
+  },
+  "IEF": {
+    "longDescription": "The iShares 7-10 Year Treasury Bond ETF invests in intermediate-duration treasury bonds. It offers a balance between yield and rate sensitivity, positioning itself in the middle of the yield curve. Used as a core bond allocation for investors seeking moderate returns with controlled volatility.",
+    "inceptionDate": "July 22, 2002",
+    "aum": "~$30 billion"
+  },
+  "VGIT": {
+    "longDescription": "The Vanguard Intermediate-Term Treasury ETF covers treasury bonds with 3-10 year maturities. With ultra-low costs and exposure to the intermediate part of the curve, it is ideal for investors seeking stable income with medium duration. It offers flight-to-quality protection during market stress while maintaining reasonable yields.",
+    "inceptionDate": "November 21, 2009",
+    "aum": "~$25 billion"
+  },
+  "VGLT": {
+    "longDescription": "The Vanguard Long-Term Treasury ETF invests in treasury bonds with maturities over 10 years. High duration means higher volatility but also greater appreciation potential when rates fall. Used for defensive strategies, rate speculation, or as long-duration balancing for risk-parity portfolios.",
+    "inceptionDate": "November 21, 2009",
+    "aum": "~$10 billion"
+  },
+  "LQD": {
+    "longDescription": "The iShares iBoxx Investment Grade Corporate Bond ETF invests in U.S. investment-grade corporate bonds. It offers yields higher than treasuries in exchange for moderate credit risk. It includes bonds from large companies with BBB or higher ratings. Ideal for investors seeking extra income over government bonds while maintaining solid credit quality.",
+    "inceptionDate": "July 22, 2002",
+    "aum": "~$40 billion"
+  },
+  "HYG": {
+    "longDescription": "The iShares iBoxx High Yield Corporate Bond ETF invests in high-yield corporate bonds (junk bonds) with ratings below investment-grade. It offers high yields in exchange for higher default risk. More correlated with stocks than treasuries, it is used for high income and diversification, but with significant volatility.",
+    "inceptionDate": "April 4, 2007",
+    "aum": "~$20 billion"
+  },
+  "VCSH": {
+    "longDescription": "The Vanguard Short-Term Corporate Bond ETF invests in short-term investment-grade corporate bonds (1-5 years). It offers yields higher than short-term treasuries with low duration and contained rate risk. Ideal for conservative investors seeking slightly higher income than short government bonds with limited credit risk.",
+    "inceptionDate": "November 20, 2009",
+    "aum": "~$50 billion"
+  },
+  "VCIT": {
+    "longDescription": "The Vanguard Intermediate-Term Corporate Bond ETF invests in investment-grade corporate bonds with 5-10 year maturities. It balances yield higher than treasuries with medium duration and controlled credit risk. Used as a core corporate holding for investors seeking stable income with moderate volatility.",
+    "inceptionDate": "November 21, 2009",
+    "aum": "~$50 billion"
+  },
+  "BNDX": {
+    "longDescription": "The Vanguard Total International Bond ETF invests in non-U.S. investment-grade bonds hedged to the dollar. It offers geographic diversification in fixed income, including government and corporate bonds from developed markets like Europe, Japan, and Canada. Ideal for investors seeking global bond diversification without currency exposure.",
+    "inceptionDate": "May 31, 2013",
+    "aum": "~$90 billion"
+  },
+  "EMB": {
+    "longDescription": "The iShares J.P. Morgan USD Emerging Markets Bond ETF invests in government and corporate bonds from emerging markets denominated in U.S. dollars. It offers yields higher than developed market bonds in exchange for greater political, economic, and credit risk. It includes countries like Mexico, Brazil, Indonesia, and Saudi Arabia.",
+    "inceptionDate": "December 17, 2007",
+    "aum": "~$18 billion"
+  },
+  "VNQ": {
+    "longDescription": "The Vanguard Real Estate ETF invests in U.S. REITs (Real Estate Investment Trusts), offering diversified exposure to the real estate sector. It includes residential, commercial, industrial, healthcare properties, and data centers. REITs distribute at least 90% of profits as dividends, making VNQ attractive for income. It offers diversification and potential inflation protection.",
+    "inceptionDate": "September 23, 2004",
+    "aum": "~$40 billion"
+  },
+  "IYR": {
+    "longDescription": "The iShares US Real Estate ETF invests in the U.S. real estate sector, primarily REITs. It offers exposure to various property types including malls, offices, apartments, and specialized facilities. With a long track record, it is an established instrument for accessing the real estate market without direct property ownership.",
+    "inceptionDate": "June 12, 2000",
+    "aum": "~$5 billion"
+  },
+  "XLRE": {
+    "longDescription": "The Real Estate Select Sector SPDR Fund invests in S&P 500 real estate companies, primarily REITs. As part of the Select Sector SPDR series, it offers targeted exposure to the real estate sector of the largest U.S. companies. It includes industry leaders with high market capitalizations and established track records.",
+    "inceptionDate": "October 7, 2015",
+    "aum": "~$5 billion"
+  },
+  "SCHH": {
+    "longDescription": "The Schwab US REIT ETF offers exposure to U.S. REITs with one of the lowest cost ratios in the sector. Ideal for buy-and-hold investors seeking real estate diversification and dividend income with maximized cost efficiency. It includes a broad spectrum of property types and U.S. geographies.",
+    "inceptionDate": "January 12, 2011",
+    "aum": "~$7 billion"
+  },
+  "USRT": {
+    "longDescription": "The iShares Core US REIT ETF is a low-cost option for exposure to U.S. REITs. Part of the iShares Core series, it combines broad diversification with competitive fees. Suitable as a core real estate holding for diversified portfolios seeking income and long-term capital appreciation.",
+    "inceptionDate": "September 9, 2008",
+    "aum": "~$2 billion"
+  },
+  "RWO": {
+    "longDescription": "The SPDR Dow Jones Global Real Estate ETF offers exposure to the global real estate market, including the U.S. and international markets. It enables geographic diversification in the real estate sector, benefiting from real estate dynamics in different economies. It includes REITs and real estate companies from developed and emerging markets.",
+    "inceptionDate": "May 26, 2008",
+    "aum": "~$500 million"
+  },
+  "VNQI": {
+    "longDescription": "The Vanguard Global ex-US Real Estate ETF invests in international REITs and real estate companies excluding the U.S. It offers exposure to developed real estate markets like Japan, UK, Australia, and Europe. Ideal for geographic diversification in the real estate sector, capturing opportunities in markets with different demographics and regulations than the U.S.",
+    "inceptionDate": "November 1, 2010",
+    "aum": "~$5 billion"
+  },
+  "IFGL": {
+    "longDescription": "The iShares International Developed Real Estate ETF focuses on developed real estate markets outside the U.S. It includes REITs and real estate companies from countries like Japan, Hong Kong, Singapore, UK, and Australia. It offers access to mature real estate markets with different characteristics from the U.S. market, useful for global real estate portfolio diversification.",
+    "inceptionDate": "October 31, 2007",
+    "aum": "~$1.5 billion"
+  }
+}

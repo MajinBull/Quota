@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://quota-ochre.vercel.app/sitemap.xml
+
+# Disallow admin/private routes if any
+Disallow: /api/

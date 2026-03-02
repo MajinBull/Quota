@@ -1,4 +1,5 @@
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import {
   LineChart,
   Line,
@@ -160,6 +161,7 @@ function getWinnerIndex(metric: string, backtests: SavedBacktest[]): number {
 }
 
 export function ComparisonView({ backtests, onClose }: Props) {
+  const { t } = useTranslation(['app', 'common']);
   const mergedData = mergeEquityCurvesWithDates(backtests);
 
   const modalContent = (
@@ -167,7 +169,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
       <div className="bg-white rounded-2xl w-full max-w-7xl max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between rounded-t-2xl z-10">
-          <h2 className="text-2xl font-bold text-slate-900">📊 Confronto Backtest</h2>
+          <h2 className="text-2xl font-bold text-slate-900">{t('app:comparison.title')}</h2>
           <button
             onClick={onClose}
             className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
@@ -183,15 +185,15 @@ export function ComparisonView({ backtests, onClose }: Props) {
           {/* METRICHE A CONFRONTO */}
           <div>
             <h3 className="text-lg font-bold text-slate-900 uppercase tracking-wide text-sm mb-3">
-              📊 Metriche a Confronto
+              {t('app:comparison.metricsTitle')}
             </h3>
-            <p className="text-xs text-slate-500 mb-3 md:hidden">Scorri lateralmente per vedere tutti i portfolio →</p>
+            <p className="text-xs text-slate-500 mb-3 md:hidden">{t('app:comparison.scrollHint')}</p>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-slate-200 border border-slate-200 rounded-xl">
                 <thead className="bg-slate-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-semibold text-slate-700 uppercase">
-                      Metrica
+                      {t('app:comparison.metricColumn')}
                     </th>
                     {backtests.map(bt => (
                       <th key={bt.id} className="px-6 py-3 text-left text-xs font-semibold text-slate-700 uppercase">
@@ -204,7 +206,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
                   {/* Rendimento Totale */}
                   <tr>
                     <td className="px-6 py-4 text-sm font-medium text-slate-900">
-                      Rendimento Totale
+                      {t('app:comparison.metrics.totalReturn')}
                     </td>
                     {backtests.map((bt, index) => {
                       const isWinner = index === getWinnerIndex('totalReturn', backtests);
@@ -225,7 +227,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
                   {/* Media Annua */}
                   <tr>
                     <td className="px-6 py-4 text-sm font-medium text-slate-900">
-                      Media Annua
+                      {t('app:comparison.metrics.averageAnnualReturn')}
                     </td>
                     {backtests.map((bt, index) => {
                       const isWinner = index === getWinnerIndex('averageAnnualReturn', backtests);
@@ -246,7 +248,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
                   {/* Max Drawdown */}
                   <tr>
                     <td className="px-6 py-4 text-sm font-medium text-slate-900">
-                      Max Drawdown
+                      {t('app:comparison.metrics.maxDrawdown')}
                     </td>
                     {backtests.map((bt, index) => {
                       const isWinner = index === getWinnerIndex('maxDrawdown', backtests);
@@ -267,7 +269,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
                   {/* Valore Finale */}
                   <tr>
                     <td className="px-6 py-4 text-sm font-medium text-slate-900">
-                      Valore Finale
+                      {t('app:comparison.metrics.finalValue')}
                     </td>
                     {backtests.map((bt, index) => {
                       const isWinner = index === getWinnerIndex('finalValue', backtests);
@@ -288,7 +290,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
                   {/* Best Asset */}
                   <tr>
                     <td className="px-6 py-4 text-sm font-medium text-slate-900">
-                      Best Asset
+                      {t('app:comparison.metrics.bestAsset')}
                     </td>
                     {backtests.map(bt => (
                       <td key={bt.id} className="px-6 py-4 text-sm text-slate-600">
@@ -306,7 +308,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
           {/* CRESCITA NORMALIZZATA */}
           <div>
             <h3 className="text-lg font-bold text-slate-900 uppercase tracking-wide text-sm mb-4">
-              📈 Crescita Normalizzata (Base 100)
+              {t('app:comparison.growthTitle')}
             </h3>
             <div className="bg-white border border-slate-200 rounded-xl p-6">
               <ResponsiveContainer width="100%" height={400}>
@@ -318,11 +320,11 @@ export function ComparisonView({ backtests, onClose }: Props) {
                     interval="preserveStartEnd"
                   />
                   <YAxis
-                    label={{ value: 'Valore (Base 100)', angle: -90, position: 'insideLeft' }}
+                    label={{ value: t('app:comparison.growthAxisLabel'), angle: -90, position: 'insideLeft' }}
                     tick={{ fontSize: 12 }}
                   />
                   <Tooltip
-                    labelFormatter={(label) => `Data: ${label}`}
+                    labelFormatter={(label) => `${t('app:comparison.growthTooltipDate')} ${label}`}
                     formatter={(value) => value !== undefined ? (value as number).toFixed(2) : '-'}
                   />
                   <Legend />
@@ -347,7 +349,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
           {/* ALLOCAZIONI */}
           <div>
             <h3 className="text-lg font-bold text-slate-900 uppercase tracking-wide text-sm mb-4">
-              🥧 Allocazioni
+              {t('app:comparison.allocationsTitle')}
             </h3>
             <div className={`grid grid-cols-1 ${backtests.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
               {backtests.map((backtest) => {
@@ -407,7 +409,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
           {/* CONFIGURAZIONI */}
           <div>
             <h3 className="text-lg font-bold text-slate-900 uppercase tracking-wide text-sm mb-4">
-              📋 Configurazioni
+              {t('app:comparison.configurationsTitle')}
             </h3>
             <div className={`grid grid-cols-1 ${backtests.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
               {backtests.map(backtest => (
@@ -416,31 +418,31 @@ export function ComparisonView({ backtests, onClose }: Props) {
 
                   <div className="space-y-3 text-sm">
                     <div>
-                      <span className="font-semibold text-slate-600">Strategia:</span>
+                      <span className="font-semibold text-slate-600">{t('app:comparison.config.strategy')}</span>
                       <p className="text-slate-900">
-                        {backtest.portfolio.investmentStrategy === 'lump_sum' ? 'Lump Sum' : 'PAC'}
+                        {backtest.portfolio.investmentStrategy === 'lump_sum' ? t('app:strategy.lumpSum.name') : t('app:strategy.pac.name')}
                       </p>
                     </div>
 
                     <div>
-                      <span className="font-semibold text-slate-600">Capitale:</span>
+                      <span className="font-semibold text-slate-600">{t('app:comparison.config.capital')}</span>
                       <p className="text-slate-900">
                         {formatCurrency(backtest.portfolio.initialCapital)}
                         {backtest.portfolio.investmentStrategy === 'pac' && backtest.portfolio.pacAmount && (
                           <span className="block text-xs mt-1">
-                            +{formatCurrency(backtest.portfolio.pacAmount)}/mese
+                            +{formatCurrency(backtest.portfolio.pacAmount)}{t('app:comparison.config.perMonth')}
                           </span>
                         )}
                       </p>
                     </div>
 
                     <div>
-                      <span className="font-semibold text-slate-600">Rebalance:</span>
+                      <span className="font-semibold text-slate-600">{t('app:comparison.config.rebalance')}</span>
                       <p className="text-slate-900 capitalize">{backtest.portfolio.rebalanceFrequency}</p>
                     </div>
 
                     <div>
-                      <span className="font-semibold text-slate-600">Periodo:</span>
+                      <span className="font-semibold text-slate-600">{t('app:comparison.config.period')}</span>
                       <p className="text-slate-900 text-xs">
                         {formatDate(backtest.result.startDate)}
                         <br />

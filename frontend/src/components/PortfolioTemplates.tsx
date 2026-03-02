@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { usePortfolioStore } from '../stores/portfolioStore';
 import type { PortfolioAllocation } from '../types';
 
@@ -13,10 +14,10 @@ interface Props {
   onTemplateSelect?: () => void;
 }
 
-const TEMPLATES: Template[] = [
+const TEMPLATE_DATA: Template[] = [
   {
-    name: 'Conservativo',
-    description: 'Basso rischio, focus su stabilità e protezione del capitale',
+    name: '', // Will be replaced by translation
+    description: '', // Will be replaced by translation
     risk: 'low',
     color: 'bg-blue-500',
     allocations: [
@@ -27,8 +28,8 @@ const TEMPLATES: Template[] = [
     ]
   },
   {
-    name: 'Bilanciato',
-    description: 'Mix equilibrato tra crescita e sicurezza',
+    name: '', // Will be replaced by translation
+    description: '', // Will be replaced by translation
     risk: 'medium',
     color: 'bg-yellow-500',
     allocations: [
@@ -40,8 +41,8 @@ const TEMPLATES: Template[] = [
     ]
   },
   {
-    name: 'Aggressivo',
-    description: 'Alto rischio, alto potenziale rendimento',
+    name: '', // Will be replaced by translation
+    description: '', // Will be replaced by translation
     risk: 'high',
     color: 'bg-red-500',
     allocations: [
@@ -54,14 +55,22 @@ const TEMPLATES: Template[] = [
   }
 ];
 
-const RISK_LABELS = {
-  low: { label: 'Basso Rischio', icon: '🛡️' },
-  medium: { label: 'Medio Rischio', icon: '⚖️' },
-  high: { label: 'Alto Rischio', icon: '🚀' }
+const RISK_ICONS = {
+  low: '🛡️',
+  medium: '⚖️',
+  high: '🚀'
 };
 
 export function PortfolioTemplates({ onTemplateSelect }: Props) {
+  const { t } = useTranslation('app');
   const { portfolio, updateMultipleAllocations } = usePortfolioStore();
+
+  const templates = t('templates.list', { returnObjects: true }) as Array<{ name: string; description: string }>;
+  const riskLabels = {
+    low: t('templates.risk.low'),
+    medium: t('templates.risk.medium'),
+    high: t('templates.risk.high')
+  };
 
   const loadTemplate = (template: Template) => {
     // Sostituisce SOLO le allocazioni, mantenendo tutti gli altri parametri
@@ -77,37 +86,39 @@ export function PortfolioTemplates({ onTemplateSelect }: Props) {
   return (
     <div>
       <p className="text-slate-600 mb-6">
-        Inizia rapidamente con un portfolio preconfigurato e personalizzalo secondo le tue esigenze
+        {t('templates.description')}
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {TEMPLATES.map((template) => {
-          const riskInfo = RISK_LABELS[template.risk];
+        {TEMPLATE_DATA.map((template, index) => {
+          const translatedTemplate = templates[index];
+          const riskLabel = riskLabels[template.risk];
+          const riskIcon = RISK_ICONS[template.risk];
 
           return (
             <div
-              key={template.name}
+              key={index}
               className="group bg-white border border-slate-200 rounded-2xl p-6 hover:border-indigo-300 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-200"
             >
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h3 className="font-semibold text-lg text-slate-900 mb-1">
-                    {template.name}
+                    {translatedTemplate.name}
                   </h3>
                   <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 bg-slate-100 px-2.5 py-1 rounded-full">
-                    {riskInfo.icon}
-                    <span>{riskInfo.label}</span>
+                    {riskIcon}
+                    <span>{riskLabel}</span>
                   </span>
                 </div>
               </div>
 
               <p className="text-sm text-slate-600 mb-4 leading-relaxed">
-                {template.description}
+                {translatedTemplate.description}
               </p>
 
               <div className="mb-5">
                 <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">
-                  Composizione
+                  {t('templates.composition', 'Composizione')}
                 </div>
                 <div className="space-y-2">
                   {template.allocations.map((alloc) => (
@@ -126,7 +137,7 @@ export function PortfolioTemplates({ onTemplateSelect }: Props) {
                 onClick={() => loadTemplate(template)}
                 className="w-full bg-slate-900 text-white py-2.5 px-4 rounded-xl hover:bg-indigo-600 transition-all duration-200 font-medium text-sm group-hover:shadow-md"
               >
-                Usa Template
+                {t('templates.loadButton')}
               </button>
             </div>
           );
@@ -139,10 +150,10 @@ export function PortfolioTemplates({ onTemplateSelect }: Props) {
             <span className="text-lg">💡</span>
             <div className="flex-1">
               <p className="text-sm text-amber-900 font-medium">
-                Portfolio già configurato
+                {t('templates.warning.title', 'Portfolio già configurato')}
               </p>
               <p className="text-xs text-amber-700 mt-1">
-                Caricando un template sostituirai solo gli asset del portfolio. Le altre impostazioni (capitale, ribilanciamento, ecc.) verranno mantenute.
+                {t('templates.warning.message', 'Caricando un template sostituirai solo gli asset del portfolio. Le altre impostazioni (capitale, ribilanciamento, ecc.) verranno mantenute.')}
               </p>
             </div>
           </div>

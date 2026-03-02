@@ -11,6 +11,7 @@ import {
   Pie,
   Cell
 } from 'recharts';
+import { useTranslation } from 'react-i18next';
 import type { BacktestResult } from '../types';
 import {
   formatCurrency,
@@ -30,6 +31,7 @@ interface Props {
 const COLORS = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
 
 export function BacktestResults({ result }: Props) {
+  const { t } = useTranslation('app');
   const { metrics, equityCurve, assetPerformances, yearlyBreakdown, portfolio, startDate, endDate } = result;
 
   // Prepare equity curve data for chart (with invested capital line)
@@ -73,10 +75,10 @@ export function BacktestResults({ result }: Props) {
       <div className="bg-white border border-slate-200 rounded-2xl p-8">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-slate-900 uppercase tracking-wide text-sm">
-            Metriche Chiave
+            {t('backtest.results.title')}
           </h2>
           <div className="text-slate-600 text-sm">
-            <span className="font-medium">Periodo: </span>
+            <span className="font-medium">{t('backtest.results.period')} </span>
             {formatDateRange(startDate, endDate)}
           </div>
         </div>
@@ -84,34 +86,34 @@ export function BacktestResults({ result }: Props) {
         {/* Key Metrics Grid - responsive */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           <MetricCard
-            label="Valore Finale"
+            label={t('backtest.results.metrics.finalValue')}
             value={formatCurrency(metrics.finalValue)}
             positive={metrics.finalValue > metrics.totalInvested}
           />
           <MetricCard
-            label="Investito"
+            label={t('backtest.results.metrics.invested')}
             value={formatCurrency(metrics.totalInvested)}
             positive={false}
           />
           <MetricCard
-            label="Rendimento Totale"
+            label={t('backtest.results.metrics.totalReturn')}
             value={formatPercentage(metrics.totalReturn)}
             positive={metrics.totalReturn > 0}
           />
           <MetricCard
-            label="Media Annua"
+            label={t('backtest.results.metrics.annualizedReturn')}
             value={formatPercentage(metrics.averageAnnualReturn)}
             positive={metrics.averageAnnualReturn > 0}
           />
           <MetricCard
-            label="Max Drawdown"
+            label={t('backtest.results.metrics.maxDrawdown')}
             value={formatPercentage(metrics.maxDrawdown)}
             positive={false}
             negative={true}
           />
           {metrics.bestAsset && (
             <MetricCard
-              label="Best Asset"
+              label={t('backtest.results.metrics.bestAsset')}
               value={`${metrics.bestAsset} (${formatPercentage(metrics.bestAssetReturn || 0)})`}
               positive={true}
             />
@@ -124,7 +126,7 @@ export function BacktestResults({ result }: Props) {
         {/* Crescita Portfolio (65% width = 2 columns) */}
         <div className="lg:col-span-2 bg-white border border-slate-200 rounded-2xl p-8">
           <h3 className="text-xl font-bold mb-6 text-slate-900 uppercase tracking-wide text-sm">
-            Crescita Portfolio
+            {t('backtest.results.charts.portfolioGrowth')}
           </h3>
           <ResponsiveContainer width="100%" height={400}>
             <LineChart data={sampledData}>
@@ -140,7 +142,7 @@ export function BacktestResults({ result }: Props) {
               />
               <Tooltip
                 formatter={(value: number | undefined) => value !== undefined ? formatCurrency(value) : ''}
-                labelFormatter={(label) => `Data: ${label}`}
+                labelFormatter={(label) => `${t('backtest.results.charts.tooltipDate')} ${label}`}
               />
               <Legend />
               <Line
@@ -149,7 +151,7 @@ export function BacktestResults({ result }: Props) {
                 stroke="#10b981"
                 strokeWidth={3}
                 dot={false}
-                name="Valore Portfolio"
+                name={t('backtest.results.charts.portfolioValue')}
               />
               <Line
                 type="monotone"
@@ -158,7 +160,7 @@ export function BacktestResults({ result }: Props) {
                 strokeWidth={2}
                 strokeDasharray="5 5"
                 dot={false}
-                name="Capitale Investito"
+                name={t('backtest.results.charts.investedCapital')}
               />
             </LineChart>
           </ResponsiveContainer>
@@ -167,7 +169,7 @@ export function BacktestResults({ result }: Props) {
         {/* Allocazione Portfolio (35% width = 1 column) */}
         <div className="bg-white border border-slate-200 rounded-2xl p-8">
           <h3 className="text-xl font-bold mb-6 text-slate-900 uppercase tracking-wide text-sm">
-            Allocazione
+            {t('backtest.results.charts.allocation')}
           </h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
@@ -213,7 +215,7 @@ export function BacktestResults({ result }: Props) {
       {assetPerformances.length > 0 && (
         <div className="bg-white border border-slate-200 rounded-2xl p-8">
           <h3 className="text-xl font-bold mb-6 text-slate-900 uppercase tracking-wide text-sm">
-            Performance per Asset (Indice Base 100)
+            {t('backtest.results.charts.assetPerformance')}
           </h3>
           <ResponsiveContainer width="100%" height={400}>
             <LineChart data={sampledAssetData}>
@@ -225,10 +227,10 @@ export function BacktestResults({ result }: Props) {
               />
               <YAxis
                 tick={{ fontSize: 12 }}
-                label={{ value: 'Indice (Base 100)', angle: -90, position: 'insideLeft' }}
+                label={{ value: t('backtest.results.charts.indexLabel'), angle: -90, position: 'insideLeft' }}
               />
               <Tooltip
-                labelFormatter={(label) => `Data: ${label}`}
+                labelFormatter={(label) => `${t('backtest.results.charts.tooltipDate')} ${label}`}
               />
               <Legend />
               {assetPerformances.map((asset, index) => (
@@ -251,27 +253,27 @@ export function BacktestResults({ result }: Props) {
       {yearlyBreakdown.length > 0 && (
         <div className="bg-white border border-slate-200 rounded-2xl p-8">
           <h3 className="text-xl font-bold mb-4 text-slate-900 uppercase tracking-wide text-sm">
-            Breakdown Anno per Anno
+            {t('backtest.results.yearlyBreakdown.title')}
           </h3>
-          <p className="text-xs text-slate-500 mb-4 md:hidden">Scorri lateralmente per vedere tutte le colonne →</p>
+          <p className="text-xs text-slate-500 mb-4 md:hidden">{t('backtest.results.yearlyBreakdown.scrollHint')}</p>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-slate-200">
               <thead className="bg-slate-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    Anno
+                    {t('backtest.results.yearlyBreakdown.columns.year')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    Valore Portfolio
+                    {t('backtest.results.yearlyBreakdown.columns.portfolioValue')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    Investito
+                    {t('backtest.results.yearlyBreakdown.columns.invested')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    Rend. Anno
+                    {t('backtest.results.yearlyBreakdown.columns.yearlyReturn')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    Rend. Cumulativo
+                    {t('backtest.results.yearlyBreakdown.columns.cumulativeReturn')}
                   </th>
                 </tr>
               </thead>

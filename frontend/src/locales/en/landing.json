@@ -1,0 +1,65 @@
+{
+  "header": {
+    "cta": "Get Started →"
+  },
+  "hero": {
+    "badge": "70+ Assets • Free Trial • Real Historical Data",
+    "title": "Discover how your investments",
+    "titleHighlight": "would have performed",
+    "subtitle": "Simulate investment strategies with real historical data going back 30+ years. See how much you would have gained (or lost) by investing in the past.",
+    "description": "Sign up for free and start testing your strategies. Get free backtests to experiment and find your perfect portfolio, then upgrade for unlimited access.",
+    "cta": "Sign Up and Start →"
+  },
+  "features": {
+    "title": "What You Can Do",
+    "subtitle": "Professional-grade tools to make informed investment decisions",
+    "list": [
+      {
+        "title": "70+ Assets Across 5 Categories",
+        "description": "Combine ETFs, cryptocurrencies, commodities (gold, silver, copper), bonds, and real estate. Build diversified portfolios like professionals do, choosing from the world's major assets."
+      },
+      {
+        "title": "Lump Sum vs DCA",
+        "description": "Compare lump sum investing with Dollar Cost Averaging (DCA). Discover which strategy would have performed better in the historical period you choose."
+      },
+      {
+        "title": "Automatic Rebalancing",
+        "description": "Simulate periodic portfolio rebalancing (monthly, quarterly, annually) to keep it aligned with your target allocation percentages at all times."
+      },
+      {
+        "title": "Historical Data Up to 30+ Years",
+        "description": "Use real prices with history dating back to 1993 for some assets. Test strategies across past financial crises, bull markets, and high volatility periods to understand real risks."
+      },
+      {
+        "title": "Advanced Metrics",
+        "description": "Analyze total return, annual average, max drawdown, volatility, and Sharpe ratio. Discover which asset contributed most and visualize portfolio evolution with interactive charts."
+      },
+      {
+        "title": "Save and Compare",
+        "description": "Save your favorite backtests and compare up to 4 different strategies side by side. View metrics, allocations, and performance in a single screen for more informed decisions."
+      }
+    ]
+  },
+  "howItWorks": {
+    "title": "How It Works",
+    "steps": [
+      {
+        "title": "Build Your Portfolio",
+        "description": "Choose from 70+ assets (S&P 500 ETFs, Bitcoin, gold, bonds...) and set allocation percentages. Or use predefined portfolios like 60/40 or All Weather."
+      },
+      {
+        "title": "Configure Your Strategy",
+        "description": "Select historical period, initial capital, strategy (Lump Sum or DCA), and rebalancing frequency. Then press \"Run Backtest\" and get results in seconds."
+      },
+      {
+        "title": "Analyze and Compare",
+        "description": "Study metrics, explore interactive charts, and save interesting simulations. Compare different strategies to find the one that best fits your goals."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Ready to test your investment strategy?",
+    "subtitle": "Sign up in 30 seconds and start creating your first portfolio right away. Free backtests to get started.",
+    "button": "Sign Up and Start →"
+  }
+}

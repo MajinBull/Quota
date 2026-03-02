@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SavedBacktestsList } from './SavedBacktestsList';
 import { ComparisonView } from './ComparisonView';
+import { RebalanceModal } from './RebalanceModal';
 import { useComparisonStore } from '../stores/comparisonStore';
 import { useAuth } from '../contexts/AuthContext';
 import type { BacktestResult } from '../types';
@@ -10,7 +12,9 @@ interface Props {
 }
 
 export function SavedBacktestsView({ onLoadBacktest }: Props) {
+  const { t } = useTranslation('app');
   const [showComparison, setShowComparison] = useState(false);
+  const [rebalanceBacktest, setRebalanceBacktest] = useState<{ result: BacktestResult; name: string } | null>(null);
   const { user } = useAuth();
 
   const {
@@ -32,6 +36,10 @@ export function SavedBacktestsView({ onLoadBacktest }: Props) {
     if (onLoadBacktest) {
       onLoadBacktest(backtest.result);
     }
+  };
+
+  const handleRebalance = (backtest: any) => {
+    setRebalanceBacktest({ result: backtest.result, name: backtest.name });
   };
 
   const handleCompareClick = () => {
@@ -56,12 +64,13 @@ export function SavedBacktestsView({ onLoadBacktest }: Props) {
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <p className="text-slate-600 font-medium">Caricamento backtest...</p>
+            <p className="text-slate-600 font-medium">{t('common:status.loading')}</p>
           </div>
         </div>
       ) : (
         <SavedBacktestsList
           onViewBacktest={handleViewBacktest}
+          onRebalance={handleRebalance}
         />
       )}
 
@@ -77,14 +86,14 @@ export function SavedBacktestsView({ onLoadBacktest }: Props) {
                 : 'bg-slate-100 text-slate-400 cursor-not-allowed'
             }`}
           >
-            📊 Confronta Selezionati ({selectedForComparison.length})
+            {t('compare.button', { count: selectedForComparison.length })}
           </button>
 
           <div className="mt-3 p-3 bg-slate-50 border border-slate-200 rounded-lg">
             <p className="text-xs text-slate-600 text-center">
               {selectedForComparison.length < 2
-                ? 'Seleziona almeno 2 backtest per confrontarli'
-                : 'Confronta fino a 3 backtest contemporaneamente'}
+                ? t('compare.hint.min')
+                : t('compare.hint.max')}
             </p>
           </div>
         </div>
@@ -97,6 +106,13 @@ export function SavedBacktestsView({ onLoadBacktest }: Props) {
           onClose={handleCloseComparison}
         />
       )}
+
+      {/* REBALANCE MODAL */}
+      <RebalanceModal
+        backtest={rebalanceBacktest?.result || null}
+        backtestName={rebalanceBacktest?.name}
+        onClose={() => setRebalanceBacktest(null)}
+      />
     </div>
   );
 }

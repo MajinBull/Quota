@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "title": "Quota - Backtest ETF Gratuito | Analisi Portafoglio e Strategia di Investimento",
+    "titleShort": "Quota - Backtest ETF Gratuito",
+    "description": "Simula e analizza strategie di investimento ETF con 20 backtest gratuiti. Confronta portafogli, visualizza performance storiche e ottimizza i tuoi investimenti.",
+    "keywords": "backtest ETF, analisi portafoglio, strategia investimento, ETF gratuito, simulazione portafoglio, quota backtesting",
+    "author": "Quota",
+    "language": "Italian"
+  },
+  "og": {
+    "title": "Quota - Backtest ETF Gratuito | Analisi Portafoglio",
+    "description": "Simula e analizza strategie di investimento ETF con 20 backtest gratuiti. Confronta portafogli e ottimizza i tuoi investimenti.",
+    "siteName": "Quota",
+    "locale": "it_IT"
+  },
+  "twitter": {
+    "title": "Quota - Backtest ETF Gratuito",
+    "description": "Simula e analizza strategie di investimento ETF con 20 backtest gratuiti."
+  }
+}

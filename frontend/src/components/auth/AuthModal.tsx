@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 
 type AuthTab = 'login' | 'signup';
 
 export function AuthModal() {
+  const { t } = useTranslation('auth');
   const [tab, setTab] = useState<AuthTab>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -83,7 +85,7 @@ export function AuthModal() {
       <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl max-w-md w-full">
           <div className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
-            <h2 className="text-xl font-bold text-slate-900">Reset Password</h2>
+            <h2 className="text-xl font-bold text-slate-900">{t('passwordReset.title')}</h2>
             <button
               onClick={() => setShowPasswordReset(false)}
               className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
@@ -96,13 +98,13 @@ export function AuthModal() {
 
           <form onSubmit={handlePasswordReset} className="p-6">
             <p className="text-sm text-slate-600 mb-4">
-              Inserisci la tua email per ricevere il link di reset della password.
+              {t('passwordReset.description')}
             </p>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
+              placeholder={t('passwordReset.emailPlaceholder')}
               className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base mb-4"
               required
               autoFocus
@@ -116,7 +118,7 @@ export function AuthModal() {
                   : 'bg-indigo-600 text-white hover:bg-indigo-700'
               }`}
             >
-              {isLoading ? 'Invio...' : 'Invia Email di Reset'}
+              {isLoading ? t('passwordReset.sending') : t('passwordReset.sendButton')}
             </button>
           </form>
         </div>
@@ -140,7 +142,7 @@ export function AuthModal() {
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}
             >
-              Login
+              {t('modal.tabs.login')}
             </button>
             <button
               onClick={() => switchTab('signup')}
@@ -150,13 +152,13 @@ export function AuthModal() {
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}
             >
-              Registrati
+              {t('modal.tabs.signup')}
             </button>
           </div>
           <p className="text-xs text-slate-600 text-center">
             {tab === 'login'
-              ? 'Accedi per iniziare a creare i tuoi backtest'
-              : 'Crea un account gratuito per iniziare'}
+              ? t('modal.subtitle.login')
+              : t('modal.subtitle.signup')}
           </p>
         </div>
 
@@ -165,13 +167,13 @@ export function AuthModal() {
           {tab === 'signup' && (
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">
-                Nome
+                {t('modal.fields.displayName')}
               </label>
               <input
                 type="text"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="Il tuo nome"
+                placeholder={t('modal.fields.displayName')}
                 className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
                 required
                 minLength={3}
@@ -181,13 +183,13 @@ export function AuthModal() {
 
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">
-              Email
+              {t('modal.fields.email')}
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="tua@email.com"
+              placeholder={t('modal.fields.emailPlaceholder')}
               className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
               required
             />
@@ -195,13 +197,13 @@ export function AuthModal() {
 
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">
-              Password
+              {t('modal.fields.password')}
             </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Minimo 6 caratteri"
+              placeholder={t('modal.fields.passwordPlaceholder')}
               className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
               required
               minLength={6}
@@ -215,7 +217,7 @@ export function AuthModal() {
                 onClick={() => setShowPasswordReset(true)}
                 className="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
               >
-                Password dimenticata?
+                {t('modal.actions.forgotPassword')}
               </button>
             </div>
           )}
@@ -235,12 +237,12 @@ export function AuthModal() {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Caricamento...
+                {tab === 'login' ? t('modal.loading.login') : t('modal.loading.signup')}
               </span>
             ) : tab === 'login' ? (
-              'Accedi →'
+              t('modal.actions.loginButton') + ' →'
             ) : (
-              'Crea Account →'
+              t('modal.actions.signupButton') + ' →'
             )}
           </button>
 
@@ -250,7 +252,7 @@ export function AuthModal() {
               <div className="w-full border-t border-slate-200"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-slate-500">oppure</span>
+              <span className="px-2 bg-white text-slate-500">{t('modal.fields.or', 'oppure')}</span>
             </div>
           </div>
 
@@ -271,7 +273,7 @@ export function AuthModal() {
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
             </svg>
-            Continua con Google
+            {t('modal.actions.loginWithGoogle')}
           </button>
         </form>
 
@@ -283,8 +285,8 @@ export function AuthModal() {
             </svg>
             <p>
               {tab === 'signup'
-                ? 'Creando un account accetti i termini di servizio e la privacy policy'
-                : 'Account gratuito con 5 backtest inclusi'}
+                ? t('modal.info.termsAccept', 'Creando un account accetti i termini di servizio e la privacy policy')
+                : t('modal.info.freeAccount', 'Account gratuito con 20 backtest inclusi')}
             </p>
           </div>
         </div>
