@@ -2,7 +2,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { AssetData, AssetCategory } from '@quota/shared/types';
 
-const DATA_DIR = path.join(__dirname, 'historical');
+// Path to data directory: functions/data/historical/
+// When compiled, __dirname is functions/lib/data, so we go up to functions/ then into data/
+const DATA_DIR = path.join(__dirname, '..', '..', 'data', 'historical');
 
 /**
  * Load all assets from a specific category JSON file
