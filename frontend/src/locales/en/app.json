@@ -275,47 +275,5 @@
       "period": "Period:",
       "perMonth": "/month"
     }
-  },
-  "projection": {
-    "title": "Future Projection",
-    "subtitle": "Statistical estimate of future portfolio value based on historical data",
-    "horizon": "Time Horizon",
-    "year": "year",
-    "year_one": "year",
-    "year_other": "years",
-    "years": "years",
-    "years_one": "year",
-    "years_other": "years",
-    "chartTitle": "Projected Evolution",
-    "summaryTitle": "Scenarios Summary",
-    "scenarios": {
-      "optimistic": "Optimistic Scenario",
-      "base": "Base Scenario",
-      "pessimistic": "Pessimistic Scenario"
-    },
-    "table": {
-      "scenario": "Scenario",
-      "finalValue": "Value",
-      "cagr": "Projected CAGR",
-      "totalReturn": "Total Return"
-    },
-    "disclaimer": {
-      "title": "Important Notice",
-      "text": "Past performance does not guarantee future returns. This is a statistical projection based on historical data, NOT a forecast or investment recommendation.",
-      "readMore": "Read full disclaimer",
-      "fullTitle": "Full Disclaimer - Future Projections",
-      "warning": "WARNING: The projections shown are for illustrative purposes only and do NOT constitute financial advice.",
-      "assumptionsTitle": "Model Assumptions:",
-      "assumption1": "Future performance will be similar to historical performance",
-      "assumption2": "Volatility will remain constant over time",
-      "assumption3": "Does not consider extreme events or economic crises",
-      "assumption4": "Does not include future transaction costs, taxes or fees",
-      "risksTitle": "Risks and Limitations:",
-      "risk1": "Markets may behave completely differently from the past",
-      "risk2": "Projections become less reliable over long time horizons",
-      "risk3": "Unforeseen events can cause very different results",
-      "risk4": "Invested capital is always at risk of loss",
-      "advice": "Always consult a professional financial advisor before making investment decisions. This tool is educational only."
-    }
   }
 }

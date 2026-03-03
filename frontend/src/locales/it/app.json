@@ -275,47 +275,5 @@
       "period": "Periodo:",
       "perMonth": "/mese"
     }
-  },
-  "projection": {
-    "title": "Proiezione Futura",
-    "subtitle": "Stima statistica del valore futuro del portfolio basata sui dati storici",
-    "horizon": "Orizzonte Temporale",
-    "year": "anno",
-    "year_one": "anno",
-    "year_other": "anni",
-    "years": "anni",
-    "years_one": "anno",
-    "years_other": "anni",
-    "chartTitle": "Evoluzione Proiettata",
-    "summaryTitle": "Riepilogo Scenari",
-    "scenarios": {
-      "optimistic": "Scenario Ottimistico",
-      "base": "Scenario Base",
-      "pessimistic": "Scenario Pessimistico"
-    },
-    "table": {
-      "scenario": "Scenario",
-      "finalValue": "Valore",
-      "cagr": "CAGR Proiettato",
-      "totalReturn": "Rendimento Totale"
-    },
-    "disclaimer": {
-      "title": "Avviso Importante",
-      "text": "Le performance passate non garantiscono rendimenti futuri. Questa è una proiezione statistica basata su dati storici, NON una previsione o raccomandazione di investimento.",
-      "readMore": "Leggi disclaimer completo",
-      "fullTitle": "Disclaimer Completo - Proiezioni Future",
-      "warning": "ATTENZIONE: Le proiezioni mostrate sono esclusivamente a scopo illustrativo e NON costituiscono consulenza finanziaria.",
-      "assumptionsTitle": "Assunzioni del Modello:",
-      "assumption1": "Le performance future saranno simili a quelle storiche",
-      "assumption2": "La volatilità rimarrà costante nel tempo",
-      "assumption3": "Non considera eventi estremi o crisi economiche",
-      "assumption4": "Non include costi di transazione, tasse o commissioni future",
-      "risksTitle": "Rischi e Limitazioni:",
-      "risk1": "I mercati possono comportarsi in modo completamente diverso dal passato",
-      "risk2": "Le proiezioni diventano meno affidabili su orizzonti temporali lunghi",
-      "risk3": "Eventi imprevisti possono causare risultati molto diversi",
-      "risk4": "Il capitale investito è sempre a rischio di perdita",
-      "advice": "Consulta sempre un consulente finanziario professionale prima di prendere decisioni di investimento. Questo tool è solo educativo."
-    }
   }
 }
