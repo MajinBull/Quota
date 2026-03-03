@@ -22,6 +22,7 @@ import {
 } from '../utils/formatters';
 import { ASSET_METADATA } from '../utils/dataLoader';
 import { SaveBacktestButton } from './SaveBacktestButton';
+import { ProjectionView } from './ProjectionView';
 
 interface Props {
   result: BacktestResult;
@@ -304,6 +305,9 @@ export function BacktestResults({ result }: Props) {
           </div>
         </div>
       )}
+
+      {/* FUTURE PROJECTION */}
+      <ProjectionView backtestResult={result} />
 
       {/* SAVE BACKTEST BUTTON (Sticky Bottom-Right) */}
       <SaveBacktestButton portfolio={portfolio} result={result} />

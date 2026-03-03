@@ -131,3 +131,27 @@ export interface PortfolioStore {
   setRebalanceFrequency: (frequency: Portfolio['rebalanceFrequency']) => void;
   resetPortfolio: () => void;
 }
+
+// Future projection scenario
+export interface ProjectionScenario {
+  value: number;
+  cagr: number;
+}
+
+// Single data point in projection timeline
+export interface ProjectionPoint {
+  year: number;
+  base: number;
+  optimistic: number;
+  pessimistic: number;
+}
+
+// Complete projection result
+export interface ProjectionResult {
+  years: number;
+  initialCapital: number;
+  base: ProjectionScenario;
+  optimistic: ProjectionScenario;
+  pessimistic: ProjectionScenario;
+  timeline: ProjectionPoint[];
+}
