@@ -12,8 +12,8 @@ import { UserProfileButton } from './components/auth/UserProfileButton';
 import { UpgradeModal } from './components/auth/UpgradeModal';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
 import { usePortfolioStore } from './stores/portfolioStore';
-import { runBacktest } from './engine/backtester';
-import type { BacktestResult } from './types';
+import { executeBacktestRemote } from './services/backtestService';
+import type { BacktestResult } from '@quota/shared/types';
 import logoQuota from './assets/logo-quota.png';
 import { Analytics } from '@vercel/analytics/react';
 
@@ -21,7 +21,7 @@ type ActiveView = 'configuration' | 'risultati' | 'backtest_salvati';
 
 function AppContent() {
   const { t } = useTranslation(['app', 'common']);
-  const { user, loading, canRunBacktest, incrementBacktestCount } = useAuth();
+  const { user, loading, canRunBacktest } = useAuth();
   const { portfolio, getTotalAllocation } = usePortfolioStore();
   const [result, setResult] = useState<BacktestResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -65,10 +65,8 @@ function AppContent() {
     setResult(null);
 
     try {
-      // Increment counter BEFORE running backtest (critical for free tier enforcement)
-      await incrementBacktestCount();
-
-      const backtestResult = await runBacktest(portfolio);
+      // Execute backtest via Cloud Function (includes server-side limit enforcement)
+      const backtestResult = await executeBacktestRemote(portfolio);
 
       if (backtestResult) {
         setResult(backtestResult);
