@@ -4,42 +4,42 @@
 
   <!-- Landing Page Italian -->
   <url>
-    <loc>https://quota-ochre.vercel.app/</loc>
-    <lastmod>2026-03-02</lastmod>
+    <loc>https://quota.finance/</loc>
+    <lastmod>2026-03-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="it" href="https://quota-ochre.vercel.app/?lang=it"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://quota-ochre.vercel.app/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://quota.finance/?lang=it"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://quota.finance/?lang=en"/>
   </url>
 
   <!-- Landing Page English -->
   <url>
-    <loc>https://quota-ochre.vercel.app/?lang=en</loc>
-    <lastmod>2026-03-02</lastmod>
+    <loc>https://quota.finance/?lang=en</loc>
+    <lastmod>2026-03-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="it" href="https://quota-ochre.vercel.app/?lang=it"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://quota-ochre.vercel.app/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://quota.finance/?lang=it"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://quota.finance/?lang=en"/>
   </url>
 
   <!-- App Page Italian -->
   <url>
-    <loc>https://quota-ochre.vercel.app/app?lang=it</loc>
-    <lastmod>2026-03-02</lastmod>
+    <loc>https://quota.finance/app?lang=it</loc>
+    <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="it" href="https://quota-ochre.vercel.app/app?lang=it"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://quota-ochre.vercel.app/app?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://quota.finance/app?lang=it"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://quota.finance/app?lang=en"/>
   </url>
 
   <!-- App Page English -->
   <url>
-    <loc>https://quota-ochre.vercel.app/app?lang=en</loc>
-    <lastmod>2026-03-02</lastmod>
+    <loc>https://quota.finance/app?lang=en</loc>
+    <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="it" href="https://quota-ochre.vercel.app/app?lang=it"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://quota-ochre.vercel.app/app?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://quota.finance/app?lang=it"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://quota.finance/app?lang=en"/>
   </url>
 
 </urlset>

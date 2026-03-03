@@ -1,12 +1,12 @@
 # QUOTA - Portfolio Backtest Platform
 
-🌐 **Live**: [quota-ochre.vercel.app](https://quota-ochre.vercel.app)
+🌐 **Live**: [quota.finance](https://quota.finance)
 
 Piattaforma web bilingue (IT/EN) per simulare strategie di investimento con dati storici reali fino a 30+ anni. Analizza come sarebbe andato il tuo portafoglio investendo nel passato.
 
 ## 🔗 Quick Links
 
-- 🌐 **App Live**: [quota-ochre.vercel.app](https://quota-ochre.vercel.app)
+- 🌐 **App Live**: [quota.finance](https://quota.finance)
 - 📊 **GitHub**: [MajinBull/Quota](https://github.com/MajinBull/Quota)
 - 📱 **Vercel Dashboard**: [vercel.com/dashboard](https://vercel.com/dashboard)
 - 🔥 **Firebase Console**: [console.firebase.google.com](https://console.firebase.google.com)
@@ -226,7 +226,7 @@ La documentazione è organizzata in `docs/` per argomento.
 **Deployment**
 - Vercel (hosting + CI/CD automatico)
 - GitHub (version control)
-- Domain: quota-ochre.vercel.app
+- Domain: quota.finance
 
 ## Metriche Calcolate
 

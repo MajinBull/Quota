@@ -14,7 +14,7 @@ export function SEO({ page: _page = 'landing' }: SEOProps) {
   const { t, i18n } = useTranslation('seo');
 
   const currentLang = i18n.language;
-  const siteUrl = 'https://quota-ochre.vercel.app';
+  const siteUrl = 'https://quota.finance';
   const defaultImage = `${siteUrl}/logo-quota.png`;
 
   return (
