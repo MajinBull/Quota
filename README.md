@@ -1,14 +1,28 @@
-# Portfolio Backtest Platform
+# QUOTA - Portfolio Backtest Platform
 
-Piattaforma web per analizzare e creare wallet diversificati con backtest storico su 20 anni di dati.
+🌐 **Live**: [quota-ochre.vercel.app](https://quota-ochre.vercel.app)
 
-## Funzionalità
+Piattaforma web bilingue (IT/EN) per simulare strategie di investimento con dati storici reali fino a 30+ anni. Analizza come sarebbe andato il tuo portafoglio investendo nel passato.
 
-- **Portfolio Builder**: Costruisci portfolio personalizzati selezionando asset da 5 categorie
-- **Backtest Engine**: Simula performance storiche con ribilanciamento automatico
-- **Metriche Avanzate**: CAGR, Sharpe Ratio, volatilità, max drawdown
-- **Visualizzazione**: Grafici interattivi equity curve e allocazione
-- **70 Asset**: ETF (22), crypto (13), commodities (12), bond (15), real estate (8)
+## 🔗 Quick Links
+
+- 🌐 **App Live**: [quota-ochre.vercel.app](https://quota-ochre.vercel.app)
+- 📊 **GitHub**: [MajinBull/Quota](https://github.com/MajinBull/Quota)
+- 📱 **Vercel Dashboard**: [vercel.com/dashboard](https://vercel.com/dashboard)
+- 🔥 **Firebase Console**: [console.firebase.google.com](https://console.firebase.google.com)
+
+## ✨ Funzionalità Principali
+
+- **70+ Asset Disponibili**: ETF (22), crypto (13), commodities (12), bonds (15), real estate (8)
+- **Backtest Storici**: Dati reali fino a 30+ anni (SPY dal 1993)
+- **Strategie Multiple**: Lump Sum vs PAC (Piano di Accumulo Capitale)
+- **Ribilanciamento**: Simulazione ribilanciamento periodico (mensile/trimestrale/annuale)
+- **Salvataggio & Confronto**: Salva backtest su cloud e confronta fino a 4 strategie
+- **Metriche Avanzate**: Rendimento totale, CAGR, Sharpe Ratio, volatilità, max drawdown
+- **Grafici Interattivi**: Equity curve, allocazioni, crescita normalizzata
+- **Calcolatore Ribilanciamento**: Calcola vendite/acquisti necessari per ribilanciare
+- **i18n**: Interfaccia completamente bilingue italiano/inglese
+- **SEO Ottimizzato**: Meta tags dinamici, sitemap, robots.txt
 
 ## Setup Rapido
 
@@ -187,21 +201,32 @@ La documentazione è organizzata in `docs/` per argomento.
 - **VNQI** - Vanguard Global ex-US Real Estate
 - **IFGL** - iShares International Developed Real Estate
 
-## Stack Tecnologico
+## 🛠️ Stack Tecnologico
 
 **Frontend**
-- React 18 + TypeScript
-- Vite (build tool)
-- Tailwind CSS (styling)
-- Recharts (grafici)
+- React 19 + TypeScript
+- Vite 7.3 (build tool ultra-veloce)
+- Tailwind CSS (styling utility-first)
+- Recharts (grafici interattivi)
 - Zustand (state management)
+- react-i18next (internazionalizzazione)
+- react-helmet-async (SEO dinamico)
+- react-router-dom (routing)
+
+**Backend & Auth**
+- Firebase Authentication (Email/Password + Google OAuth)
+- Firestore Database (NoSQL cloud, real-time sync)
+- Vercel Analytics (web analytics)
+
+**Data & Tools**
+- Python 3 + Tiingo/yfinance (data download)
+- JSON static files (70+ asset con storico 30+ anni)
 - date-fns (date utilities)
 
-**Backend/Data**
-- Firebase Auth (Email + Google OAuth)
-- Firestore Database (NoSQL cloud)
-- Python 3 + Tiingo/yfinance (data download)
-- JSON static files (historical data)
+**Deployment**
+- Vercel (hosting + CI/CD automatico)
+- GitHub (version control)
+- Domain: quota-ochre.vercel.app
 
 ## Metriche Calcolate
 
@@ -212,39 +237,64 @@ La documentazione è organizzata in `docs/` per argomento.
 - **Max Drawdown**: Massima perdita da picco a valle
 - **Best/Worst Day**: Miglior e peggior giorno singolo
 
-## Struttura Progetto
+## 📁 Struttura Progetto
 
 ```
-ETF ECC/
-├── data/                      # Dati storici JSON
-│   ├── etf_historical.json
-│   ├── crypto_historical.json
-│   ├── metals_historical.json
-│   ├── bonds_historical.json
-│   ├── real_estate_historical.json
-│   └── all_assets.json
-├── docs/                      # Documentazione tecnica
-│   ├── setup/                 # Guide setup & deployment
-│   ├── development/           # Workflow sviluppo & testing
-│   ├── architecture/          # Documentazione architettura
-│   └── planning/              # Roadmap & piani futuri
-├── frontend/                  # Applicazione web
+Quota/
+├── frontend/                       # Applicazione React
 │   ├── src/
-│   │   ├── components/        # Componenti React UI
-│   │   ├── config/            # Firebase config
-│   │   ├── contexts/          # React contexts (Auth)
-│   │   ├── engine/            # Backtest logic
-│   │   ├── services/          # Firebase services
-│   │   ├── stores/            # State management
-│   │   ├── types/             # TypeScript types
-│   │   ├── utils/             # Utilities
-│   │   └── App.tsx            # Main app
-│   └── public/data/           # Dati accessibili dal browser
-├── download_data_v2.py        # Script download dati (Tiingo + yfinance fallback)
-├── assets_config.py           # Configurazione 70 asset con metadata
-├── firestore.rules            # Firestore security rules
-├── firestore.indexes.json     # Firestore indexes config
-└── requirements.txt           # Dipendenze Python
+│   │   ├── components/             # Componenti UI
+│   │   │   ├── auth/               # AuthModal, UserProfileButton, UpgradeModal
+│   │   │   ├── SEO.tsx             # Meta tags dinamici
+│   │   │   ├── LanguageSwitcher.tsx
+│   │   │   ├── PortfolioBuilder.tsx
+│   │   │   ├── BacktestResults.tsx
+│   │   │   ├── SavedBacktestsView.tsx
+│   │   │   ├── ComparisonView.tsx
+│   │   │   └── RebalanceModal.tsx
+│   │   ├── locales/                # Traduzioni i18n
+│   │   │   ├── it/                 # Italiano
+│   │   │   │   ├── common.json
+│   │   │   │   ├── landing.json
+│   │   │   │   ├── app.json
+│   │   │   │   ├── auth.json
+│   │   │   │   ├── seo.json
+│   │   │   │   └── assets.json     # 70 asset descriptions
+│   │   │   └── en/                 # English
+│   │   │       └── (same structure)
+│   │   ├── pages/                  # Route pages
+│   │   │   └── LandingPage.tsx
+│   │   ├── config/                 # Firebase config
+│   │   ├── contexts/               # AuthContext
+│   │   ├── engine/                 # Backtest engine logic
+│   │   ├── services/               # Firebase services
+│   │   ├── stores/                 # Zustand stores
+│   │   ├── types/                  # TypeScript interfaces
+│   │   ├── utils/                  # Utilities & formatters
+│   │   ├── i18n.ts                 # i18next config
+│   │   ├── main.tsx                # Entry point
+│   │   └── App.tsx                 # Main app component
+│   ├── public/
+│   │   ├── data/                   # Historical data JSON
+│   │   │   ├── etf_historical.json        (23 MB)
+│   │   │   ├── crypto_historical.json     (5.7 MB)
+│   │   │   ├── commodities_historical.json (9.1 MB)
+│   │   │   ├── bonds_historical.json      (12 MB)
+│   │   │   ├── real_estate_historical.json (5.8 MB)
+│   │   │   └── all_assets.json            (21 MB)
+│   │   ├── logo-quota.png          # Favicon
+│   │   ├── robots.txt              # SEO
+│   │   └── sitemap.xml             # SEO
+│   ├── index.html                  # HTML template
+│   ├── package.json                # Dependencies
+│   └── .npmrc                      # npm config (legacy-peer-deps)
+├── data/                           # Local data backup
+├── docs/                           # Documentation
+├── download_data_v2.py             # Data download script
+├── assets_config.py                # 70 asset configuration
+├── firestore.rules                 # Firestore security
+├── firestore.indexes.json          # Firestore indexes
+└── requirements.txt                # Python dependencies
 ```
 
 ## Build per Produzione
@@ -256,25 +306,55 @@ npm run build
 
 Il build ottimizzato sarà in `frontend/dist/` - deployabile su Vercel, Netlify, GitHub Pages, ecc.
 
-## Prossimi Sviluppi (Roadmap)
+## 🎯 Stato Attuale (Marzo 2026)
 
-- [ ] Comparazione con benchmark (S&P500, 60/40)
+✅ **Completato**:
+- Deploy production su Vercel
+- Firebase Auth + Firestore integrati
+- Salvataggio e confronto backtest (fino a 4)
+- Ribilanciamento portfolio con calcolatore
+- Internazionalizzazione completa IT/EN
+- SEO ottimizzato (robots.txt, sitemap.xml, meta tags)
+- 70+ asset con dati storici aggiornati
+- Grafici interattivi e metriche avanzate
+
+## 🚀 Roadmap Futura
+
+**High Priority**
+- [ ] Sistema di pagamenti (Stripe) per piano premium
+- [ ] Limiti backtest per piano free vs premium
+- [ ] Custom domain definitivo
 - [ ] Export risultati PDF/CSV
-- [ ] Salvataggio portfolio (localStorage)
+- [ ] Comparazione con benchmark (S&P500, All Weather)
+
+**Medium Priority**
 - [ ] Portfolio optimizer (frontiera efficiente)
-- [ ] Scenari "what-if" (crash storici)
-- [ ] Costi di transazione simulati
-- [ ] Più asset (commodities, forex)
-- [ ] Backend per autenticazione utenti
-- [ ] Social features (condivisione portfolio)
+- [ ] Scenari "what-if" su crash storici (2008, 2020)
+- [ ] Simulazione costi di transazione
+- [ ] Notifiche email per ribilanciamento
+- [ ] Dashboard analytics avanzate
 
-## Note Importanti
+**Low Priority**
+- [ ] Social features (condivisione portfolio pubblici)
+- [ ] API pubblica per backtest
+- [ ] Mobile app (React Native)
+- [ ] Più asset (forex, futures, azioni singole)
 
-- I risultati storici non garantiscono performance future
+## ⚠️ Disclaimer & Note Importanti
+
+**Disclaimer Finanziario**:
+- I risultati storici **non garantiscono** performance future
 - Il backtest assume liquidità infinita (nessuno slippage)
-- Non include costi di transazione o tasse
-- Dati da Yahoo Finance (potrebbero contenere errori)
-- Adatto per scopi educativi e di ricerca
+- **Non include** costi di transazione, commissioni o tasse
+- Questo strumento è per **scopi educativi e di ricerca**
+- Non costituisce consulenza finanziaria
+
+**Note Tecniche**:
+- Dati da Tiingo/Yahoo Finance (possibili errori o gap)
+- Ribilanciamento simulato senza considerare spread bid-ask
+- Dividendi reinvestiti automaticamente
+- Firebase richiede registrazione per salvare backtest
+- Ultimo aggiornamento dati: 27 febbraio 2026
 
 ## Licenza
 
