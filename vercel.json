@@ -3,6 +3,19 @@
   "outputDirectory": "frontend/dist",
   "installCommand": "cd frontend && npm install",
   "framework": null,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "destination": "https://quota.finance/:path*",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "quota-ochre.vercel.app"
+        }
+      ]
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",
