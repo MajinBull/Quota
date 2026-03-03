@@ -1,4 +1,4 @@
-import * as functions from 'firebase-functions';
+import { onSchedule } from 'firebase-functions/v2/scheduler';
 import * as admin from 'firebase-admin';
 
 /**
@@ -12,10 +12,14 @@ import * as admin from 'firebase-admin';
  * - Uses batched writes to handle large user bases efficiently
  * - Logs completion for monitoring
  */
-export const monthlyResetLimits = functions.pubsub
-  .schedule('0 0 1 * *')
-  .timeZone('UTC')
-  .onRun(async (context) => {
+export const monthlyResetLimits = onSchedule(
+  {
+    schedule: '0 0 1 * *',
+    timeZone: 'UTC',
+    region: 'us-central1',
+    memory: '256MiB',
+  },
+  async (event) => {
     const startTime = Date.now();
     console.log('Starting monthly backtest limit reset...');
 
@@ -30,7 +34,7 @@ export const monthlyResetLimits = functions.pubsub
 
       if (snapshot.empty) {
         console.log('No users to reset (all counts already at 0)');
-        return null;
+        return;
       }
 
       console.log(`Found ${snapshot.size} users with non-zero backtest counts`);
@@ -70,7 +74,7 @@ export const monthlyResetLimits = functions.pubsub
         executionTimeMs: executionTime,
       });
 
-      return null;
+      return;
     } catch (error) {
       console.error('Monthly reset failed:', error);
 

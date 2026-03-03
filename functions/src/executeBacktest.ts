@@ -1,4 +1,4 @@
-import * as functions from 'firebase-functions';
+import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import * as admin from 'firebase-admin';
 import { runBacktest } from './engine/backtester';
 import { getHistoricalData } from './data/cache';
@@ -29,14 +29,17 @@ interface ExecuteBacktestResponse {
  * - Uses global cache for historical data (warm starts ~1s, cold starts ~3-5s)
  * - Returns full backtest result
  */
-export const executeBacktest = functions.https.onCall(
-  async (data: ExecuteBacktestRequest, context): Promise<ExecuteBacktestResponse> => {
+export const executeBacktest = onCall<ExecuteBacktestRequest>(
+  { region: 'us-central1', memory: '512MiB', timeoutSeconds: 300 },
+  async (request): Promise<ExecuteBacktestResponse> => {
+    const data = request.data;
+    const context = request;
     const startTime = Date.now();
 
     try {
       // 1. Authentication check
       if (!context.auth) {
-        throw new functions.https.HttpsError(
+        throw new HttpsError(
           'unauthenticated',
           'You must be logged in to run backtests'
         );
@@ -50,7 +53,7 @@ export const executeBacktest = functions.https.onCall(
       const validationError = validatePortfolio(portfolio);
 
       if (validationError) {
-        throw new functions.https.HttpsError(
+        throw new HttpsError(
           'invalid-argument',
           `Invalid portfolio: ${validationError}`
         );
@@ -60,7 +63,7 @@ export const executeBacktest = functions.https.onCall(
       const userDoc = await admin.firestore().collection('users').doc(uid).get();
 
       if (!userDoc.exists) {
-        throw new functions.https.HttpsError(
+        throw new HttpsError(
           'not-found',
           'User data not found. Please re-login.'
         );
@@ -74,7 +77,7 @@ export const executeBacktest = functions.https.onCall(
 
       // 4. Enforce free tier limit (20 backtests/month)
       if (!isPremium && currentCount >= 20) {
-        throw new functions.https.HttpsError(
+        throw new HttpsError(
           'resource-exhausted',
           'Hai raggiunto il limite mensile di 20 backtest. Passa a Premium per backtest illimitati!'
         );
@@ -106,7 +109,7 @@ export const executeBacktest = functions.https.onCall(
       }
 
       if (missingAssets.length > 0) {
-        throw new functions.https.HttpsError(
+        throw new HttpsError(
           'not-found',
           `Asset data not found for: ${missingAssets.join(', ')}`
         );
@@ -117,7 +120,7 @@ export const executeBacktest = functions.https.onCall(
       const result = runBacktest(portfolio, assetDataMap);
 
       if (!result) {
-        throw new functions.https.HttpsError(
+        throw new HttpsError(
           'internal',
           'Backtest execution failed - no result returned'
         );
@@ -140,12 +143,12 @@ export const executeBacktest = functions.https.onCall(
       console.error(`Backtest error after ${executionTime}ms:`, error);
 
       // Re-throw HttpsErrors as-is
-      if (error instanceof functions.https.HttpsError) {
+      if (error instanceof HttpsError) {
         throw error;
       }
 
       // Wrap other errors
-      throw new functions.https.HttpsError(
+      throw new HttpsError(
         'internal',
         `Backtest failed: ${error.message || 'Unknown error'}`
       );
