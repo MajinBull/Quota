@@ -21,7 +21,7 @@ type ActiveView = 'configuration' | 'risultati' | 'backtest_salvati';
 
 function AppContent() {
   const { t } = useTranslation(['app', 'common']);
-  const { user, loading, canRunBacktest } = useAuth();
+  const { user, loading, canRunBacktest, updateLocalBacktestCount } = useAuth();
   const { portfolio, getTotalAllocation } = usePortfolioStore();
   const [result, setResult] = useState<BacktestResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -66,17 +66,33 @@ function AppContent() {
 
     try {
       // Execute backtest via Cloud Function (includes server-side limit enforcement)
-      const backtestResult = await executeBacktestRemote(portfolio);
+      const { result: backtestResult, remainingBacktests } = await executeBacktestRemote(portfolio);
 
       if (backtestResult) {
         setResult(backtestResult);
+
+        // Update local counter based on server response
+        // For premium users, remainingBacktests is -1
+        // For free users, calculate current count from remaining
+        if (user && !user.isPremium && remainingBacktests >= 0) {
+          const currentCount = 20 - remainingBacktests;
+          updateLocalBacktestCount(currentCount);
+        }
+
         // Switch to results view after successful backtest
         setActiveView('risultati');
       } else {
         setError(t('app:errors.backtestError'));
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('app:errors.unknownError'));
+      const errorMessage = err instanceof Error ? err.message : t('app:errors.unknownError');
+
+      // Check if it's the limit exceeded error
+      if (errorMessage.includes('limite mensile') || errorMessage.includes('Premium')) {
+        setShowUpgradeModal(true);
+      } else {
+        setError(errorMessage);
+      }
     } finally {
       setIsLoading(false);
     }

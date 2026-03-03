@@ -1,0 +1,63 @@
+{
+  "download_date": "2026-02-23 14:26:10",
+  "period": "2005-01-01 to 2026-02-23",
+  "categories": {
+    "etf": {
+      "total": 5,
+      "successful": 5,
+      "symbols": [
+        "SPY",
+        "QQQ",
+        "VTI",
+        "VEA",
+        "VWO"
+      ]
+    },
+    "crypto": {
+      "total": 5,
+      "successful": 5,
+      "symbols": [
+        "BTC-USD",
+        "ETH-USD",
+        "BNB-USD",
+        "SOL-USD",
+        "ADA-USD"
+      ]
+    },
+    "metals": {
+      "total": 5,
+      "successful": 5,
+      "symbols": [
+        "GLD",
+        "SLV",
+        "PPLT",
+        "PALL",
+        "COPX"
+      ]
+    },
+    "bonds": {
+      "total": 5,
+      "successful": 5,
+      "symbols": [
+        "AGG",
+        "TLT",
+        "LQD",
+        "HYG",
+        "TIP"
+      ]
+    },
+    "real_estate": {
+      "total": 5,
+      "successful": 5,
+      "symbols": [
+        "VNQ",
+        "VNQI",
+        "IYR",
+        "RWO",
+        "REET"
+      ]
+    }
+  },
+  "total_assets": 25,
+  "successful_downloads": 25
+}

@@ -140,6 +140,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     );
   };
 
+  /**
+   * Update local backtest count from server response
+   * Used after Cloud Function execution to sync UI with server state
+   */
+  const updateLocalBacktestCount = (newCount: number) => {
+    setUser((prev) =>
+      prev
+        ? {
+            ...prev,
+            backtestExecutionCount: newCount,
+          }
+        : null
+    );
+  };
+
   const canRunBacktest = (): boolean => {
     if (!user) return false;
     if (user.isPremium) return true;
@@ -155,6 +170,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     logout,
     resetPassword,
     incrementBacktestCount,
+    updateLocalBacktestCount,
     canRunBacktest,
   };
 

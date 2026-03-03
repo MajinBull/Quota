@@ -16,5 +16,6 @@ export interface AuthContextType {
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   incrementBacktestCount: () => Promise<void>;
+  updateLocalBacktestCount: (newCount: number) => void;
   canRunBacktest: () => boolean;
 }

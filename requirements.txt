@@ -1,2 +1,15 @@
-yfinance>=0.2.36
+# Core data processing
 pandas>=2.0.0
+numpy>=1.24.0
+
+# API clients
+requests>=2.31.0
+
+# Environment variables
+python-dotenv>=1.0.0
+
+# Progress tracking
+tqdm>=4.66.0
+
+# Legacy (for comparison/fallback only)
+yfinance>=0.2.36

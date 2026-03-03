@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio Aggressivo 2025–2065</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Bebas+Neue&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --panel: #111118;
+    --border: #1e1e2e;
+    --accent: #00ff88;
+    --accent2: #ff6b35;
+    --accent3: #7c6fff;
+    --gold: #ffd700;
+    --text: #e0e0f0;
+    --muted: #5a5a7a;
+    --crypto: #f7931a;
+    --etf: #00d4ff;
+    --metal: #c0c0c0;
+    --reit: #ff6b9d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  header {
+    padding: 40px 0 30px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 30px;
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, var(--accent), var(--etf) 50%, var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  .badge {
+    background: linear-gradient(135deg, #ff003c22, #ff003c44);
+    border: 1px solid #ff003c88;
+    color: #ff6b6b;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    padding: 6px 14px;
+    border-radius: 4px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Controls */
+  .controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 30px;
+    padding: 24px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .ctrl-group label {
+    display: block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .ctrl-group input, .ctrl-group select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    transition: border-color 0.2s;
+  }
+
+  .ctrl-group input:focus, .ctrl-group select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .btn-run {
+    background: linear-gradient(135deg, var(--accent), var(--etf));
+    color: #000;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    align-self: end;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .btn-run:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px #00ff8844;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tab {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    margin-bottom: -1px;
+  }
+
+  .tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .stat-card.green::before { background: var(--accent); }
+  .stat-card.blue::before { background: var(--etf); }
+  .stat-card.orange::before { background: var(--crypto); }
+  .stat-card.purple::before { background: var(--accent3); }
+  .stat-card.gold::before { background: var(--gold); }
+
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .stat-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .stat-val.green { color: var(--accent); }
+  .stat-val.blue { color: var(--etf); }
+  .stat-val.orange { color: var(--crypto); }
+  .stat-val.purple { color: var(--accent3); }
+  .stat-val.gold { color: var(--gold); }
+
+  .stat-sub {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* Chart containers */
+  .chart-panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .chart-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  canvas { max-width: 100%; }
+
+  /* Allocation grid */
+  .alloc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .asset-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .asset-card:hover { border-color: var(--accent); }
+
+  .asset-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+
+  .asset-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    font-weight: 700;
+  }
+
+  .asset-pct {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .asset-bar-bg {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .asset-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.8s ease;
+  }
+
+  .asset-details {
+    font-size: 0.75rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .asset-details strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* Analysis section */
+  .analysis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  .analysis-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px;
+  }
+
+  .analysis-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  .event-list { list-style: none; }
+
+  .event-item {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .event-item:last-child { border-bottom: none; }
+
+  .event-year {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent);
+    white-space: nowrap;
+    padding-top: 2px;
+    min-width: 40px;
+  }
+
+  .event-text { color: var(--muted); }
+  .event-text strong { color: var(--text); }
+
+  /* Projection table */
+  .proj-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+
+  .proj-table th {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .proj-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #1a1a2e;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+  }
+
+  .proj-table tr:hover td { background: #ffffff05; }
+
+  .positive { color: var(--accent); }
+  .neutral { color: var(--gold); }
+  .big { color: #00ff88; font-weight: 700; }
+
+  /* Footer */
+  footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    line-height: 1.8;
+  }
+
+  .disclaimer {
+    background: #ff6b3511;
+    border: 1px solid #ff6b3533;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    font-size: 0.72rem;
+    color: #ff9966;
+    line-height: 1.7;
+  }
+
+  .toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    cursor: pointer;
+  }
+
+  .toggle-wrap input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .toggle-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid;
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .toggle-label.btc { color: #f7931a; border-color: #f7931a55; background: #f7931a11; }
+  .toggle-label.eth { color: #627eea; border-color: #627eea55; background: #627eea11; }
+
+  input[type="checkbox"]:not(:checked) + .toggle-label {
+    opacity: 0.4;
+    text-decoration: line-through;
+  }
+
+  @media (max-width: 600px) {
+    .controls { grid-template-columns: 1fr 1fr; }
+    .tabs { overflow-x: auto; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-top">
+      <div>
+        <h1>PORTFOLIO<br>AGGRESSIVO</h1>
+        <p class="subtitle">// ETF · Metalli · Crypto · REITs · 2025–2065</p>
+      </div>
+      <div class="badge">⚡ PROFILO AGGRESSIVO</div>
+    </div>
+  </header>
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="ctrl-group">
+      <label>Capitale Iniziale (€)</label>
+      <input type="number" id="initialCapital" value="1000" min="100" step="100">
+    </div>
+    <div class="ctrl-group">
+      <label>Aggiunta Settimanale (€)</label>
+      <input type="number" id="weeklyAdd" value="100" min="0" step="50">
+    </div>
+    <div class="ctrl-group">
+      <label>Anno Inizio Backtest</label>
+      <select id="startYear">
+        <option value="2010">2010</option>
+        <option value="2013">2013</option>
+        <option value="2015">2015</option>
+        <option value="2018" selected>2018</option>
+        <option value="2020">2020</option>
+      </select>
+    </div>
+    <div class="ctrl-group">
+      <label>Anni Proiezione Futura</label>
+      <select id="futureYears">
+        <option value="20">20 anni</option>
+        <option value="30" selected>30 anni</option>
+        <option value="40">40 anni</option>
+      </select>
+    </div>
+    <div class="ctrl-group">
+      <label>Crypto nel Backtest</label>
+      <div style="display:flex;gap:10px;margin-top:6px;flex-wrap:wrap;">
+        <label class="toggle-wrap">
+          <input type="checkbox" id="toggle-btc" checked onchange="runSimulation()">
+          <span class="toggle-label btc">₿ BTC</span>
+        </label>
+        <label class="toggle-wrap">
+          <input type="checkbox" id="toggle-eth" checked onchange="runSimulation()">
+          <span class="toggle-label eth">Ξ ETH</span>
+        </label>
+      </div>
+    </div>
+    <div class="ctrl-group">
+      <label>&nbsp;</label>
+      <button class="btn-run" onclick="runSimulation()">▶ CALCOLA</button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('backtest', this)">📈 Backtest Storico</button>
+    <button class="tab" onclick="switchTab('portfolio', this)">🎯 Portafoglio</button>
+    <button class="tab" onclick="switchTab('projection', this)">🚀 Proiezione Futura</button>
+    <button class="tab" onclick="switchTab('analysis', this)">🔬 Analisi Driver</button>
+  </div>
+
+  <!-- TAB 1: BACKTEST -->
+  <div id="tab-backtest" class="tab-content active">
+    <div class="stats-row" id="stats-row">
+      <div class="stat-card green">
+        <div class="stat-label">Valore Finale</div>
+        <div class="stat-val green" id="stat-final">—</div>
+        <div class="stat-sub" id="stat-final-sub">portafoglio totale</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-label">Capitale Investito</div>
+        <div class="stat-val blue" id="stat-invested">—</div>
+        <div class="stat-sub">versato totale</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-label">Rendimento Totale</div>
+        <div class="stat-val orange" id="stat-return">—</div>
+        <div class="stat-sub">% sul capitale</div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-label">CAGR</div>
+        <div class="stat-val purple" id="stat-cagr">—</div>
+        <div class="stat-sub">crescita annua composta</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-label">Best Asset</div>
+        <div class="stat-val gold" id="stat-best">—</div>
+        <div class="stat-sub" id="stat-best-sub">nel periodo</div>
+      </div>
+    </div>
+
+    <div class="chart-panel">
+      <div class="chart-title">// Crescita Portafoglio vs Capitale Investito (€)</div>
+      <canvas id="chartBacktest" height="90"></canvas>
+    </div>
+
+    <div class="chart-panel">
+      <div class="chart-title">// Performance per Asset Class (indice 100 = punto partenza)</div>
+      <canvas id="chartAssets" height="80"></canvas>
+    </div>
+  </div>
+
+  <!-- TAB 2: PORTFOLIO ALLOCATION -->
+  <div id="tab-portfolio" class="tab-content">
+    <div class="alloc-grid" id="alloc-grid">
+      <!-- filled by JS -->
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;" class="two-col-charts">
+      <div class="chart-panel" style="margin-bottom:0">
+        <div class="chart-title">// Allocazione per Asset Class</div>
+        <canvas id="chartDonut" height="200"></canvas>
+      </div>
+      <div class="chart-panel" style="margin-bottom:0">
+        <div class="chart-title">// Esposizione Geografica Stimata</div>
+        <canvas id="chartGeo" height="200"></canvas>
+      </div>
+    </div>
+    <div class="chart-panel">
+      <div class="chart-title">// Breakdown Geografico — USA ora solo ~18% del portafoglio totale</div>
+      <div id="geo-bars" style="display:flex;flex-direction:column;gap:10px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: PROIEZIONE -->
+  <div id="tab-projection" class="tab-content">
+    <div class="chart-panel">
+      <div class="chart-title">// Proiezione Monte Carlo — Scenari Conservativo / Base / Ottimista</div>
+      <canvas id="chartProjection" height="90"></canvas>
+    </div>
+    <div class="chart-panel">
+      <div class="chart-title">// Tabella Milestone — Crescita Anno per Anno</div>
+      <div style="overflow-x:auto;">
+        <table class="proj-table" id="projTable">
+          <thead>
+            <tr>
+              <th>Anno</th>
+              <th>Investito (€)</th>
+              <th>Scen. Conserv.</th>
+              <th>Scen. Base</th>
+              <th>Scen. Ottimista</th>
+              <th>Moltiplicatore</th>
+            </tr>
+          </thead>
+          <tbody id="projTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: ANALISI DRIVER -->
+  <div id="tab-analysis" class="tab-content">
+    <div class="analysis-grid">
+      <div class="analysis-card">
+        <h3><span class="dot" style="background:var(--gold)"></span>ORO</h3>
+        <ul class="event-list">
+          <li class="event-item"><span class="event-year">2008</span><div class="event-text"><strong>Crisis finanziaria globale</strong> — fly-to-safety, +25% in 1 anno. L'oro è ancora percepito come rifugio assoluto.</div></li>
+          <li class="event-item"><span class="event-year">2011</span><div class="event-text"><strong>Picco $1.920/oz</strong> — paura inflazione post-QE Fed, crisi debito europeo. Poi correzione 40% fino al 2015.</div></li>
+          <li class="event-item"><span class="event-year">2020</span><div class="event-text"><strong>COVID + QE massivo</strong> — l'oro tocca $2.067/oz. Tassi reali negativi = benzina per l'oro.</div></li>
+          <li class="event-item"><span class="event-year">2022</span><div class="event-text"><strong>Guerra Ucraina + inflazione</strong> — corsa agli asset reali. L'oro tiene meglio degli azionari.</div></li>
+          <li class="event-item"><span class="event-year">2024</span><div class="event-text"><strong>Acquisti banche centrali</strong> — record di acquisti da Cina, India, Russia. Supera i $2.500/oz.</div></li>
+        </ul>
+      </div>
+
+      <div class="analysis-card">
+        <h3><span class="dot" style="background:#b0b0c0"></span>ARGENTO / ALLUMINIO</h3>
+        <ul class="event-list">
+          <li class="event-item"><span class="event-year">2021</span><div class="event-text"><strong>Silver squeeze Reddit</strong> — WallStreetBets, +20% in 3 giorni. Alta volatilità per bassa liquidità.</div></li>
+          <li class="event-item"><span class="event-year">2021</span><div class="event-text"><strong>Alluminio: shortage globale</strong> — blocchi supply chain post-COVID, +80% in 2 anni. Domanda EV esplode.</div></li>
+          <li class="event-item"><span class="event-year">2022</span><div class="event-text"><strong>LME alluminio $3.380/ton</strong> — sanzioni Russia (maggior produttore mondiale). Poi crollo -40% con recessione.</div></li>
+          <li class="event-item"><span class="event-year">2023–24</span><div class="event-text"><strong>Transizione energetica</strong> — pannelli solari, batterie, EV. Domanda strutturale per argento e alluminio in crescita decennale.</div></li>
+        </ul>
+      </div>
+
+      <div class="analysis-card">
+        <h3><span class="dot" style="background:var(--crypto)"></span>BITCOIN / ETH</h3>
+        <ul class="event-list">
+          <li class="event-item"><span class="event-year">2017</span><div class="event-text"><strong>Bull run ICO</strong> — BTC da $1k a $19k (+1.800%). Poi crypto winter -84% nel 2018.</div></li>
+          <li class="event-item"><span class="event-year">2020–21</span><div class="event-text"><strong>Institutional adoption</strong> — MicroStrategy, Tesla, PayPal. BTC supera $64k. ETH esplode con DeFi +800%.</div></li>
+          <li class="event-item"><span class="event-year">2022</span><div class="event-text"><strong>Crash Luna + FTX</strong> — -75% in 12 mesi. Evento sistemico, non solo speculativo.</div></li>
+          <li class="event-item"><span class="event-year">2024</span><div class="event-text"><strong>ETF Bitcoin spot USA</strong> — approvazione SEC, BlackRock entra. Halving aprile 2024. BTC supera $73k.</div></li>
+          <li class="event-item"><span class="event-year">2025</span><div class="event-text"><strong>Narrativa digital gold</strong> — adozione istituzionale crescente, regolamentazione UE MiCA attiva.</div></li>
+        </ul>
+      </div>
+
+      <div class="analysis-card">
+        <h3><span class="dot" style="background:var(--etf)"></span>ETF GLOBALI (MSCI World)</h3>
+        <ul class="event-list">
+          <li class="event-item"><span class="event-year">2009–20</span><div class="event-text"><strong>Bull market più lungo della storia</strong> — 11 anni di crescita ininterrotta. S&P500 +430%. MSCI World +250%.</div></li>
+          <li class="event-item"><span class="event-year">2020</span><div class="event-text"><strong>Crash COVID: -34% in 33 giorni</strong> poi recupero completo in 5 mesi. Chi tenne guadagnò tutto.</div></li>
+          <li class="event-item"><span class="event-year">2022</span><div class="event-text"><strong>Rialzo tassi Fed aggressivo</strong> — MSCI World -20%. Obbligazioni e growth stock colpiti duramente.</div></li>
+          <li class="event-item"><span class="event-year">2023–24</span><div class="event-text"><strong>AI boom</strong> — Nvidia +800%, Mag7 trainano indici. Tech rappresenta oltre 25% MSCI World.</div></li>
+        </ul>
+      </div>
+
+      <div class="analysis-card">
+        <h3><span class="dot" style="background:var(--reit)"></span>REITs</h3>
+        <ul class="event-list">
+          <li class="event-item"><span class="event-year">2008</span><div class="event-text"><strong>Crisi subprime</strong> — REITs -70%. Immobiliare USA collassa. Opportunità enorme post-crash.</div></li>
+          <li class="event-item"><span class="event-year">2015–20</span><div class="event-text"><strong>Recovery e boom</strong> — tassi bassi favoriscono immobiliare. REIT USA +140% in 5 anni. Dividend yield 4-6%.</div></li>
+          <li class="event-item"><span class="event-year">2022–23</span><div class="event-text"><strong>Tassi alti = pressione</strong> — i REITs soffrono perché il debito costa di più. -30% dai massimi.</div></li>
+          <li class="event-item"><span class="event-year">2024–25</span><div class="event-text"><strong>Taglio tassi Fed</strong> — i REITs tornano attrattivi. Data center e logistica esplodono con la domanda AI.</div></li>
+        </ul>
+      </div>
+
+      <div class="analysis-card">
+        <h3><span class="dot" style="background:var(--accent)"></span>FATTORI MACRO CHIAVE</h3>
+        <ul class="event-list">
+          <li class="event-item"><span class="event-year">TASSI</span><div class="event-text"><strong>Tassi reali negativi</strong> → favoriscono oro, crypto, growth. <strong>Tassi alti</strong> → favoriscono cash, value, obbligazioni.</div></li>
+          <li class="event-item"><span class="event-year">INFLAZ.</span><div class="event-text"><strong>Alta inflazione</strong> → asset reali vincono (oro, commodity, immobiliare). ETF nominali soffrono.</div></li>
+          <li class="event-item"><span class="event-year">DOLLARO</span><div class="event-text"><strong>USD debole</strong> → commodities salgono (prezzate in $). Attenzione al cambio €/$ per noi europei.</div></li>
+          <li class="event-item"><span class="event-year">GEOPOLIT.</span><div class="event-text"><strong>Tensioni globali</strong> → fly-to-safety (oro, CHF). Cripto ambigue: talvolta rifugio, talvolta vendute.</div></li>
+          <li class="event-item"><span class="event-year">TECH/AI</span><div class="event-text"><strong>Rivoluzione AI</strong> → traina ETF tech e domanda energia/infrastrutture. Impatto decennale sull'economia.</div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="disclaimer">
+      ⚠️ DISCLAIMER: Questa simulazione è a scopo puramente educativo e informativo. I rendimenti passati non garantiscono rendimenti futuri. Il presente documento non costituisce consulenza finanziaria, legale o fiscale. Prima di investire, consulta un consulente finanziario abilitato. Gli investimenti in strumenti finanziari comportano rischi, inclusa la possibile perdita del capitale investito.
+    </div>
+    <p>PORTFOLIO SIMULATOR v1.0 · Dati storici approssimati · Valuta base: EUR · Aggiornato 2025</p>
+  </footer>
+</div>
+
+<script>
+// =====================
+// DATA & CONFIGURATION
+// =====================
+const PORTFOLIO = [
+  // ── ETF AZIONARI GLOBALI DIVERSIFICATI ──────────────────────────────
+  {
+    name: "MSCI World ex-USA",
+    ticker: "Paesi Sviluppati no USA",
+    pct: 16,
+    color: "#00d4ff",
+    colorAlpha: "#00d4ff33",
+    category: "ETF",
+    cagr: { base: 0.075, bear: 0.03, bull: 0.12 },
+    examples: "IWDP, XDWX, Xtrackers MSCI World ex USA",
+    desc: "Azionario sviluppato SENZA USA: Europa, Giappone, Canada, Australia. Elimina la concentrazione americana tipica di MSCI World classico (~70% USA).",
+    risk: "Media-Alta",
+    isCrypto: false
+  },
+  {
+    name: "ETF Europa (STOXX 600)",
+    ticker: "EU Equity",
+    pct: 10,
+    color: "#3399ff",
+    colorAlpha: "#3399ff33",
+    category: "ETF",
+    cagr: { base: 0.072, bear: 0.025, bull: 0.115 },
+    examples: "MEUD, EXSA, iShares STOXX Europe 600",
+    desc: "600 maggiori aziende europee: Germania, Francia, UK, Svizzera, Italia. Settori forti: lusso, automotive, farmaceutica, energia.",
+    risk: "Media",
+    isCrypto: false
+  },
+  {
+    name: "ETF USA Tech / Nasdaq",
+    ticker: "USA Tech",
+    pct: 8,
+    color: "#4a90ff",
+    colorAlpha: "#4a90ff33",
+    category: "ETF",
+    cagr: { base: 0.11, bear: 0.03, bull: 0.18 },
+    examples: "CNDX, EQQQ, iShares Nasdaq 100",
+    desc: "Solo la componente tech USA: Apple, Nvidia, Microsoft, Meta, Alphabet. Esposizione mirata all'innovazione senza sovrappesare tutto l'azionario USA.",
+    risk: "Alta",
+    isCrypto: false
+  },
+  {
+    name: "ETF India",
+    ticker: "India Equity",
+    pct: 7,
+    color: "#ff9933",
+    colorAlpha: "#ff993322",
+    category: "ETF",
+    cagr: { base: 0.11, bear: 0.02, bull: 0.20 },
+    examples: "NDIA, iShares MSCI India, Xtrackers MSCI India",
+    desc: "La più grande democrazia al mondo con PIL in crescita ~7% annuo. Classe media in esplosione, demografia favorevole, hub IT globale. Potenziale enorme su 30+ anni.",
+    risk: "Alta",
+    isCrypto: false
+  },
+  {
+    name: "ETF Asia-Pacifico",
+    ticker: "APAC ex-Japan",
+    pct: 5,
+    color: "#00e5ff",
+    colorAlpha: "#00e5ff22",
+    category: "ETF",
+    cagr: { base: 0.085, bear: 0.01, bull: 0.15 },
+    examples: "AAXJ, iShares MSCI AC Asia ex Japan, PAASI",
+    desc: "Corea del Sud (Samsung, TSMC), Taiwan, Singapore, Indonesia, Vietnam. Hub manifatturiero e tech del prossimo decennio.",
+    risk: "Alta",
+    isCrypto: false
+  },
+  {
+    name: "Emerging Markets ex-China",
+    ticker: "EM ex-CN",
+    pct: 4,
+    color: "#00ffaa",
+    colorAlpha: "#00ffaa22",
+    category: "ETF",
+    cagr: { base: 0.09, bear: 0.01, bull: 0.17 },
+    examples: "EMXC, iShares MSCI EM ex-China, EMXF",
+    desc: "Brasile, Messico, Sud Africa, Indonesia, Polonia. Evita il rischio regolatorio cinese mantenendo piena esposizione ai mercati emergenti.",
+    risk: "Alta",
+    isCrypto: false
+  },
+  // ── CRYPTO ──────────────────────────────────────────────────────────
+  {
+    name: "Bitcoin",
+    ticker: "BTC",
+    pct: 5,
+    color: "#f7931a",
+    colorAlpha: "#f7931a33",
+    category: "Crypto",
+    cagr: { base: 0.45, bear: -0.2, bull: 1.2 },
+    examples: "BTC diretta o ETF (21Shares CBTC)",
+    desc: "Digital gold, supply limitata a 21M. Alta volatilità, cicli di halving ogni 4 anni. Posizione ridotta per gestire la volatilità del portafoglio.",
+    risk: "Estrema",
+    isCrypto: true
+  },
+  {
+    name: "Ethereum",
+    ticker: "ETH",
+    pct: 3,
+    color: "#627eea",
+    colorAlpha: "#627eea33",
+    category: "Crypto",
+    cagr: { base: 0.5, bear: -0.3, bull: 1.5 },
+    examples: "ETH diretta o ETF (21Shares AETH)",
+    desc: "Layer 1 smart contract dominante. Proof-of-stake, staking yield ~4%. Posizione piccola ma con upside asimmetrico.",
+    risk: "Estrema",
+    isCrypto: true
+  },
+  // ── METALLI PREZIOSI & COMMODITY ────────────────────────────────────
+  {
+    name: "Oro (Gold)",
+    ticker: "XAU",
+    pct: 9,
+    color: "#ffd700",
+    colorAlpha: "#ffd70033",
+    category: "Metalli",
+    cagr: { base: 0.065, bear: 0.02, bull: 0.12 },
+    examples: "ETC (ZETH, PPFB), iShares Physical Gold",
+    desc: "Riserva di valore millenaria. Hedge vs inflazione e crisi sistemiche. Acquisti record da banche centrali (Cina, India, Russia).",
+    risk: "Bassa-Media",
+    isCrypto: false
+  },
+  {
+    name: "Argento",
+    ticker: "XAG",
+    pct: 4,
+    color: "#c0c0d0",
+    colorAlpha: "#c0c0d033",
+    category: "Metalli",
+    cagr: { base: 0.055, bear: 0.01, bull: 0.15 },
+    examples: "iShares Physical Silver (SSLN)",
+    desc: "Metallo sia industriale che prezioso. Domanda strutturale da solar panel, EV e elettronica verde.",
+    risk: "Alta",
+    isCrypto: false
+  },
+  {
+    name: "Alluminio / Commodity",
+    ticker: "ALU",
+    pct: 3,
+    color: "#9aa0b0",
+    colorAlpha: "#9aa0b033",
+    category: "Metalli",
+    cagr: { base: 0.04, bear: -0.05, bull: 0.12 },
+    examples: "ETF commodity diversificato (CMOD, AIGC)",
+    desc: "Metallo chiave per EV, packaging, costruzioni. Ciclo con economia globale e transizione energetica.",
+    risk: "Alta",
+    isCrypto: false
+  },
+  // ── REITs IMMOBILIARE GLOBALE ────────────────────────────────────────
+  {
+    name: "REITs Europa",
+    ticker: "EU-REIT",
+    pct: 8,
+    color: "#ff6b9d",
+    colorAlpha: "#ff6b9d33",
+    category: "REITs",
+    cagr: { base: 0.07, bear: 0.02, bull: 0.11 },
+    examples: "EPRA Europe (IPRP), Amundi EPRA",
+    desc: "Immobiliare europeo diversificato. Logistica, uffici, residenziale. Dividendo medio 4-5%.",
+    risk: "Media",
+    isCrypto: false
+  },
+  {
+    name: "REITs USA / Globali",
+    ticker: "REIT-US",
+    pct: 8,
+    color: "#ff3d7f",
+    colorAlpha: "#ff3d7f22",
+    category: "REITs",
+    cagr: { base: 0.075, bear: 0.025, bull: 0.12 },
+    examples: "iShares Global REIT (REET), VNQ Vanguard",
+    desc: "Immobiliare USA e globale. Data center, infrastrutture AI, healthcare real estate, logistica e-commerce.",
+    risk: "Media",
+    isCrypto: false
+  },
+  {
+    name: "REITs Asia-Pacific",
+    ticker: "REIT-AP",
+    pct: 5,
+    color: "#ff8c69",
+    colorAlpha: "#ff8c6922",
+    category: "REITs",
+    cagr: { base: 0.065, bear: 0.01, bull: 0.10 },
+    examples: "iShares Asia Property (IASP)",
+    desc: "Immobiliare Asia: Singapore, Giappone, Australia. Diversificazione geografica e valutaria con dividendi stabili.",
+    risk: "Media-Alta",
+    isCrypto: false
+  },
+  {
+    name: "REITs Emergenti",
+    ticker: "REIT-EM",
+    pct: 5,
+    color: "#ffaa44",
+    colorAlpha: "#ffaa4422",
+    category: "REITs",
+    cagr: { base: 0.08, bear: 0.01, bull: 0.14 },
+    examples: "iShares Emerging Mkt Property (IEMS)",
+    desc: "Immobiliare in mercati emergenti: India, Brasile, Messico. Alta crescita urbanistica e domanda abitativa strutturale.",
+    risk: "Alta",
+    isCrypto: false
+  }
+];
+
+// Historical approximate annual returns (indexed) for backtest
+const HIST_RETURNS = {
+  // years: 2012,2013,2014,2015,2016,2018,2019,2020,2022,2023,2024,2025,2026
+  "MSCI World ex-USA":        [0.20, 0.15, -0.04, 0.10, 0.22, -0.14, 0.24, 0.12, -0.16, 0.18, 0.12, 0.10, 0.07],
+  "ETF Europa (STOXX 600)":   [0.17, 0.20, 0.02, 0.08, 0.21, -0.15, 0.27, -0.04, -0.13, 0.16, 0.10, 0.09, 0.07],
+  "ETF USA Tech / Nasdaq":    [0.18, 0.37, 0.19, 0.07, 0.07, -0.01, 0.39, 0.48, -0.33, 0.55, 0.29, 0.24, 0.10],
+  "ETF India":                [0.26, -0.04, 0.24, -0.06, 0.02, -0.08, 0.09, 0.15, 0.04, 0.20, 0.19, 0.15, 0.09],
+  "ETF Asia-Pacifico":        [0.22, 0.03, -0.02, -0.10, 0.08, -0.14, 0.18, 0.25, -0.20, 0.12, 0.10, 0.10, 0.07],
+  "Emerging Markets ex-China":[0.20, -0.03, -0.05, -0.15, 0.12, -0.16, 0.20, 0.18, -0.22, 0.10, 0.08, 0.09, 0.07],
+  "Bitcoin":                  [5.5,  1.2, -0.58, 13.0, 1.4, -0.73, 3.0, 0.59, -0.75, 1.56, 1.5, 1.4, 0.6],
+  "Ethereum":                 [null, null, null, 8.0, 2.9, -0.82, 4.6, 0.32, -0.67, 2.1, 1.8, 1.6, 0.7],
+  "Oro (Gold)":               [0.07, -0.28, -0.10, 0.08, 0.13, -0.02, 0.18, 0.25, -0.04, 0.13, 0.10, 0.15, 0.12],
+  "Argento":                  [0.08, -0.36, -0.20, 0.15, 0.16, -0.09, 0.47, -0.12, -0.12, 0.05, 0.08, 0.12, 0.10],
+  "Alluminio / Commodity":    [0.12, -0.14, -0.18, 0.11, 0.22, -0.16, 0.43, 0.35, -0.35, 0.07, 0.05, 0.04, 0.03],
+  "REITs Europa":             [0.22, 0.07, 0.14, 0.09, 0.14, -0.13, 0.17, -0.01, -0.28, 0.10, 0.08, 0.09, 0.06],
+  "REITs USA / Globali":      [0.28, 0.05, 0.02, 0.12, 0.25, -0.08, 0.09, 0.27, -0.25, 0.12, 0.09, 0.10, 0.07],
+  "REITs Asia-Pacific":       [0.18, 0.02, 0.06, 0.05, 0.18, -0.10, 0.12, 0.13, -0.20, 0.08, 0.07, 0.08, 0.05],
+  "REITs Emergenti":          [0.24, 0.01, 0.08, 0.04, 0.15, -0.15, 0.14, 0.10, -0.22, 0.09, 0.08, 0.09, 0.06],
+};
+const HIST_YEARS_BASE = [2012, 2013, 2014, 2015, 2016, 2018, 2019, 2020, 2022, 2023, 2024, 2025, 2026];
+
+let charts = {};
+
+function fmt(n) {
+  if (n >= 1e6) return (n/1e6).toFixed(2) + 'M';
+  if (n >= 1e3) return (n/1e3).toFixed(1) + 'k';
+  return n.toFixed(0);
+}
+
+function fmtEur(n) { return '€' + fmt(n); }
+
+// =====================
+// SIMULATION ENGINE
+// =====================
+function getActivePortfolio() {
+  const btcOn = document.getElementById('toggle-btc').checked;
+  const ethOn = document.getElementById('toggle-eth').checked;
+
+  // Filter assets based on toggles
+  const active = PORTFOLIO.filter(a => {
+    if (a.name === 'Bitcoin') return btcOn;
+    if (a.name === 'Ethereum') return ethOn;
+    return true;
+  });
+
+  // Redistribute excluded crypto % proportionally to remaining assets
+  const totalPct = active.reduce((s, a) => s + a.pct, 0);
+  return active.map(a => ({ ...a, pctAdj: (a.pct / totalPct) * 100 }));
+}
+
+function runSimulation() {
+  const initial = parseFloat(document.getElementById('initialCapital').value) || 1000;
+  const weekly  = parseFloat(document.getElementById('weeklyAdd').value) || 100;
+  const startYear = parseInt(document.getElementById('startYear').value);
+  const futureYears = parseInt(document.getElementById('futureYears').value);
+
+  const activePortfolio = getActivePortfolio();
+
+  // Determine year range
+  const endYear = 2025;
+  const years = [];
+  for (let y = startYear; y <= endYear; y++) years.push(y);
+
+  // Build backtest data
+  // We simulate on annual basis with DCA
+  const labels = years.map(String);
+  
+  // Portfolio value and invested capital over time
+  const portfolioVals = [];
+  const investedVals = [];
+  
+  // Per-asset indices
+  const assetIndices = {};
+  activePortfolio.forEach(a => { assetIndices[a.name] = [100]; });
+
+  let portfolioValue = initial;
+  let invested = initial;
+  const weeksPerYear = 52;
+
+  // Build returns by year for each asset
+  function getHistReturn(assetName, year) {
+    const idx = HIST_YEARS_BASE.indexOf(year);
+    if (idx === -1) return HIST_RETURNS[assetName]?.[HIST_RETURNS[assetName].length - 1] ?? 0.07;
+    const ret = HIST_RETURNS[assetName]?.[idx];
+    return (ret === null || ret === undefined) ? 0.07 : ret;
+  }
+
+  // Per-asset value tracking
+  const assetValues = {};
+  activePortfolio.forEach(a => {
+    assetValues[a.name] = initial * (a.pctAdj / 100);
+  });
+
+  years.forEach((year, yi) => {
+    // DCA: add weekly contributions
+    const yearlyAdd = weekly * weeksPerYear;
+    invested += yearlyAdd;
+    
+    // Distribute new money by allocation
+    activePortfolio.forEach(a => {
+      assetValues[a.name] += yearlyAdd * (a.pctAdj / 100);
+    });
+
+    // Apply returns
+    activePortfolio.forEach(a => {
+      const ret = getHistReturn(a.name, year);
+      assetValues[a.name] *= (1 + ret);
+    });
+
+    // Sum portfolio
+    portfolioValue = Object.values(assetValues).reduce((s, v) => s + v, 0);
+    portfolioVals.push(portfolioValue);
+    investedVals.push(invested);
+
+    // Asset indices (normalized to 100 at start)
+    if (yi === 0) {
+      activePortfolio.forEach(a => { assetIndices[a.name] = [100]; });
+    } else {
+      activePortfolio.forEach(a => {
+        const prevVal = assetIndices[a.name][yi - 1];
+        const ret = getHistReturn(a.name, year);
+        assetIndices[a.name].push(prevVal * (1 + ret));
+      });
+    }
+  });
+
+  const finalVal = portfolioVals[portfolioVals.length - 1];
+  const totalInvested = investedVals[investedVals.length - 1];
+  const totalReturn = ((finalVal - totalInvested) / totalInvested * 100).toFixed(1);
+  const nYears = years.length;
+  const cagr = (Math.pow(finalVal / initial, 1 / nYears) - 1) * 100;
+
+  // Best asset
+  const bestAsset = activePortfolio.reduce((best, a) => {
+    const lastIdx = assetIndices[a.name][assetIndices[a.name].length - 1];
+    const bestIdx = assetIndices[best.name][assetIndices[best.name].length - 1];
+    return lastIdx > bestIdx ? a : best;
+  }, activePortfolio[0]);
+
+  // Update stats
+  document.getElementById('stat-final').textContent = fmtEur(finalVal);
+  document.getElementById('stat-invested').textContent = fmtEur(totalInvested);
+  document.getElementById('stat-return').textContent = '+' + totalReturn + '%';
+  document.getElementById('stat-cagr').textContent = cagr.toFixed(1) + '%';
+  document.getElementById('stat-best').textContent = bestAsset.name.split(' ')[0];
+  document.getElementById('stat-best-sub').textContent = '+' + (assetIndices[bestAsset.name][assetIndices[bestAsset.name].length - 1]).toFixed(0) + ' (base 100)';
+
+  // Draw backtest chart
+  if (charts.backtest) charts.backtest.destroy();
+  const ctx1 = document.getElementById('chartBacktest').getContext('2d');
+  charts.backtest = new Chart(ctx1, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Portafoglio (€)',
+          data: portfolioVals,
+          borderColor: '#00ff88',
+          backgroundColor: '#00ff8811',
+          fill: true,
+          tension: 0.4,
+          borderWidth: 2.5,
+          pointRadius: 4,
+        },
+        {
+          label: 'Capitale Investito (€)',
+          data: investedVals,
+          borderColor: '#ffffff33',
+          borderDash: [6, 4],
+          fill: false,
+          tension: 0.1,
+          borderWidth: 1.5,
+          pointRadius: 0,
+        }
+      ]
+    },
+    options: chartOpts('€')
+  });
+
+  // Draw per-asset chart
+  if (charts.assets) charts.assets.destroy();
+  const ctx2 = document.getElementById('chartAssets').getContext('2d');
+  charts.assets = new Chart(ctx2, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: activePortfolio.map(a => ({
+        label: a.name,
+        data: assetIndices[a.name],
+        borderColor: a.color,
+        backgroundColor: 'transparent',
+        fill: false,
+        tension: 0.3,
+        borderWidth: 1.8,
+        pointRadius: 2,
+      }))
+    },
+    options: chartOpts('idx')
+  });
+
+  // Build future projection
+  buildProjection(finalVal, invested, futureYears);
+
+  // Update allocation cards (reflect toggle state)
+  buildAllocCards();
+  
+  // Donut (always full portfolio)
+  buildDonut();
+  buildGeoChart();
+}
+
+function chartOpts(unit) {
+  return {
+    responsive: true,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: {
+        labels: {
+          color: '#8888aa',
+          font: { family: "'Space Mono', monospace", size: 10 },
+          boxWidth: 12,
+        }
+      },
+      tooltip: {
+        backgroundColor: '#111118',
+        borderColor: '#1e1e2e',
+        borderWidth: 1,
+        titleColor: '#e0e0f0',
+        bodyColor: '#8888aa',
+        callbacks: {
+          label: ctx => {
+            const v = ctx.parsed.y;
+            const label = ctx.dataset.label;
+            if (unit === '€') return ` ${label}: €${v.toLocaleString('it-IT', {maximumFractionDigits: 0})}`;
+            return ` ${label}: ${v.toFixed(1)}`;
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        ticks: { color: '#555577', font: { family: "'Space Mono', monospace", size: 10 } },
+        grid: { color: '#1e1e2e' }
+      },
+      y: {
+        ticks: {
+          color: '#555577',
+          font: { family: "'Space Mono', monospace", size: 10 },
+          callback: v => unit === '€' ? '€' + fmt(v) : v.toFixed(0)
+        },
+        grid: { color: '#1e1e2e' }
+      }
+    }
+  };
+}
+
+function buildProjection(startVal, startInvested, years) {
+  const weekly = parseFloat(document.getElementById('weeklyAdd').value) || 100;
+  const weeksPerYear = 52;
+
+  const yearLabels = [];
+  const conservData = [], baseData = [], bullData = [];
+  const tableRows = [];
+
+  // Weighted portfolio CAGR (using activePortfolio from the toggle state)
+  const ap = getActivePortfolio();
+  const baseCagr  = ap.reduce((s, a) => s + (a.pctAdj/100) * a.cagr.base, 0);
+  const bearCagr  = ap.reduce((s, a) => s + (a.pctAdj/100) * a.cagr.bear, 0);
+  const bullCagr  = ap.reduce((s, a) => s + (a.pctAdj/100) * a.cagr.bull, 0);
+
+  let vBase = startVal, vBear = startVal, vBull = startVal;
+  let invested = startInvested;
+  const currentYear = 2025;
+
+  for (let i = 1; i <= years; i++) {
+    const yr = currentYear + i;
+    const yearlyAdd = weekly * weeksPerYear;
+    invested += yearlyAdd;
+    vBase  = (vBase  + yearlyAdd) * (1 + baseCagr);
+    vBear  = (vBear  + yearlyAdd) * (1 + bearCagr);
+    vBull  = (vBull  + yearlyAdd) * (1 + bullCagr);
+
+    yearLabels.push(yr.toString());
+    conservData.push(vBear);
+    baseData.push(vBase);
+    bullData.push(vBull);
+
+    if (i % 5 === 0 || i === 1 || i === years) {
+      const mult = (vBase / invested).toFixed(1);
+      const cls = mult >= 3 ? 'big' : mult >= 1.5 ? 'positive' : 'neutral';
+      tableRows.push(`<tr>
+        <td>${yr}</td>
+        <td>${fmtEur(invested)}</td>
+        <td class="neutral">${fmtEur(vBear)}</td>
+        <td class="positive">${fmtEur(vBase)}</td>
+        <td style="color:#00ffcc">${fmtEur(vBull)}</td>
+        <td class="${cls}">${mult}x</td>
+      </tr>`);
+    }
+  }
+
+  if (charts.proj) charts.proj.destroy();
+  const ctx3 = document.getElementById('chartProjection').getContext('2d');
+  charts.proj = new Chart(ctx3, {
+    type: 'line',
+    data: {
+      labels: yearLabels,
+      datasets: [
+        { label: '🐻 Conservativo', data: conservData, borderColor: '#ff6b35', backgroundColor: '#ff6b3511', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 0 },
+        { label: '📊 Base', data: baseData, borderColor: '#00ff88', backgroundColor: '#00ff8818', fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 0 },
+        { label: '🚀 Ottimista', data: bullData, borderColor: '#00ffcc', backgroundColor: '#00ffcc11', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 0 },
+      ]
+    },
+    options: chartOpts('€')
+  });
+
+  document.getElementById('projTableBody').innerHTML = tableRows.join('');
+}
+
+function buildAllocCards() {
+  const btcOn = document.getElementById('toggle-btc').checked;
+  const ethOn = document.getElementById('toggle-eth').checked;
+  const grid = document.getElementById('alloc-grid');
+  grid.innerHTML = PORTFOLIO.map(a => {
+    const isDisabled = (a.name === 'Bitcoin' && !btcOn) || (a.name === 'Ethereum' && !ethOn);
+    const opacity = isDisabled ? 'opacity:0.35;' : '';
+    const tag = isDisabled ? '<span style="font-size:0.6rem;color:#ff6b35;font-family:Space Mono,monospace;margin-left:8px;">ESCLUSO DAL BACKTEST</span>' : '';
+    return `
+    <div class="asset-card" style="${opacity}">
+      <div class="asset-header">
+        <div>
+          <div class="asset-name" style="color:${a.color}">${a.name}${tag}</div>
+          <div style="font-size:0.65rem;color:var(--muted);margin-top:2px;font-family:'Space Mono'">${a.ticker} · ${a.category}</div>
+        </div>
+        <div class="asset-pct" style="color:${a.color}">${a.pct}%</div>
+      </div>
+      <div class="asset-bar-bg">
+        <div class="asset-bar-fill" style="width:${a.pct * 3.2}%;background:${a.color}"></div>
+      </div>
+      <div class="asset-details">
+        <div>${a.desc}</div>
+        <br>
+        <div><strong>Esempi:</strong> ${a.examples}</div>
+        <div><strong>Rischio:</strong> ${a.risk}</div>
+        <div><strong>CAGR atteso:</strong> Bear ${(a.cagr.bear*100).toFixed(0)}% / Base ${(a.cagr.base*100).toFixed(0)}% / Bull ${(a.cagr.bull*100).toFixed(0)}%</div>
+      </div>
+    </div>
+  `}).join('');
+}
+
+function buildDonut() {
+  if (charts.donut) charts.donut.destroy();
+  const ctx4 = document.getElementById('chartDonut').getContext('2d');
+  charts.donut = new Chart(ctx4, {
+    type: 'doughnut',
+    data: {
+      labels: PORTFOLIO.map(a => `${a.name} (${a.pct}%)`),
+      datasets: [{
+        data: PORTFOLIO.map(a => a.pct),
+        backgroundColor: PORTFOLIO.map(a => a.colorAlpha),
+        borderColor: PORTFOLIO.map(a => a.color),
+        borderWidth: 2,
+        hoverBorderWidth: 3,
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: '65%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: '#8888aa',
+            font: { family: "'Space Mono', monospace", size: 10 },
+            boxWidth: 10,
+            padding: 16,
+          }
+        }
+      }
+    }
+  });
+}
+
+function buildGeoChart() {
+  // Estimated geographic exposure of the full portfolio
+  const GEO = [
+    { region: "Europa",          pct: 27, color: "#3399ff",  desc: "STOXX 600, MSCI ex-USA (UK, DE, FR, CH, IT…), REITs Europa" },
+    { region: "USA",             pct: 18, color: "#4a90ff",  desc: "Nasdaq 100 ETF + quota USA nei REITs globali" },
+    { region: "Asia-Pacifico",   pct: 16, color: "#00e5ff",  desc: "Giappone, Australia, Singapore, Corea, Taiwan + REITs AP" },
+    { region: "India",           pct: 10, color: "#ff9933",  desc: "ETF India dedicato + quota India in EM ex-China" },
+    { region: "Mercati Emergenti",pct: 10, color: "#00ffaa", desc: "Brasile, Messico, Sud Africa, Indonesia, Polonia" },
+    { region: "Globale / Cripto",pct: 8,  color: "#f7931a",  desc: "BTC, ETH (asset non geograficamente localizzati)" },
+    { region: "Metalli / Commodity",pct:11,color: "#ffd700", desc: "Oro, Argento, Alluminio — prezzati globalmente in USD" },
+  ];
+
+  // Geo donut
+  if (charts.geo) charts.geo.destroy();
+  const ctxG = document.getElementById('chartGeo').getContext('2d');
+  charts.geo = new Chart(ctxG, {
+    type: 'doughnut',
+    data: {
+      labels: GEO.map(g => g.region + ' (' + g.pct + '%)'),
+      datasets: [{ data: GEO.map(g => g.pct), backgroundColor: GEO.map(g => g.color + '55'), borderColor: GEO.map(g => g.color), borderWidth: 2 }]
+    },
+    options: { responsive: true, cutout: '60%', plugins: { legend: { position: 'bottom', labels: { color: '#8888aa', font: { family: "'Space Mono', monospace", size: 9 }, boxWidth: 10, padding: 12 } } } }
+  });
+
+  // Geo bars
+  const barsEl = document.getElementById('geo-bars');
+  barsEl.innerHTML = GEO.map(g => `
+    <div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+        <span style="font-family:'Space Mono',monospace;font-size:0.75rem;color:${g.color};font-weight:700">${g.region}</span>
+        <span style="font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--muted)">${g.pct}%</span>
+      </div>
+      <div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:3px">
+        <div style="height:100%;width:${g.pct * 2.5}%;background:${g.color};border-radius:3px;transition:width 0.8s ease"></div>
+      </div>
+      <div style="font-size:0.68rem;color:var(--muted)">${g.desc}</div>
+    </div>
+  `).join('');
+}
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+// Auto-run on load
+window.onload = () => {
+  buildAllocCards();
+  buildDonut();
+  buildGeoChart();
+  runSimulation();
+};
+</script>
+</body>
+</html>
