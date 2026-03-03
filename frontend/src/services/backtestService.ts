@@ -1,6 +1,6 @@
 import { httpsCallable } from 'firebase/functions';
 import { functions } from '../config/firebase';
-import type { Portfolio, BacktestResult } from '@quota/shared/types';
+import type { Portfolio, BacktestResult } from '../types';
 
 interface ExecuteBacktestResponse {
   success: boolean;

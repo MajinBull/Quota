@@ -13,7 +13,7 @@ import { UpgradeModal } from './components/auth/UpgradeModal';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
 import { usePortfolioStore } from './stores/portfolioStore';
 import { executeBacktestRemote } from './services/backtestService';
-import type { BacktestResult } from '@quota/shared/types';
+import type { BacktestResult } from './types';
 import logoQuota from './assets/logo-quota.png';
 import { Analytics } from '@vercel/analytics/react';
 
