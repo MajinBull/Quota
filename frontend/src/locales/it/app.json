@@ -53,7 +53,8 @@
       "crypto": "Crypto",
       "commodities": "Commodities",
       "bonds": "Obbligazioni",
-      "realEstate": "Immobiliare"
+      "realEstate": "Immobiliare",
+      "stocks": "Azioni"
     },
     "allocation": {
       "title": "Allocazione Portfolio",

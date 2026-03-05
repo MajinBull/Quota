@@ -1,5 +1,5 @@
 // Asset categories
-export type AssetCategory = 'etf' | 'crypto' | 'commodities' | 'bonds' | 'real_estate';
+export type AssetCategory = 'etf' | 'crypto' | 'commodities' | 'bonds' | 'real_estate' | 'stocks';
 
 // Single candlestick data point
 export interface Candle {

@@ -211,7 +211,8 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
       crypto: t('portfolio.categories.crypto'),
       commodities: t('portfolio.categories.commodities'),
       bonds: t('portfolio.categories.bonds'),
-      real_estate: t('portfolio.categories.realEstate')
+      real_estate: t('portfolio.categories.realEstate'),
+      stocks: t('portfolio.categories.stocks')
     };
     return categoryMap[category] || category;
   };
@@ -230,10 +231,10 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
       try {
         return JSON.parse(stored);
       } catch {
-        return { etf: [], crypto: [], commodities: [], bonds: [], real_estate: [] };
+        return { etf: [], crypto: [], commodities: [], bonds: [], real_estate: [], stocks: [] };
       }
     }
-    return { etf: [], crypto: [], commodities: [], bonds: [], real_estate: [] };
+    return { etf: [], crypto: [], commodities: [], bonds: [], real_estate: [], stocks: [] };
   });
 
   const totalAllocation = getTotalAllocation();

@@ -862,6 +862,234 @@ export const ASSET_METADATA: Record<string, AssetInfo> = {
     website: 'https://www.ishares.com/us/products/239540/ishares-international-developed-real-estate-etf',
     longDescription: 'L\'iShares International Developed Real Estate ETF si concentra su mercati immobiliari sviluppati al di fuori degli USA. Include REIT e società immobiliari di paesi come Giappone, Hong Kong, Singapore, UK e Australia. Offre accesso a mercati immobiliari maturi con caratteristiche diverse dal mercato USA, utile per diversificazione globale del portafoglio immobiliare.'
   },
+
+  // Stocks - Tech Giants (7)
+  'AAPL': {
+    symbol: 'AAPL',
+    category: 'stocks',
+    name: 'Apple Inc.',
+    description: 'Consumer electronics and software',
+    popularity_rank: 1,
+    inceptionDate: '12 dicembre 1980',
+    aum: 'Market Cap ~$3.5 trilioni',
+    website: 'https://www.apple.com',
+    longDescription: 'Apple Inc. è una delle aziende tecnologiche più preziose al mondo, leader nel settore dell\'elettronica di consumo. Produce iPhone, iPad, Mac, Apple Watch e servizi digitali come Apple Music, iCloud e App Store. Con un ecosistema integrato di hardware, software e servizi, Apple ha creato una forte fedeltà del cliente e margini di profitto elevati. L\'azienda è nota per design innovativo, qualità premium e forte riconoscimento del brand.'
+  },
+  'MSFT': {
+    symbol: 'MSFT',
+    category: 'stocks',
+    name: 'Microsoft Corporation',
+    description: 'Software and cloud computing',
+    popularity_rank: 2,
+    inceptionDate: '13 marzo 1986',
+    aum: 'Market Cap ~$3.1 trilioni',
+    website: 'https://www.microsoft.com',
+    longDescription: 'Microsoft Corporation è leader globale nel software e cloud computing. Produce Windows, Office 365, Azure cloud platform, Xbox gaming e LinkedIn. Sotto la leadership di Satya Nadella, Microsoft ha trasformato il suo business verso cloud e subscription, diventando uno dei maggiori provider cloud al mondo. Azure compete direttamente con AWS di Amazon ed è fondamentale per la strategia AI dell\'azienda.'
+  },
+  'GOOGL': {
+    symbol: 'GOOGL',
+    category: 'stocks',
+    name: 'Alphabet Inc. (Google)',
+    description: 'Search, advertising, cloud',
+    popularity_rank: 3,
+    inceptionDate: '19 agosto 2004',
+    aum: 'Market Cap ~$2.2 trilioni',
+    website: 'https://www.google.com',
+    longDescription: 'Alphabet Inc. è la holding di Google, dominante nel search online e advertising digitale. Oltre al motore di ricerca, possiede YouTube, Android, Google Cloud, Waymo (auto autonome) e numerosi progetti innovativi. Google genera oltre l\'80% dei ricavi tramite advertising, ma sta diversificando verso cloud computing e hardware. È leader nell\'AI con progetti come Google AI e Gemini.'
+  },
+  'AMZN': {
+    symbol: 'AMZN',
+    category: 'stocks',
+    name: 'Amazon.com Inc.',
+    description: 'E-commerce and cloud services',
+    popularity_rank: 4,
+    inceptionDate: '15 maggio 1997',
+    aum: 'Market Cap ~$2.1 trilioni',
+    website: 'https://www.amazon.com',
+    longDescription: 'Amazon.com Inc. è il leader mondiale dell\'e-commerce e del cloud computing. Oltre al marketplace retail, gestisce Amazon Web Services (AWS), il provider cloud più grande al mondo che genera la maggior parte dei profitti aziendali. Amazon opera anche in streaming (Prime Video), advertising, grocery (Whole Foods), dispositivi (Alexa, Kindle) e logistica. L\'ecosistema Prime conta oltre 200 milioni di membri globali.'
+  },
+  'META': {
+    symbol: 'META',
+    category: 'stocks',
+    name: 'Meta Platforms Inc.',
+    description: 'Social media and metaverse',
+    popularity_rank: 5,
+    inceptionDate: '18 maggio 2012',
+    aum: 'Market Cap ~$1.4 trilioni',
+    website: 'https://www.meta.com',
+    longDescription: 'Meta Platforms Inc. (ex Facebook) è il leader globale dei social media con oltre 3 miliardi di utenti attivi. Possiede Facebook, Instagram, WhatsApp e Threads. Genera ricavi principalmente tramite advertising digitale altamente targetizzato. Meta investe massicciamente nel metaverso tramite Reality Labs, sviluppando visori VR/AR (Meta Quest) e infrastrutture per mondi virtuali, nonostante significative perdite iniziali.'
+  },
+  'NVDA': {
+    symbol: 'NVDA',
+    category: 'stocks',
+    name: 'NVIDIA Corporation',
+    description: 'Graphics processing and AI chips',
+    popularity_rank: 6,
+    inceptionDate: '22 gennaio 1999',
+    aum: 'Market Cap ~$3.3 trilioni',
+    website: 'https://www.nvidia.com',
+    longDescription: 'NVIDIA Corporation è leader mondiale nelle GPU (Graphics Processing Units) e acceleratori AI. Inizialmente focalizzata su gaming, NVIDIA è diventata dominante nell\'AI e data center grazie alle sue GPU utilizzate per training e inference di modelli di machine learning. Le GPU NVIDIA alimentano la rivoluzione AI, con chip come H100 e A100 utilizzati da tutte le major tech. Anche presente in automotive (Nvidia Drive) e professionale (Quadro).'
+  },
+  'TSLA': {
+    symbol: 'TSLA',
+    category: 'stocks',
+    name: 'Tesla Inc.',
+    description: 'Electric vehicles and energy',
+    popularity_rank: 7,
+    inceptionDate: '29 giugno 2010',
+    aum: 'Market Cap ~$1.0 trilione',
+    website: 'https://www.tesla.com',
+    longDescription: 'Tesla Inc. è il leader mondiale dei veicoli elettrici (EV) e soluzioni energetiche sostenibili. Produce auto elettriche (Model S, 3, X, Y, Cybertruck), batterie, pannelli solari e sistemi di energy storage. Tesla ha rivoluzionato l\'industria automotive accelerando la transizione verso mobilità elettrica. Sotto la leadership visionaria di Elon Musk, investe anche in guida autonoma (Autopilot/FSD) e robotica (Optimus).'
+  },
+
+  // Stocks - Finance & Services (5)
+  'JPM': {
+    symbol: 'JPM',
+    category: 'stocks',
+    name: 'JPMorgan Chase & Co.',
+    description: 'Global banking and financial services',
+    popularity_rank: 8,
+    inceptionDate: '5 marzo 1969',
+    aum: 'Market Cap ~$700 miliardi',
+    website: 'https://www.jpmorganchase.com',
+    longDescription: 'JPMorgan Chase & Co. è la più grande banca statunitense per asset e una delle istituzioni finanziarie più importanti al mondo. Opera in investment banking, commercial banking, asset management e servizi finanziari per consumatori. Con presenza in oltre 100 paesi, JPMorgan serve milioni di clienti retail, piccole imprese, corporation e istituzioni. È considerata una delle banche più solide e ben gestite globalmente.'
+  },
+  'V': {
+    symbol: 'V',
+    category: 'stocks',
+    name: 'Visa Inc.',
+    description: 'Global payment technology',
+    popularity_rank: 9,
+    inceptionDate: '19 marzo 2008',
+    aum: 'Market Cap ~$600 miliardi',
+    website: 'https://www.visa.com',
+    longDescription: 'Visa Inc. è il leader mondiale nei pagamenti digitali, operando la più grande rete di pagamento elettronico. Facilita transazioni tra consumatori, merchant, banche e governi in oltre 200 paesi. Visa non emette carte né presta denaro, ma guadagna commissioni su ogni transazione elaborata. Beneficia della tendenza globale verso cashless payments e digitalizzazione finanziaria, con crescita strutturale a lungo termine.'
+  },
+  'MA': {
+    symbol: 'MA',
+    category: 'stocks',
+    name: 'Mastercard Inc.',
+    description: 'Payment processing network',
+    popularity_rank: 10,
+    inceptionDate: '25 maggio 2006',
+    aum: 'Market Cap ~$500 miliardi',
+    website: 'https://www.mastercard.com',
+    longDescription: 'Mastercard Inc. è il secondo network di pagamento globale dopo Visa, elaborando miliardi di transazioni annualmente. Come Visa, Mastercard opera un modello toll-booth: guadagna commissioni su transazioni senza rischio di credito. L\'azienda investe in cybersecurity, AI per fraud detection e nuove tecnologie di pagamento come contactless e biometrico. Beneficia della crescita dell\'e-commerce e della riduzione dell\'uso di contante.'
+  },
+  'BAC': {
+    symbol: 'BAC',
+    category: 'stocks',
+    name: 'Bank of America Corp.',
+    description: 'Banking and financial services',
+    popularity_rank: 11,
+    inceptionDate: '25 settembre 1984',
+    aum: 'Market Cap ~$350 miliardi',
+    website: 'https://www.bankofamerica.com',
+    longDescription: 'Bank of America Corporation è una delle più grandi banche commerciali USA, seconda solo a JPMorgan. Offre servizi bancari consumer e commercial, wealth management (Merrill Lynch) e investment banking. Con migliaia di filiali e ATM, serve oltre 60 milioni di clienti consumer e business. Bank of America ha investito massicciamente in tecnologia digitale e mobile banking, riducendo costi operativi e migliorando customer experience.'
+  },
+  'WMT': {
+    symbol: 'WMT',
+    category: 'stocks',
+    name: 'Walmart Inc.',
+    description: 'Retail and e-commerce',
+    popularity_rank: 12,
+    inceptionDate: '17 agosto 1972',
+    aum: 'Market Cap ~$700 miliardi',
+    website: 'https://www.walmart.com',
+    longDescription: 'Walmart Inc. è il più grande retailer al mondo per ricavi, con migliaia di negozi negli USA e presenza internazionale. Offre una vasta gamma di prodotti a prezzi competitivi grazie a supply chain efficiente e economie di scala. Walmart ha investito miliardi in e-commerce e omnichannel per competere con Amazon, con crescita significativa di Walmart+ (servizio subscription) e delivery. Opera anche Sam\'s Club (membership warehouse).'
+  },
+
+  // Stocks - Healthcare & Consumer (5)
+  'JNJ': {
+    symbol: 'JNJ',
+    category: 'stocks',
+    name: 'Johnson & Johnson',
+    description: 'Pharmaceuticals and medical devices',
+    popularity_rank: 13,
+    inceptionDate: '24 settembre 1944',
+    aum: 'Market Cap ~$380 miliardi',
+    website: 'https://www.jnj.com',
+    longDescription: 'Johnson & Johnson è un conglomerato sanitario globale che opera in farmaceutici, medical devices e consumer health. Produce farmaci innovativi per oncologia, immunologia e malattie cardiovascolari, dispositivi chirurgici avanzati e brand consumer come Tylenol, Band-Aid e Neutrogena. J&J è nota per stabilità, dividendi crescenti per oltre 60 anni consecutivi (Dividend King) e pipeline farmaceutica robusta. Nel 2023 ha separato il business consumer (Kenvue).'
+  },
+  'PG': {
+    symbol: 'PG',
+    category: 'stocks',
+    name: 'Procter & Gamble Co.',
+    description: 'Consumer goods and brands',
+    popularity_rank: 14,
+    inceptionDate: '1 gennaio 1970',
+    aum: 'Market Cap ~$400 miliardi',
+    website: 'https://www.pg.com',
+    longDescription: 'Procter & Gamble è uno dei più grandi produttori di beni di consumo al mondo, con brand iconici come Tide, Pampers, Gillette, Oral-B, Pantene e Olay. Opera in categorie difensive (beauty, grooming, health care, fabric care, baby care) con prodotti essenziali utilizzati quotidianamente. P&G è un Dividend Aristocrat con oltre 60 anni di aumenti di dividendo consecutivi, offrendo stabilità e prevedibilità di cash flow.'
+  },
+  'UNH': {
+    symbol: 'UNH',
+    category: 'stocks',
+    name: 'UnitedHealth Group Inc.',
+    description: 'Health insurance and services',
+    popularity_rank: 15,
+    inceptionDate: '17 ottobre 1984',
+    aum: 'Market Cap ~$500 miliardi',
+    website: 'https://www.unitedhealthgroup.com',
+    longDescription: 'UnitedHealth Group è la più grande compagnia di assicurazioni sanitarie USA per ricavi e numero di assicurati. Opera attraverso UnitedHealthcare (health benefits) e Optum (health services, pharmacy, technology). Beneficia della crescita strutturale della spesa sanitaria dovuta all\'invecchiamento demografico e all\'aumento dei costi medici. UnitedHealth ha mostrato crescita consistente di ricavi e profitti grazie a integrazione verticale e tecnologia.'
+  },
+  'PFE': {
+    symbol: 'PFE',
+    category: 'stocks',
+    name: 'Pfizer Inc.',
+    description: 'Pharmaceuticals and vaccines',
+    popularity_rank: 16,
+    inceptionDate: '1 gennaio 1972',
+    aum: 'Market Cap ~$150 miliardi',
+    website: 'https://www.pfizer.com',
+    longDescription: 'Pfizer Inc. è una delle più grandi aziende farmaceutiche globali, sviluppando e producendo farmaci e vaccini innovativi. Nota per blockbuster come Lipitor (colesterolo), Viagra e il vaccino COVID-19 sviluppato con BioNTech. Pfizer investe miliardi in R&D per farmaci oncologici, malattie rare e vaccini. Ha una pipeline forte e strategia di acquisizioni per crescita (recente acquisizione Seagen per $43 miliardi).'
+  },
+  'KO': {
+    symbol: 'KO',
+    category: 'stocks',
+    name: 'The Coca-Cola Company',
+    description: 'Beverages and soft drinks',
+    popularity_rank: 17,
+    inceptionDate: '1 gennaio 1970',
+    aum: 'Market Cap ~$290 miliardi',
+    website: 'https://www.coca-colacompany.com',
+    longDescription: 'The Coca-Cola Company è il leader mondiale nelle bevande analcoliche, con oltre 500 brand inclusi Coca-Cola, Sprite, Fanta, Dasani e Minute Maid. Distribuisce prodotti in oltre 200 paesi con uno dei sistemi di distribuzione più capillari al mondo. Coca-Cola è un Dividend King con oltre 60 anni di aumenti consecutivi di dividendo. Sta diversificando verso bevande healthier e zero-sugar per adattarsi ai trend di consumo.'
+  },
+
+  // Stocks - Industrial & Entertainment (3)
+  'DIS': {
+    symbol: 'DIS',
+    category: 'stocks',
+    name: 'The Walt Disney Company',
+    description: 'Entertainment and media',
+    popularity_rank: 18,
+    inceptionDate: '12 novembre 1957',
+    aum: 'Market Cap ~$200 miliardi',
+    website: 'https://www.disney.com',
+    longDescription: 'The Walt Disney Company è un conglomerato di intrattenimento globale che opera in media (ABC, ESPN), parchi a tema, resort, cruise line e streaming (Disney+). Possiede franchise iconici come Marvel, Star Wars, Pixar e Disney classics. Disney+ ha raggiunto oltre 150 milioni di subscriber in pochi anni, competendo con Netflix. I parchi a tema generano profitti significativi con pricing power elevato e fan loyalty globale.'
+  },
+  'NKE': {
+    symbol: 'NKE',
+    category: 'stocks',
+    name: 'Nike Inc.',
+    description: 'Athletic footwear and apparel',
+    popularity_rank: 19,
+    inceptionDate: '2 dicembre 1980',
+    aum: 'Market Cap ~$120 miliardi',
+    website: 'https://www.nike.com',
+    longDescription: 'Nike Inc. è il leader globale nell\'abbigliamento e calzature sportive, con il brand più riconosciuto dell\'industria. Produce scarpe, abbigliamento e equipment per sport e lifestyle, con endorsement di atleti top come Michael Jordan (linea Air Jordan). Nike sta spostando vendite verso direct-to-consumer (DTC) tramite Nike.com e app, aumentando margini. Investe massicciamente in innovazione di prodotto, marketing e tecnologia digitale.'
+  },
+  'NFLX': {
+    symbol: 'NFLX',
+    category: 'stocks',
+    name: 'Netflix Inc.',
+    description: 'Streaming entertainment',
+    popularity_rank: 20,
+    inceptionDate: '23 maggio 2002',
+    aum: 'Market Cap ~$350 miliardi',
+    website: 'https://www.netflix.com',
+    longDescription: 'Netflix Inc. è il pioniere e leader dello streaming entertainment con oltre 260 milioni di subscriber globali. Produce migliaia di ore di contenuti originali (serie, film, documentari) e licenzia contenuti di terze parti. Netflix ha rivoluzionato l\'industria dell\'intrattenimento, causando il decline della TV tradizionale e cable. Investe miliardi annualmente in contenuti per mantenere leadership, espandendosi in gaming, live sports e advertising-supported tier.'
+  },
 };
 
 // Cache for loaded data
@@ -970,7 +1198,7 @@ export function getAssetsByCategory(category: AssetCategory): AssetInfo[] {
  * Get all available categories
  */
 export function getAllCategories(): AssetCategory[] {
-  return ['etf', 'crypto', 'commodities', 'bonds', 'real_estate'];
+  return ['etf', 'crypto', 'commodities', 'bonds', 'real_estate', 'stocks'];
 }
 
 /**

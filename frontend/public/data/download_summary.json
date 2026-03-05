@@ -1,5 +1,5 @@
 {
-  "download_date": "2026-02-23 14:26:10",
+  "download_date": "2026-03-05 21:33:40",
   "period": "2005-01-01 to 2026-02-23",
   "categories": {
     "etf": {
@@ -56,8 +56,34 @@
         "RWO",
         "REET"
       ]
+    },
+    "stocks": {
+      "total": 20,
+      "successful": 20,
+      "symbols": [
+        "AAPL",
+        "MSFT",
+        "GOOGL",
+        "AMZN",
+        "META",
+        "NVDA",
+        "TSLA",
+        "JPM",
+        "V",
+        "MA",
+        "BAC",
+        "WMT",
+        "JNJ",
+        "PG",
+        "UNH",
+        "PFE",
+        "KO",
+        "DIS",
+        "NKE",
+        "NFLX"
+      ]
     }
   },
-  "total_assets": 25,
-  "successful_downloads": 25
+  "total_assets": 45,
+  "successful_downloads": 45
 }

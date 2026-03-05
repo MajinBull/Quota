@@ -348,5 +348,105 @@
     "longDescription": "The iShares International Developed Real Estate ETF focuses on developed real estate markets outside the U.S. It includes REITs and real estate companies from countries like Japan, Hong Kong, Singapore, UK, and Australia. It offers access to mature real estate markets with different characteristics from the U.S. market, useful for global real estate portfolio diversification.",
     "inceptionDate": "October 31, 2007",
     "aum": "~$1.5 billion"
+  },
+  "AAPL": {
+    "longDescription": "Apple Inc. is one of the world's most valuable technology companies, a leader in consumer electronics. It produces iPhone, iPad, Mac, Apple Watch, and digital services like Apple Music, iCloud, and the App Store. With an integrated ecosystem of hardware, software, and services, Apple has created strong customer loyalty and high profit margins. The company is known for innovative design, premium quality, and strong brand recognition.",
+    "inceptionDate": "December 12, 1980",
+    "aum": "Market Cap ~$3.5 trillion"
+  },
+  "MSFT": {
+    "longDescription": "Microsoft Corporation is a global leader in software and cloud computing. It produces Windows, Office 365, Azure cloud platform, Xbox gaming, and LinkedIn. Under Satya Nadella's leadership, Microsoft has transformed its business toward cloud and subscriptions, becoming one of the world's largest cloud providers. Azure competes directly with Amazon's AWS and is fundamental to the company's AI strategy.",
+    "inceptionDate": "March 13, 1986",
+    "aum": "Market Cap ~$3.1 trillion"
+  },
+  "GOOGL": {
+    "longDescription": "Alphabet Inc. is the holding company of Google, dominant in online search and digital advertising. Beyond search, it owns YouTube, Android, Google Cloud, Waymo (autonomous vehicles), and numerous innovative projects. Google generates over 80% of revenue through advertising but is diversifying toward cloud computing and hardware. It is a leader in AI with projects like Google AI and Gemini.",
+    "inceptionDate": "August 19, 2004",
+    "aum": "Market Cap ~$2.2 trillion"
+  },
+  "AMZN": {
+    "longDescription": "Amazon.com Inc. is the global leader in e-commerce and cloud computing. Beyond the retail marketplace, it manages Amazon Web Services (AWS), the world's largest cloud provider that generates most of the company's profits. Amazon also operates in streaming (Prime Video), advertising, grocery (Whole Foods), devices (Alexa, Kindle), and logistics. The Prime ecosystem has over 200 million global members.",
+    "inceptionDate": "May 15, 1997",
+    "aum": "Market Cap ~$2.1 trillion"
+  },
+  "META": {
+    "longDescription": "Meta Platforms Inc. (formerly Facebook) is the global leader in social media with over 3 billion active users. It owns Facebook, Instagram, WhatsApp, and Threads. It generates revenue primarily through highly targeted digital advertising. Meta is investing heavily in the metaverse through Reality Labs, developing VR/AR headsets (Meta Quest) and infrastructure for virtual worlds, despite significant initial losses.",
+    "inceptionDate": "May 18, 2012",
+    "aum": "Market Cap ~$1.4 trillion"
+  },
+  "NVDA": {
+    "longDescription": "NVIDIA Corporation is the world leader in GPUs (Graphics Processing Units) and AI accelerators. Initially focused on gaming, NVIDIA has become dominant in AI and data centers thanks to its GPUs used for training and inference of machine learning models. NVIDIA GPUs power the AI revolution, with chips like H100 and A100 used by all major tech companies. Also present in automotive (Nvidia Drive) and professional (Quadro).",
+    "inceptionDate": "January 22, 1999",
+    "aum": "Market Cap ~$3.3 trillion"
+  },
+  "TSLA": {
+    "longDescription": "Tesla Inc. is the world leader in electric vehicles (EV) and sustainable energy solutions. It produces electric cars (Model S, 3, X, Y, Cybertruck), batteries, solar panels, and energy storage systems. Tesla has revolutionized the automotive industry by accelerating the transition to electric mobility. Under Elon Musk's visionary leadership, it also invests in autonomous driving (Autopilot/FSD) and robotics (Optimus).",
+    "inceptionDate": "June 29, 2010",
+    "aum": "Market Cap ~$1.0 trillion"
+  },
+  "JPM": {
+    "longDescription": "JPMorgan Chase & Co. is the largest U.S. bank by assets and one of the world's most important financial institutions. It operates in investment banking, commercial banking, asset management, and consumer financial services. With a presence in over 100 countries, JPMorgan serves millions of retail clients, small businesses, corporations, and institutions. It is considered one of the strongest and best-managed banks globally.",
+    "inceptionDate": "March 5, 1969",
+    "aum": "Market Cap ~$700 billion"
+  },
+  "V": {
+    "longDescription": "Visa Inc. is the global leader in digital payments, operating the world's largest electronic payment network. It facilitates transactions between consumers, merchants, banks, and governments in over 200 countries. Visa does not issue cards or lend money but earns fees on each transaction processed. It benefits from the global trend toward cashless payments and financial digitization, with long-term structural growth.",
+    "inceptionDate": "March 19, 2008",
+    "aum": "Market Cap ~$600 billion"
+  },
+  "MA": {
+    "longDescription": "Mastercard Inc. is the world's second-largest payment network after Visa, processing billions of transactions annually. Like Visa, Mastercard operates a toll-booth model: it earns fees on transactions without credit risk. The company invests in cybersecurity, AI for fraud detection, and new payment technologies like contactless and biometric. It benefits from e-commerce growth and declining cash usage.",
+    "inceptionDate": "May 25, 2006",
+    "aum": "Market Cap ~$500 billion"
+  },
+  "BAC": {
+    "longDescription": "Bank of America Corporation is one of the largest U.S. commercial banks, second only to JPMorgan. It offers consumer and commercial banking services, wealth management (Merrill Lynch), and investment banking. With thousands of branches and ATMs, it serves over 60 million consumer and business clients. Bank of America has invested heavily in digital and mobile banking technology, reducing operating costs and improving customer experience.",
+    "inceptionDate": "September 25, 1984",
+    "aum": "Market Cap ~$350 billion"
+  },
+  "WMT": {
+    "longDescription": "Walmart Inc. is the world's largest retailer by revenue, with thousands of stores in the U.S. and international presence. It offers a wide range of products at competitive prices thanks to efficient supply chain and economies of scale. Walmart has invested billions in e-commerce and omnichannel to compete with Amazon, with significant growth in Walmart+ (subscription service) and delivery. It also operates Sam's Club (membership warehouse).",
+    "inceptionDate": "August 17, 1972",
+    "aum": "Market Cap ~$700 billion"
+  },
+  "JNJ": {
+    "longDescription": "Johnson & Johnson is a global healthcare conglomerate operating in pharmaceuticals, medical devices, and consumer health. It produces innovative drugs for oncology, immunology, and cardiovascular diseases, advanced surgical devices, and consumer brands like Tylenol, Band-Aid, and Neutrogena. J&J is known for stability, growing dividends for over 60 consecutive years (Dividend King), and a robust pharmaceutical pipeline. In 2023, it separated its consumer business (Kenvue).",
+    "inceptionDate": "September 24, 1944",
+    "aum": "Market Cap ~$380 billion"
+  },
+  "PG": {
+    "longDescription": "Procter & Gamble is one of the world's largest consumer goods manufacturers, with iconic brands like Tide, Pampers, Gillette, Oral-B, Pantene, and Olay. It operates in defensive categories (beauty, grooming, health care, fabric care, baby care) with essential products used daily. P&G is a Dividend Aristocrat with over 60 years of consecutive dividend increases, offering stability and predictable cash flows.",
+    "inceptionDate": "January 1, 1970",
+    "aum": "Market Cap ~$400 billion"
+  },
+  "UNH": {
+    "longDescription": "UnitedHealth Group is the largest U.S. health insurance company by revenue and number of insured. It operates through UnitedHealthcare (health benefits) and Optum (health services, pharmacy, technology). It benefits from structural growth in healthcare spending due to demographic aging and rising medical costs. UnitedHealth has shown consistent revenue and profit growth through vertical integration and technology.",
+    "inceptionDate": "October 17, 1984",
+    "aum": "Market Cap ~$500 billion"
+  },
+  "PFE": {
+    "longDescription": "Pfizer Inc. is one of the world's largest pharmaceutical companies, developing and producing innovative drugs and vaccines. Known for blockbusters like Lipitor (cholesterol), Viagra, and the COVID-19 vaccine developed with BioNTech. Pfizer invests billions in R&D for oncology drugs, rare diseases, and vaccines. It has a strong pipeline and acquisition strategy for growth (recent Seagen acquisition for $43 billion).",
+    "inceptionDate": "January 1, 1972",
+    "aum": "Market Cap ~$150 billion"
+  },
+  "KO": {
+    "longDescription": "The Coca-Cola Company is the global leader in non-alcoholic beverages, with over 500 brands including Coca-Cola, Sprite, Fanta, Dasani, and Minute Maid. It distributes products in over 200 countries with one of the world's most extensive distribution systems. Coca-Cola is a Dividend King with over 60 years of consecutive dividend increases. It is diversifying toward healthier and zero-sugar beverages to adapt to consumption trends.",
+    "inceptionDate": "January 1, 1970",
+    "aum": "Market Cap ~$290 billion"
+  },
+  "DIS": {
+    "longDescription": "The Walt Disney Company is a global entertainment conglomerate operating in media (ABC, ESPN), theme parks, resorts, cruise lines, and streaming (Disney+). It owns iconic franchises like Marvel, Star Wars, Pixar, and Disney classics. Disney+ has reached over 150 million subscribers in just a few years, competing with Netflix. Theme parks generate significant profits with high pricing power and global fan loyalty.",
+    "inceptionDate": "November 12, 1957",
+    "aum": "Market Cap ~$200 billion"
+  },
+  "NKE": {
+    "longDescription": "Nike Inc. is the global leader in athletic footwear and apparel, with the industry's most recognized brand. It produces shoes, apparel, and equipment for sports and lifestyle, with top athlete endorsements like Michael Jordan (Air Jordan line). Nike is shifting sales toward direct-to-consumer (DTC) through Nike.com and apps, increasing margins. It invests heavily in product innovation, marketing, and digital technology.",
+    "inceptionDate": "December 2, 1980",
+    "aum": "Market Cap ~$120 billion"
+  },
+  "NFLX": {
+    "longDescription": "Netflix Inc. is the pioneer and leader in streaming entertainment with over 260 million global subscribers. It produces thousands of hours of original content (series, films, documentaries) and licenses third-party content. Netflix has revolutionized the entertainment industry, causing the decline of traditional TV and cable. It invests billions annually in content to maintain leadership, expanding into gaming, live sports, and advertising-supported tiers.",
+    "inceptionDate": "May 23, 2002",
+    "aum": "Market Cap ~$350 billion"
   }
 }

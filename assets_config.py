@@ -1,6 +1,6 @@
 """
 Asset Configuration for Historical Data Download
-Contains all 72 assets organized by category with metadata
+Contains all 92 assets organized by category with metadata
 """
 
 # Asset symbols organized by category
@@ -65,6 +65,20 @@ ASSETS = {
 
         # International REIT (2)
         "VNQI", "IFGL"
+    ],
+
+    "stocks": [
+        # Tech Giants (7)
+        "AAPL", "MSFT", "GOOGL", "AMZN", "META", "NVDA", "TSLA",
+
+        # Finance & Services (5)
+        "JPM", "V", "MA", "BAC", "WMT",
+
+        # Healthcare & Consumer (5)
+        "JNJ", "PG", "UNH", "PFE", "KO",
+
+        # Industrial & Entertainment (3)
+        "DIS", "NKE", "NFLX"
     ]
 }
 
@@ -535,6 +549,134 @@ ASSET_METADATA = {
         "description": "Developed markets ex-US real estate",
         "inception": "2016-10-18",
         "expense_ratio": 0.48
+    },
+
+    # Stocks - Tech Giants
+    "AAPL": {
+        "name": "Apple Inc.",
+        "description": "Consumer electronics and software",
+        "inception": "1980-12-12",
+        "expense_ratio": 0
+    },
+    "MSFT": {
+        "name": "Microsoft Corporation",
+        "description": "Software and cloud computing",
+        "inception": "1986-03-13",
+        "expense_ratio": 0
+    },
+    "GOOGL": {
+        "name": "Alphabet Inc.",
+        "description": "Internet search and advertising",
+        "inception": "2004-08-19",
+        "expense_ratio": 0
+    },
+    "AMZN": {
+        "name": "Amazon.com Inc.",
+        "description": "E-commerce and cloud services",
+        "inception": "1997-05-15",
+        "expense_ratio": 0
+    },
+    "META": {
+        "name": "Meta Platforms Inc.",
+        "description": "Social media and metaverse",
+        "inception": "2012-05-18",
+        "expense_ratio": 0
+    },
+    "NVDA": {
+        "name": "NVIDIA Corporation",
+        "description": "Graphics processors and AI chips",
+        "inception": "1999-01-22",
+        "expense_ratio": 0
+    },
+    "TSLA": {
+        "name": "Tesla Inc.",
+        "description": "Electric vehicles and clean energy",
+        "inception": "2010-06-29",
+        "expense_ratio": 0
+    },
+
+    # Stocks - Finance & Services
+    "JPM": {
+        "name": "JPMorgan Chase & Co.",
+        "description": "Global investment banking",
+        "inception": "1980-03-05",
+        "expense_ratio": 0
+    },
+    "V": {
+        "name": "Visa Inc.",
+        "description": "Global payments technology",
+        "inception": "2008-03-19",
+        "expense_ratio": 0
+    },
+    "MA": {
+        "name": "Mastercard Inc.",
+        "description": "Payment processing services",
+        "inception": "2006-05-25",
+        "expense_ratio": 0
+    },
+    "BAC": {
+        "name": "Bank of America Corp.",
+        "description": "Banking and financial services",
+        "inception": "1980-03-05",
+        "expense_ratio": 0
+    },
+    "WMT": {
+        "name": "Walmart Inc.",
+        "description": "Retail and e-commerce",
+        "inception": "1980-08-25",
+        "expense_ratio": 0
+    },
+
+    # Stocks - Healthcare & Consumer
+    "JNJ": {
+        "name": "Johnson & Johnson",
+        "description": "Pharmaceuticals and medical devices",
+        "inception": "1980-03-05",
+        "expense_ratio": 0
+    },
+    "PG": {
+        "name": "Procter & Gamble Co.",
+        "description": "Consumer goods and personal care",
+        "inception": "1980-03-05",
+        "expense_ratio": 0
+    },
+    "UNH": {
+        "name": "UnitedHealth Group Inc.",
+        "description": "Healthcare and insurance services",
+        "inception": "1984-10-17",
+        "expense_ratio": 0
+    },
+    "PFE": {
+        "name": "Pfizer Inc.",
+        "description": "Pharmaceutical development",
+        "inception": "1980-03-05",
+        "expense_ratio": 0
+    },
+    "KO": {
+        "name": "The Coca-Cola Company",
+        "description": "Beverage manufacturing",
+        "inception": "1980-03-05",
+        "expense_ratio": 0
+    },
+
+    # Stocks - Industrial & Entertainment
+    "DIS": {
+        "name": "The Walt Disney Company",
+        "description": "Entertainment and media",
+        "inception": "1980-03-05",
+        "expense_ratio": 0
+    },
+    "NKE": {
+        "name": "Nike Inc.",
+        "description": "Athletic footwear and apparel",
+        "inception": "1980-12-02",
+        "expense_ratio": 0
+    },
+    "NFLX": {
+        "name": "Netflix Inc.",
+        "description": "Streaming entertainment services",
+        "inception": "2002-05-23",
+        "expense_ratio": 0
     }
 }
 

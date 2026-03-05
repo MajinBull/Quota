@@ -53,7 +53,8 @@
       "crypto": "Crypto",
       "commodities": "Commodities",
       "bonds": "Bonds",
-      "realEstate": "Real Estate"
+      "realEstate": "Real Estate",
+      "stocks": "Stocks"
     },
     "allocation": {
       "title": "Portfolio Allocation",
