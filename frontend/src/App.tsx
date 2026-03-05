@@ -10,7 +10,6 @@ import { useAuth } from './contexts/AuthContext';
 import { AuthModal } from './components/auth/AuthModal';
 import { UserProfileButton } from './components/auth/UserProfileButton';
 import { UpgradeModal } from './components/auth/UpgradeModal';
-import { LanguageSwitcher } from './components/LanguageSwitcher';
 import { usePortfolioStore } from './stores/portfolioStore';
 import { executeBacktestRemote } from './services/backtestService';
 import type { BacktestResult } from './types';
@@ -36,13 +35,13 @@ function AppContent() {
   // Loading state during auth check
   if (loading) {
     return (
-      <div className="min-h-screen bg-stone-50 flex items-center justify-center">
+      <div className="min-h-screen bg-stone-50 dark:bg-slate-950 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <svg className="animate-spin h-12 w-12 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <p className="text-slate-600 font-medium">{t('common:status.loading')}</p>
+          <p className="text-slate-600 dark:text-slate-400 font-medium">{t('common:status.loading')}</p>
         </div>
       </div>
     );
@@ -99,9 +98,9 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-stone-50">
+    <div className="min-h-screen bg-stone-50 dark:bg-slate-950">
       {/* Header */}
-      <header className="border-b border-slate-200 bg-white sticky top-0 z-40">
+      <header className="border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 sticky top-0 z-40">
         <div className="px-4 py-3 md:px-8 md:py-4">
           <div className="flex flex-col md:flex-row items-center md:justify-between gap-3 md:gap-0">
             {/* Logo + Profile (Mobile) */}
@@ -109,9 +108,8 @@ function AppContent() {
               <div className="flex-shrink-0">
                 <img src={logoQuota} alt="QUOTA" className="h-10 md:h-12" />
               </div>
-              {/* User Profile Button + Language - Mobile */}
+              {/* User Profile Button - Mobile */}
               <div className="md:hidden flex items-center gap-2">
-                <LanguageSwitcher />
                 <UserProfileButton onUpgrade={() => setShowUpgradeModal(true)} />
               </div>
             </div>
@@ -123,7 +121,7 @@ function AppContent() {
                 className={`flex-1 md:flex-none px-3 py-2 md:px-8 md:py-3 rounded-xl font-semibold text-xs md:text-base transition-all ${
                   activeView === 'configuration'
                     ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
                 }`}
               >
                 <span className="md:hidden">{t('app:navigation.tabs.configurationShort')}</span>
@@ -136,8 +134,8 @@ function AppContent() {
                   activeView === 'risultati' && result
                     ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30'
                     : result
-                    ? 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                    : 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                    ? 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
+                    : 'bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed'
                 }`}
               >
                 <span className="md:hidden">{t('app:navigation.tabs.resultsShort')}</span>
@@ -148,7 +146,7 @@ function AppContent() {
                 className={`flex-1 md:flex-none px-3 py-2 md:px-8 md:py-3 rounded-xl font-semibold text-xs md:text-base transition-all ${
                   activeView === 'backtest_salvati'
                     ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
                 }`}
               >
                 <span className="md:hidden">{t('app:navigation.tabs.savedShort')}</span>
@@ -156,9 +154,8 @@ function AppContent() {
               </button>
             </div>
 
-            {/* User Profile Button + Language - Desktop */}
+            {/* User Profile Button - Desktop */}
             <div className="hidden md:flex items-center gap-3 flex-shrink-0">
-              <LanguageSwitcher />
               <UserProfileButton onUpgrade={() => setShowUpgradeModal(true)} />
             </div>
           </div>
@@ -168,14 +165,14 @@ function AppContent() {
       {/* Main Content */}
       <main className="max-w-[1800px] mx-auto p-4 md:p-8">
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+          <div className="bg-red-50 dark:bg-red-900/35 border border-red-200 dark:border-red-700 rounded-xl p-4 mb-6">
             <div className="flex items-start gap-3">
-              <svg className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
               </svg>
               <div>
-                <h3 className="text-red-900 font-semibold text-sm">{t('common:status.error')}</h3>
-                <p className="text-red-700 mt-1 text-xs">{error}</p>
+                <h3 className="text-red-900 dark:text-red-200 font-semibold text-sm">{t('common:status.error')}</h3>
+                <p className="text-red-700 dark:text-red-300 mt-1 text-xs">{error}</p>
               </div>
             </div>
           </div>
@@ -188,14 +185,14 @@ function AppContent() {
 
             {/* Run Backtest Button - Sticky Bottom */}
             <div className="fixed bottom-4 left-1/2 -translate-x-1/2 md:left-auto md:right-5 md:translate-x-0 z-10 w-[calc(100%-2rem)] max-w-sm md:w-96">
-              <div className="bg-white border border-slate-200 rounded-2xl shadow-xl p-4">
+              <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl dark:shadow-slate-900 p-4">
                 <button
                   onClick={handleRunBacktest}
                   disabled={!isValidPortfolio || isLoading}
                   className={`w-full py-4 px-6 rounded-xl font-semibold text-base transition-all duration-200 ${
                     isValidPortfolio && !isLoading
                       ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40'
-                      : 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                      : 'bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed'
                   }`}
                 >
                   {isLoading ? (
@@ -228,16 +225,16 @@ function AppContent() {
                 </button>
 
                 {!isValidPortfolio && portfolio.allocations.length > 0 && (
-                  <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                    <p className="text-xs text-amber-900 font-medium text-center">
+                  <div className="mt-3 p-3 bg-amber-50 dark:bg-amber-900/35 border border-amber-200 dark:border-amber-700 rounded-lg">
+                    <p className="text-xs text-amber-900 dark:text-amber-200 font-medium text-center">
                       {t('app:backtest.run.warning', { percentage: totalAllocation.toFixed(1) })}
                     </p>
                   </div>
                 )}
 
                 {portfolio.allocations.length === 0 && (
-                  <div className="mt-3 p-3 bg-slate-50 border border-slate-200 rounded-lg">
-                    <p className="text-xs text-slate-600 text-center">
+                  <div className="mt-3 p-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg">
+                    <p className="text-xs text-slate-600 dark:text-slate-400 text-center">
                       {t('app:backtest.run.emptyHint')}
                     </p>
                   </div>
@@ -272,15 +269,15 @@ function AppContent() {
 
       {/* Templates Modal */}
       {isTemplatesModalOpen && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-slate-900">{t('app:templates.modalTitle')}</h2>
+        <div className="fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto shadow-xl dark:shadow-slate-900">
+            <div className="sticky top-0 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-4 flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t('app:templates.modalTitle')}</h2>
               <button
                 onClick={() => setIsTemplatesModalOpen(false)}
-                className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
               >
-                <svg className="w-6 h-6 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-6 h-6 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -293,14 +290,14 @@ function AppContent() {
       )}
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white mt-12">
+      <footer className="border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 mt-12">
         <div className="px-6 py-6">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
-            <div className="text-slate-600 text-sm">
-              <span className="font-semibold text-slate-900">{t('common:footer.brand')}</span>
+            <div className="text-slate-600 dark:text-slate-400 text-sm">
+              <span className="font-semibold text-slate-900 dark:text-white">{t('common:footer.brand')}</span>
               {' · '}{t('common:footer.subtitle')}
             </div>
-            <div className="text-slate-500 text-xs">
+            <div className="text-slate-500 dark:text-slate-400 text-xs">
               {t('common:footer.disclaimer')}
             </div>
           </div>

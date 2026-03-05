@@ -13,8 +13,8 @@ export function UpgradeModal({ onClose }: Props) {
   const features = t('upgrade.features', { returnObjects: true }) as Array<{ title: string; description: string }>;
 
   return createPortal(
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl w-full max-w-sm md:max-w-3xl overflow-hidden">
+    <div className="fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm md:max-w-3xl overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-br from-indigo-600 to-purple-600 px-4 py-5 md:px-6 md:py-6 text-center">
           <div className="w-12 h-12 md:w-14 md:h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mx-auto mb-3">
@@ -36,33 +36,33 @@ export function UpgradeModal({ onClose }: Props) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-x-4 md:gap-y-3 mb-4 md:mb-5">
             {features.map((feature, index) => (
               <div key={index} className="flex items-start gap-2">
-                <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <svg className="w-3 h-3 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                <div className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg className="w-3 h-3 text-emerald-600 dark:text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-slate-900">{feature.title}</p>
-                  <p className="text-xs text-slate-600">{feature.description}</p>
+                  <p className="text-sm font-semibold text-slate-900 dark:text-white">{feature.title}</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-400">{feature.description}</p>
                 </div>
               </div>
             ))}
           </div>
 
           {/* Pricing Info Box */}
-          <div className="bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-xl p-3 md:p-4 mb-4 md:mb-5">
+          <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/40 dark:to-purple-900/40 border-2 border-indigo-200 dark:border-indigo-700 rounded-xl p-3 md:p-4 mb-4 md:mb-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs md:text-sm font-medium text-slate-700">{t('upgrade.pricing.title')}</span>
+              <span className="text-xs md:text-sm font-medium text-slate-700 dark:text-slate-300">{t('upgrade.pricing.title')}</span>
               <div className="text-right">
-                <p className="text-xl md:text-2xl font-bold text-indigo-600">{t('upgrade.pricing.price')}</p>
-                <p className="text-xs text-slate-600">{t('upgrade.pricing.period')}</p>
+                <p className="text-xl md:text-2xl font-bold text-indigo-600 dark:text-indigo-400">{t('upgrade.pricing.price')}</p>
+                <p className="text-xs text-slate-600 dark:text-slate-400">{t('upgrade.pricing.period')}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 mt-2 pt-2 border-t border-indigo-200">
-              <svg className="w-3 h-3 md:w-4 md:h-4 text-emerald-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <div className="flex items-center gap-2 mt-2 pt-2 border-t border-indigo-200 dark:border-indigo-800">
+              <svg className="w-3 h-3 md:w-4 md:h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              <p className="text-xs text-slate-700">{t('upgrade.pricing.noCommitment')}</p>
+              <p className="text-xs text-slate-700 dark:text-slate-300">{t('upgrade.pricing.noCommitment')}</p>
             </div>
           </div>
 
@@ -70,21 +70,21 @@ export function UpgradeModal({ onClose }: Props) {
           <div className="space-y-2">
             <button
               disabled
-              className="w-full py-3 md:py-3.5 px-6 rounded-xl font-semibold text-sm md:text-base bg-gradient-to-r from-slate-400 to-slate-500 text-white cursor-not-allowed shadow-lg"
+              className="w-full py-3 md:py-3.5 px-6 rounded-xl font-semibold text-sm md:text-base bg-gradient-to-r from-slate-400 to-slate-500 dark:from-slate-500 dark:to-slate-600 text-white cursor-not-allowed shadow-lg"
             >
               {t('upgrade.actions.upgrade')}
             </button>
 
             <button
               onClick={onClose}
-              className="w-full py-2.5 md:py-3 px-6 rounded-xl font-semibold text-sm md:text-base bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
+              className="w-full py-2.5 md:py-3 px-6 rounded-xl font-semibold text-sm md:text-base bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
             >
               {t('upgrade.actions.close')}
             </button>
           </div>
 
           {/* Info Note */}
-          <p className="text-xs text-center text-slate-500 mt-3">
+          <p className="text-xs text-center text-slate-500 dark:text-slate-400 mt-3">
             {t('upgrade.comingSoon')}
           </p>
         </div>

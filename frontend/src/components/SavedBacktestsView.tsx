@@ -64,7 +64,7 @@ export function SavedBacktestsView({ onLoadBacktest }: Props) {
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <p className="text-slate-600 font-medium">{t('common:status.loading')}</p>
+            <p className="text-slate-600 dark:text-slate-400 font-medium">{t('common:status.loading')}</p>
           </div>
         </div>
       ) : (
@@ -76,21 +76,21 @@ export function SavedBacktestsView({ onLoadBacktest }: Props) {
 
       {/* BOTTONE CONFRONTA STICKY (sempre visibile) */}
       <div className="fixed bottom-4 left-1/2 -translate-x-1/2 md:left-auto md:right-5 md:translate-x-0 z-10 w-[calc(100%-2rem)] max-w-sm md:w-96">
-        <div className="bg-white border border-slate-200 rounded-2xl shadow-xl p-4">
+        <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl dark:shadow-slate-900 p-4">
           <button
             onClick={handleCompareClick}
             disabled={selectedForComparison.length < 2}
             className={`w-full py-4 px-6 rounded-xl font-semibold text-base transition-all duration-200 ${
               selectedForComparison.length >= 2
                 ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40'
-                : 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                : 'bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed'
             }`}
           >
             {t('compare.button', { count: selectedForComparison.length })}
           </button>
 
-          <div className="mt-3 p-3 bg-slate-50 border border-slate-200 rounded-lg">
-            <p className="text-xs text-slate-600 text-center">
+          <div className="mt-3 p-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg">
+            <p className="text-xs text-slate-600 dark:text-slate-400 text-center">
               {selectedForComparison.length < 2
                 ? t('compare.hint.min')
                 : t('compare.hint.max')}

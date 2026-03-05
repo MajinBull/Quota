@@ -85,7 +85,7 @@ export function PortfolioTemplates({ onTemplateSelect }: Props) {
 
   return (
     <div>
-      <p className="text-slate-600 mb-6">
+      <p className="text-slate-600 dark:text-slate-400 mb-6">
         {t('templates.description')}
       </p>
 
@@ -98,26 +98,26 @@ export function PortfolioTemplates({ onTemplateSelect }: Props) {
           return (
             <div
               key={index}
-              className="group bg-white border border-slate-200 rounded-2xl p-6 hover:border-indigo-300 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-200"
+              className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 hover:border-indigo-300 dark:hover:border-indigo-600 hover:shadow-lg hover:shadow-indigo-500/10 dark:hover:shadow-indigo-900/20 transition-all duration-200"
             >
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="font-semibold text-lg text-slate-900 mb-1">
+                  <h3 className="font-semibold text-lg text-slate-900 dark:text-white mb-1">
                     {translatedTemplate.name}
                   </h3>
-                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 bg-slate-100 px-2.5 py-1 rounded-full">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 px-2.5 py-1 rounded-full">
                     {riskIcon}
                     <span>{riskLabel}</span>
                   </span>
                 </div>
               </div>
 
-              <p className="text-sm text-slate-600 mb-4 leading-relaxed">
+              <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
                 {translatedTemplate.description}
               </p>
 
               <div className="mb-5">
-                <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">
+                <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-3">
                   {t('templates.composition', 'Composizione')}
                 </div>
                 <div className="space-y-2">
@@ -126,8 +126,8 @@ export function PortfolioTemplates({ onTemplateSelect }: Props) {
                       key={alloc.symbol}
                       className="flex items-center justify-between text-sm"
                     >
-                      <span className="font-medium text-slate-700">{alloc.symbol}</span>
-                      <span className="text-slate-900 font-semibold">{alloc.percentage}%</span>
+                      <span className="font-medium text-slate-700 dark:text-slate-300">{alloc.symbol}</span>
+                      <span className="text-slate-900 dark:text-white font-semibold">{alloc.percentage}%</span>
                     </div>
                   ))}
                 </div>
@@ -135,7 +135,7 @@ export function PortfolioTemplates({ onTemplateSelect }: Props) {
 
               <button
                 onClick={() => loadTemplate(template)}
-                className="w-full bg-slate-900 text-white py-2.5 px-4 rounded-xl hover:bg-indigo-600 transition-all duration-200 font-medium text-sm group-hover:shadow-md"
+                className="w-full bg-slate-900 dark:bg-slate-700 text-white py-2.5 px-4 rounded-xl hover:bg-indigo-600 dark:hover:bg-indigo-500 transition-all duration-200 font-medium text-sm group-hover:shadow-md"
               >
                 {t('templates.loadButton')}
               </button>
@@ -145,14 +145,14 @@ export function PortfolioTemplates({ onTemplateSelect }: Props) {
       </div>
 
       {portfolio.allocations.length > 0 && (
-        <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+        <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-900/35 border border-amber-200 dark:border-amber-700 rounded-xl">
           <div className="flex items-start gap-3">
             <span className="text-lg">💡</span>
             <div className="flex-1">
-              <p className="text-sm text-amber-900 font-medium">
+              <p className="text-sm text-amber-900 dark:text-amber-100 font-medium">
                 {t('templates.warning.title', 'Portfolio già configurato')}
               </p>
-              <p className="text-xs text-amber-700 mt-1">
+              <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
                 {t('templates.warning.message', 'Caricando un template sostituirai solo gli asset del portfolio. Le altre impostazioni (capitale, ribilanciamento, ecc.) verranno mantenute.')}
               </p>
             </div>

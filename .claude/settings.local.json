@@ -43,7 +43,12 @@
       "Bash(firebase --version:*)",
       "Bash(firebase projects:list:*)",
       "Bash(firebase login:*)",
-      "Bash(firebase deploy:*)"
+      "Bash(firebase deploy:*)",
+      "Bash(node test_projection_math.js:*)",
+      "Bash(node test_projection_validation.js:*)",
+      "Bash(del test_projection_math.js test_projection_validation.js)",
+      "Bash(git checkout:*)",
+      "Bash(tee:*)"
     ]
   }
 }

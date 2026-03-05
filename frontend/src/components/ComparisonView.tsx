@@ -13,6 +13,7 @@ import {
   Pie,
   Cell
 } from 'recharts';
+import { useTheme } from '../contexts/ThemeContext';
 import type { SavedBacktest } from '../stores/comparisonStore';
 import type { PortfolioAllocation } from '../types';
 import { formatPercentage, formatCurrency, formatDate } from '../utils/formatters';
@@ -162,19 +163,24 @@ function getWinnerIndex(metric: string, backtests: SavedBacktest[]): number {
 
 export function ComparisonView({ backtests, onClose }: Props) {
   const { t } = useTranslation(['app', 'common']);
+  const { isDark } = useTheme();
   const mergedData = mergeEquityCurvesWithDates(backtests);
 
+  // Chart colors based on theme
+  const gridColor = isDark ? '#334155' : '#e2e8f0';
+  const axisColor = isDark ? '#94a3b8' : '#64748b';
+
   const modalContent = (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl w-full max-w-7xl max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-7xl max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between rounded-t-2xl z-10">
-          <h2 className="text-2xl font-bold text-slate-900">{t('app:comparison.title')}</h2>
+        <div className="sticky top-0 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-4 flex items-center justify-between rounded-t-2xl z-10">
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t('app:comparison.title')}</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
           >
-            <svg className="w-6 h-6 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-6 h-6 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -184,28 +190,28 @@ export function ComparisonView({ backtests, onClose }: Props) {
         <div className="p-4 md:p-6 space-y-6 md:space-y-8">
           {/* METRICHE A CONFRONTO */}
           <div>
-            <h3 className="text-lg font-bold text-slate-900 uppercase tracking-wide text-sm mb-3">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white uppercase tracking-wide text-sm mb-3">
               {t('app:comparison.metricsTitle')}
             </h3>
-            <p className="text-xs text-slate-500 mb-3 md:hidden">{t('app:comparison.scrollHint')}</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 md:hidden">{t('app:comparison.scrollHint')}</p>
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-slate-200 border border-slate-200 rounded-xl">
-                <thead className="bg-slate-50">
+              <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl">
+                <thead className="bg-slate-50 dark:bg-slate-700">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-700 uppercase">
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase">
                       {t('app:comparison.metricColumn')}
                     </th>
                     {backtests.map(bt => (
-                      <th key={bt.id} className="px-6 py-3 text-left text-xs font-semibold text-slate-700 uppercase">
+                      <th key={bt.id} className="px-6 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase">
                         {bt.name}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-slate-200">
+                <tbody className="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
                   {/* Rendimento Totale */}
                   <tr>
-                    <td className="px-6 py-4 text-sm font-medium text-slate-900">
+                    <td className="px-6 py-4 text-sm font-medium text-slate-900 dark:text-white">
                       {t('app:comparison.metrics.totalReturn')}
                     </td>
                     {backtests.map((bt, index) => {
@@ -214,7 +220,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
                         <td
                           key={bt.id}
                           className={`px-6 py-4 text-sm font-semibold ${
-                            isWinner ? 'text-emerald-600' : 'text-slate-900'
+                            isWinner ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-900 dark:text-white'
                           }`}
                         >
                           {formatPercentage(bt.result.metrics.totalReturn)}
@@ -226,7 +232,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
 
                   {/* Media Annua */}
                   <tr>
-                    <td className="px-6 py-4 text-sm font-medium text-slate-900">
+                    <td className="px-6 py-4 text-sm font-medium text-slate-900 dark:text-white">
                       {t('app:comparison.metrics.averageAnnualReturn')}
                     </td>
                     {backtests.map((bt, index) => {
@@ -235,7 +241,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
                         <td
                           key={bt.id}
                           className={`px-6 py-4 text-sm font-semibold ${
-                            isWinner ? 'text-emerald-600' : 'text-slate-900'
+                            isWinner ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-900 dark:text-white'
                           }`}
                         >
                           {formatPercentage(bt.result.metrics.averageAnnualReturn)}
@@ -247,7 +253,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
 
                   {/* Max Drawdown */}
                   <tr>
-                    <td className="px-6 py-4 text-sm font-medium text-slate-900">
+                    <td className="px-6 py-4 text-sm font-medium text-slate-900 dark:text-white">
                       {t('app:comparison.metrics.maxDrawdown')}
                     </td>
                     {backtests.map((bt, index) => {
@@ -256,7 +262,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
                         <td
                           key={bt.id}
                           className={`px-6 py-4 text-sm font-semibold ${
-                            isWinner ? 'text-emerald-600' : 'text-red-600'
+                            isWinner ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'
                           }`}
                         >
                           {formatPercentage(bt.result.metrics.maxDrawdown)}
@@ -268,7 +274,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
 
                   {/* Valore Finale */}
                   <tr>
-                    <td className="px-6 py-4 text-sm font-medium text-slate-900">
+                    <td className="px-6 py-4 text-sm font-medium text-slate-900 dark:text-white">
                       {t('app:comparison.metrics.finalValue')}
                     </td>
                     {backtests.map((bt, index) => {
@@ -277,7 +283,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
                         <td
                           key={bt.id}
                           className={`px-6 py-4 text-sm font-semibold ${
-                            isWinner ? 'text-emerald-600' : 'text-slate-900'
+                            isWinner ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-900 dark:text-white'
                           }`}
                         >
                           {formatCurrency(bt.result.metrics.finalValue)}
@@ -289,11 +295,11 @@ export function ComparisonView({ backtests, onClose }: Props) {
 
                   {/* Best Asset */}
                   <tr>
-                    <td className="px-6 py-4 text-sm font-medium text-slate-900">
+                    <td className="px-6 py-4 text-sm font-medium text-slate-900 dark:text-white">
                       {t('app:comparison.metrics.bestAsset')}
                     </td>
                     {backtests.map(bt => (
-                      <td key={bt.id} className="px-6 py-4 text-sm text-slate-600">
+                      <td key={bt.id} className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
                         {bt.result.metrics.bestAsset}
                         {' '}
                         ({formatPercentage(bt.result.metrics.bestAssetReturn || 0)})
@@ -307,27 +313,33 @@ export function ComparisonView({ backtests, onClose }: Props) {
 
           {/* CRESCITA NORMALIZZATA */}
           <div>
-            <h3 className="text-lg font-bold text-slate-900 uppercase tracking-wide text-sm mb-4">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white uppercase tracking-wide text-sm mb-4">
               {t('app:comparison.growthTitle')}
             </h3>
-            <div className="bg-white border border-slate-200 rounded-xl p-6">
+            <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6">
               <ResponsiveContainer width="100%" height={400}>
                 <LineChart data={mergedData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
                   <XAxis
                     dataKey="formattedDate"
-                    tick={{ fontSize: 12 }}
+                    tick={{ fontSize: 12, fill: axisColor }}
                     interval="preserveStartEnd"
                   />
                   <YAxis
-                    label={{ value: t('app:comparison.growthAxisLabel'), angle: -90, position: 'insideLeft' }}
-                    tick={{ fontSize: 12 }}
+                    label={{ value: t('app:comparison.growthAxisLabel'), angle: -90, position: 'insideLeft', fill: axisColor }}
+                    tick={{ fontSize: 12, fill: axisColor }}
                   />
                   <Tooltip
                     labelFormatter={(label) => `${t('app:comparison.growthTooltipDate')} ${label}`}
                     formatter={(value) => value !== undefined ? (value as number).toFixed(2) : '-'}
+                    contentStyle={{
+                      backgroundColor: isDark ? '#1e293b' : '#ffffff',
+                      border: `1px solid ${isDark ? '#475569' : '#e2e8f0'}`,
+                      borderRadius: '8px',
+                      color: isDark ? '#f1f5f9' : '#0f172a'
+                    }}
                   />
-                  <Legend />
+                  <Legend wrapperStyle={{ color: isDark ? '#cbd5e1' : '#64748b' }} />
 
                   {backtests.map((backtest, index) => (
                     <Line
@@ -348,7 +360,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
 
           {/* ALLOCAZIONI */}
           <div>
-            <h3 className="text-lg font-bold text-slate-900 uppercase tracking-wide text-sm mb-4">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white uppercase tracking-wide text-sm mb-4">
               {t('app:comparison.allocationsTitle')}
             </h3>
             <div className={`grid grid-cols-1 ${backtests.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
@@ -360,8 +372,8 @@ export function ComparisonView({ backtests, onClose }: Props) {
                 }));
 
                 return (
-                  <div key={backtest.id} className="bg-white border border-slate-200 rounded-xl p-6">
-                    <h4 className="font-bold text-slate-900 mb-4 text-center">{backtest.name}</h4>
+                  <div key={backtest.id} className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6">
+                    <h4 className="font-bold text-slate-900 dark:text-white mb-4 text-center">{backtest.name}</h4>
 
                     <ResponsiveContainer width="100%" height={250}>
                       <PieChart>
@@ -391,10 +403,10 @@ export function ComparisonView({ backtests, onClose }: Props) {
                             className="w-3 h-3 rounded-full flex-shrink-0"
                             style={{ backgroundColor: item.color }}
                           />
-                          <span className="text-sm text-slate-700 truncate flex-1">
+                          <span className="text-sm text-slate-700 dark:text-slate-300 truncate flex-1">
                             {item.name}
                           </span>
-                          <span className="text-sm font-semibold text-slate-900">
+                          <span className="text-sm font-semibold text-slate-900 dark:text-white">
                             {item.value}%
                           </span>
                         </div>
@@ -408,25 +420,25 @@ export function ComparisonView({ backtests, onClose }: Props) {
 
           {/* CONFIGURAZIONI */}
           <div>
-            <h3 className="text-lg font-bold text-slate-900 uppercase tracking-wide text-sm mb-4">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white uppercase tracking-wide text-sm mb-4">
               {t('app:comparison.configurationsTitle')}
             </h3>
             <div className={`grid grid-cols-1 ${backtests.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
               {backtests.map(backtest => (
-                <div key={backtest.id} className="bg-slate-50 border border-slate-200 rounded-xl p-6">
-                  <h4 className="font-bold text-slate-900 mb-4">{backtest.name}</h4>
+                <div key={backtest.id} className="bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl p-6">
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-4">{backtest.name}</h4>
 
                   <div className="space-y-3 text-sm">
                     <div>
-                      <span className="font-semibold text-slate-600">{t('app:comparison.config.strategy')}</span>
-                      <p className="text-slate-900">
+                      <span className="font-semibold text-slate-600 dark:text-slate-300">{t('app:comparison.config.strategy')}</span>
+                      <p className="text-slate-900 dark:text-white">
                         {backtest.portfolio.investmentStrategy === 'lump_sum' ? t('app:strategy.lumpSum.name') : t('app:strategy.pac.name')}
                       </p>
                     </div>
 
                     <div>
-                      <span className="font-semibold text-slate-600">{t('app:comparison.config.capital')}</span>
-                      <p className="text-slate-900">
+                      <span className="font-semibold text-slate-600 dark:text-slate-300">{t('app:comparison.config.capital')}</span>
+                      <p className="text-slate-900 dark:text-white">
                         {formatCurrency(backtest.portfolio.initialCapital)}
                         {backtest.portfolio.investmentStrategy === 'pac' && backtest.portfolio.pacAmount && (
                           <span className="block text-xs mt-1">
@@ -437,13 +449,13 @@ export function ComparisonView({ backtests, onClose }: Props) {
                     </div>
 
                     <div>
-                      <span className="font-semibold text-slate-600">{t('app:comparison.config.rebalance')}</span>
-                      <p className="text-slate-900 capitalize">{backtest.portfolio.rebalanceFrequency}</p>
+                      <span className="font-semibold text-slate-600 dark:text-slate-300">{t('app:comparison.config.rebalance')}</span>
+                      <p className="text-slate-900 dark:text-white capitalize">{backtest.portfolio.rebalanceFrequency}</p>
                     </div>
 
                     <div>
-                      <span className="font-semibold text-slate-600">{t('app:comparison.config.period')}</span>
-                      <p className="text-slate-900 text-xs">
+                      <span className="font-semibold text-slate-600 dark:text-slate-300">{t('app:comparison.config.period')}</span>
+                      <p className="text-slate-900 dark:text-white text-xs">
                         {formatDate(backtest.result.startDate)}
                         <br />
                         {formatDate(backtest.result.endDate)}

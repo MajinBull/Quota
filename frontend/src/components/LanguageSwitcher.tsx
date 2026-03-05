@@ -37,14 +37,14 @@ export function LanguageSwitcher() {
       {/* Language Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all"
+        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-600 hover:shadow-md transition-all"
         aria-label="Change language"
       >
-        <span className="text-sm font-medium text-slate-700">
+        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
           {currentLanguage.code.toUpperCase()}
         </span>
         <svg
-          className={`w-4 h-4 text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          className={`w-4 h-4 text-slate-400 dark:text-slate-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -55,21 +55,21 @@ export function LanguageSwitcher() {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden">
+        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl dark:shadow-slate-900 z-50 overflow-hidden">
           {LANGUAGES.map((lang) => (
             <button
               key={lang.code}
               onClick={() => changeLanguage(lang.code)}
-              className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors ${
-                lang.code === i18n.language ? 'bg-indigo-50' : ''
+              className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors ${
+                lang.code === i18n.language ? 'bg-indigo-50 dark:bg-indigo-900/30' : ''
               }`}
             >
-              <span className="text-sm font-semibold text-slate-700">{lang.code.toUpperCase()}</span>
+              <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">{lang.code.toUpperCase()}</span>
               <div className="flex-1 text-left">
-                <p className="text-sm font-medium text-slate-900">{lang.name}</p>
+                <p className="text-sm font-medium text-slate-900 dark:text-white">{lang.name}</p>
               </div>
               {lang.code === i18n.language && (
-                <svg className="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               )}

@@ -147,7 +147,7 @@ function AllocationSlider({ value, onChange }: AllocationSliderProps) {
         ref={sliderRef}
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
-        className="relative h-10 bg-slate-200 rounded-lg overflow-hidden cursor-pointer select-none touch-none"
+        className="relative h-10 bg-slate-200 dark:bg-slate-600 rounded-lg overflow-hidden cursor-pointer select-none touch-none"
       >
         {/* Barra di riempimento */}
         <div
@@ -165,7 +165,7 @@ function AllocationSlider({ value, onChange }: AllocationSliderProps) {
               onChange={handleInputChange}
               onBlur={handleInputBlur}
               onKeyDown={handleInputKeyDown}
-              className="w-16 text-center bg-white border-2 border-indigo-500 rounded px-2 py-1 font-bold text-sm focus:outline-none"
+              className="w-16 text-center bg-white dark:bg-slate-700 text-slate-900 dark:text-white border-2 border-indigo-500 rounded px-2 py-1 font-bold text-sm focus:outline-none"
               min="0"
               max="100"
               step="1"
@@ -173,7 +173,7 @@ function AllocationSlider({ value, onChange }: AllocationSliderProps) {
           ) : (
             <span
               onClick={handleNumberClick}
-              className="font-bold text-sm text-slate-900 cursor-text px-2 py-1 rounded hover:bg-white/20 transition-colors"
+              className="font-bold text-sm text-slate-900 dark:text-white cursor-text px-2 py-1 rounded hover:bg-white/20 transition-colors"
             >
               {Math.round(value)}%
             </span>
@@ -469,21 +469,21 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
   return (
     <div className="space-y-8">
       {/* STRATEGIA E PARAMETRI */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-4 md:p-8">
-        <h2 className="text-xl font-bold mb-4 md:mb-6 text-slate-900 uppercase tracking-wide text-sm">
+      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 md:p-8">
+        <h2 className="text-xl font-bold mb-4 md:mb-6 text-slate-900 dark:text-white uppercase tracking-wide text-sm">
           {t('strategy.title')}
         </h2>
 
         <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
           {/* Left side: Strategy explanation */}
-          <div className="lg:w-80 bg-slate-50 border border-slate-200 rounded-xl p-4">
+          <div className="lg:w-80 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl p-4">
             {portfolio.investmentStrategy === 'lump_sum' ? (
               <>
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-2 h-2 bg-indigo-600 rounded-full"></div>
-                  <h3 className="font-semibold text-slate-900 text-sm">{t('strategy.lumpSum.name')}</h3>
+                  <h3 className="font-semibold text-slate-900 dark:text-white text-sm">{t('strategy.lumpSum.name')}</h3>
                 </div>
-                <p className="text-xs text-slate-600 leading-relaxed">
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                   {t('strategy.lumpSum.description')}
                 </p>
               </>
@@ -491,9 +491,9 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
               <>
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-2 h-2 bg-indigo-600 rounded-full"></div>
-                  <h3 className="font-semibold text-slate-900 text-sm">{t('strategy.pac.name')}</h3>
+                  <h3 className="font-semibold text-slate-900 dark:text-white text-sm">{t('strategy.pac.name')}</h3>
                 </div>
-                <p className="text-xs text-slate-600 leading-relaxed">
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                   {t('strategy.pac.description')}
                 </p>
               </>
@@ -507,7 +507,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
               <label className={`cursor-pointer px-4 py-2 rounded-lg font-medium text-sm transition-all whitespace-nowrap ${
                 portfolio.investmentStrategy === 'lump_sum'
                   ? 'bg-indigo-600 text-white'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
               }`}>
                 <input
                   type="radio"
@@ -521,7 +521,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
               <label className={`cursor-pointer px-4 py-2 rounded-lg font-medium text-sm transition-all whitespace-nowrap ${
                 portfolio.investmentStrategy === 'pac'
                   ? 'bg-indigo-600 text-white'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
               }`}>
                 <input
                   type="radio"
@@ -538,16 +538,16 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
             <div className="flex-1 space-y-3">
               {/* Capitale */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                <label className="text-sm font-medium text-slate-600 sm:w-32 sm:flex-shrink-0">
+                <label className="text-sm font-medium text-slate-600 dark:text-slate-300 sm:w-32 sm:flex-shrink-0">
                   {portfolio.investmentStrategy === 'pac' ? t('strategy.fields.firstPayment') : t('strategy.fields.capital')}
                 </label>
                 <div className="relative flex-1">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">€</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 text-sm">€</span>
                   <input
                     type="number"
                     value={portfolio.initialCapital}
                     onChange={(e) => setInitialCapital(parseFloat(e.target.value) || 0)}
-                    className="w-full pl-7 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                    className="w-full pl-7 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                     min="1"
                     step="100"
                   />
@@ -558,15 +558,15 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
               {portfolio.investmentStrategy === 'pac' && (
                 <>
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                    <label className="text-sm font-medium text-slate-600 sm:w-32 sm:flex-shrink-0">{t('strategy.fields.pacAmount')}</label>
+                    <label className="text-sm font-medium text-slate-600 dark:text-slate-300 sm:w-32 sm:flex-shrink-0">{t('strategy.fields.pacAmount')}</label>
                     <div className="flex flex-1 gap-2">
                       <div className="relative flex-1">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">€</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 text-sm">€</span>
                         <input
                           type="number"
                           value={portfolio.pacAmount || 500}
                           onChange={(e) => setPACAmount(parseFloat(e.target.value) || 0)}
-                          className="w-full pl-7 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                          className="w-full pl-7 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                           min="1"
                           step="100"
                         />
@@ -574,7 +574,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                       <select
                         value={portfolio.pacFrequency || 'monthly'}
                         onChange={(e) => setPACFrequency(e.target.value as any)}
-                        className="w-32 sm:w-36 px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm appearance-none bg-white"
+                        className="w-32 sm:w-36 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm appearance-none bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                       >
                         <option value="monthly">{t('strategy.frequency.monthly')}</option>
                         <option value="quarterly">{t('strategy.frequency.quarterly')}</option>
@@ -587,11 +587,11 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
 
               {/* Rebilanciamento */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                <label className="text-sm font-medium text-slate-600 sm:w-32 sm:flex-shrink-0">{t('strategy.fields.rebalance')}</label>
+                <label className="text-sm font-medium text-slate-600 dark:text-slate-300 sm:w-32 sm:flex-shrink-0">{t('strategy.fields.rebalance')}</label>
                 <select
                   value={portfolio.rebalanceFrequency}
                   onChange={(e) => setRebalanceFrequency(e.target.value as any)}
-                  className="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm appearance-none bg-white"
+                  className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm appearance-none bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                 >
                   <option value="none">{t('strategy.frequency.none')}</option>
                   <option value="monthly">{t('strategy.frequency.monthly')}</option>
@@ -602,11 +602,11 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
 
               {/* Anno Inizio */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                <label className="text-sm font-medium text-slate-600 sm:w-32 sm:flex-shrink-0">{t('strategy.fields.startYear')}</label>
+                <label className="text-sm font-medium text-slate-600 dark:text-slate-300 sm:w-32 sm:flex-shrink-0">{t('strategy.fields.startYear')}</label>
                 <select
                   value={portfolio.startYear || 'auto'}
                   onChange={(e) => setStartYear(e.target.value === 'auto' ? undefined : parseInt(e.target.value))}
-                  className="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm appearance-none bg-white"
+                  className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm appearance-none bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                 >
                   <option value="auto">{t('strategy.startYear.auto')}</option>
                   <option value="2005">2005</option>
@@ -621,10 +621,10 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
       </div>
 
       {/* AGGIUNGI ASSET */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-4 md:p-8">
+      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 md:p-8">
         {/* Header with Title and Search */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4 md:mb-6">
-          <h2 className="text-xl font-bold text-slate-900 uppercase tracking-wide text-sm">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-wide text-sm">
             {t('portfolio.addAssets.title')}
           </h2>
 
@@ -635,10 +635,10 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
               placeholder={t('portfolio.addAssets.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+              className="w-full pl-10 pr-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
             />
             <svg
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -659,7 +659,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                 className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
                   selectedCategory === category
                     ? 'bg-indigo-600 text-white shadow-md'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
                 }`}
               >
                 {getCategoryLabel(category)}
@@ -669,11 +669,11 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
 
           {/* Sort Dropdown - right */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            <label className="text-sm font-medium text-slate-600">{t('portfolio.addAssets.sortBy')}</label>
+            <label className="text-sm font-medium text-slate-600 dark:text-slate-300">{t('portfolio.addAssets.sortBy')}</label>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm appearance-none bg-white"
+              className="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm appearance-none bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
             >
               <option value="name-az">{t('portfolio.addAssets.sortOptions.nameAZ')}</option>
               <option value="name-za">{t('portfolio.addAssets.sortOptions.nameZA')}</option>
@@ -695,8 +695,8 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                 key={asset.symbol}
                 className={`rounded-xl p-4 transition-all relative cursor-pointer group ${
                   isAdded
-                    ? 'bg-green-50 border border-green-500 hover:border-red-400 hover:bg-red-50'
-                    : 'bg-slate-50 border border-slate-200 hover:border-green-400 hover:bg-green-50'
+                    ? 'bg-green-50 dark:bg-green-900/20 border border-green-500 dark:border-green-700 hover:border-red-400 dark:hover:border-red-600 hover:bg-red-50 dark:hover:bg-red-900/20'
+                    : 'bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 hover:border-green-400 dark:hover:border-green-600 hover:bg-green-50 dark:hover:bg-green-900/20'
                 }`}
                 onClick={() => isAdded ? handleRemoveAsset(asset.symbol) : handleAddAsset(asset.symbol)}
               >
@@ -716,7 +716,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
 
                 <div>
                   {/* Symbol with favorite star inline */}
-                  <div className={`font-semibold text-sm mb-1 flex items-center gap-1.5 ${isAdded ? 'text-slate-600' : 'text-slate-900'}`}>
+                  <div className={`font-semibold text-sm mb-1 flex items-center gap-1.5 ${isAdded ? 'text-slate-600 dark:text-slate-400' : 'text-slate-900 dark:text-white'}`}>
                     <span>{asset.symbol}</span>
                     {/* Favorite Star - inline after symbol */}
                     <button
@@ -737,7 +737,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                       </svg>
                     </button>
                   </div>
-                  <div className={`text-xs line-clamp-2 ${isAdded ? 'text-slate-500' : 'text-slate-600'}`}>
+                  <div className={`text-xs line-clamp-2 ${isAdded ? 'text-slate-500 dark:text-slate-400' : 'text-slate-600 dark:text-slate-300'}`}>
                     {asset.name}
                   </div>
                 </div>
@@ -748,22 +748,22 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
       </div>
 
       {/* ALLOCAZIONE PORTFOLIO */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-4 md:p-8">
+      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 md:p-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 md:mb-6">
-          <h2 className="text-xl font-bold text-slate-900 uppercase tracking-wide text-sm">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-wide text-sm">
             {t('portfolio.allocation.title')}
           </h2>
           <div className="flex items-center gap-3">
             <span className={`text-sm font-semibold px-3 py-1.5 rounded-full ${
               isValid
-                ? 'bg-green-100 text-green-700'
-                : 'bg-amber-100 text-amber-700'
+                ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
             }`}>
               {t('portfolio.allocation.total')} {totalAllocation.toFixed(1)}%
             </span>
             <button
               onClick={onOpenTemplates}
-              className="flex items-center gap-2 px-4 py-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg transition-colors text-sm font-medium"
+              className="flex items-center gap-2 px-4 py-2 bg-indigo-100 dark:bg-indigo-900/30 hover:bg-indigo-200 dark:hover:bg-indigo-900/50 text-indigo-700 dark:text-indigo-400 rounded-lg transition-colors text-sm font-medium"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -782,15 +782,15 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
               return (
                 <div
                   key={allocation.symbol}
-                  className="bg-slate-50 border border-slate-200 rounded-xl p-4 hover:border-indigo-300 transition-colors relative"
+                  className="bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl p-4 hover:border-indigo-300 dark:hover:border-indigo-500 transition-colors relative"
                 >
                   {/* Lock/Unlock button in top-right corner */}
                   <button
                     onClick={() => toggleLock(allocation.symbol)}
                     className={`absolute top-2 right-2 p-1.5 rounded-lg transition-all ${
                       isLocked
-                        ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200'
-                        : 'text-slate-400 hover:text-slate-600 hover:bg-slate-200'
+                        ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-200 dark:hover:bg-indigo-900/50'
+                        : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
                     }`}
                     title={isLocked ? t('portfolio.allocation.locked') : t('portfolio.allocation.unlocked')}
                   >
@@ -809,16 +809,16 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
 
                   <div className="flex items-start justify-between mb-3 pr-8">
                     <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-slate-900 text-sm truncate">
+                      <div className="font-semibold text-slate-900 dark:text-white text-sm truncate">
                         {allocation.symbol}
                       </div>
-                      <div className="text-xs text-slate-500 truncate">
+                      <div className="text-xs text-slate-500 dark:text-slate-400 truncate">
                         {assetInfo?.name || allocation.symbol}
                       </div>
                     </div>
                     <button
                       onClick={() => handleRemoveAsset(allocation.symbol)}
-                      className="p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
+                      className="p-1 text-slate-400 dark:text-slate-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors flex-shrink-0"
                       title={t('portfolio.allocation.remove')}
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -835,9 +835,9 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
             })}
           </div>
         ) : (
-          <div className="text-center py-12 bg-slate-50 rounded-xl border-2 border-dashed border-slate-300">
-            <p className="text-slate-600 mb-2">{t('portfolio.allocation.emptyState.title')}</p>
-            <p className="text-xs text-slate-500">{t('portfolio.allocation.emptyState.subtitle')}</p>
+          <div className="text-center py-12 bg-slate-50 dark:bg-slate-700 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600">
+            <p className="text-slate-600 dark:text-slate-300 mb-2">{t('portfolio.allocation.emptyState.title')}</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">{t('portfolio.allocation.emptyState.subtitle')}</p>
           </div>
         )}
       </div>

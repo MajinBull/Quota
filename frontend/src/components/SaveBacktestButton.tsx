@@ -61,7 +61,7 @@ export function SaveBacktestButton({ portfolio, result }: Props) {
     <>
       {/* Sticky Bottom Button */}
       <div className="fixed bottom-4 left-1/2 -translate-x-1/2 md:left-auto md:right-5 md:translate-x-0 z-10 w-[calc(100%-2rem)] max-w-sm md:w-96">
-        <div className="bg-white border border-slate-200 rounded-2xl shadow-xl p-4">
+        <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl dark:shadow-slate-900 p-4">
           <button
             onClick={handleOpenModal}
             className="w-full py-4 px-6 rounded-xl font-semibold text-base transition-all duration-200 bg-emerald-600 text-white hover:bg-emerald-700 shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40"
@@ -69,8 +69,8 @@ export function SaveBacktestButton({ portfolio, result }: Props) {
             {t('backtest.save.button')}
           </button>
 
-          <div className="mt-3 p-3 bg-slate-50 border border-slate-200 rounded-lg">
-            <p className="text-xs text-slate-600 text-center">
+          <div className="mt-3 p-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg">
+            <p className="text-xs text-slate-600 dark:text-slate-400 text-center">
               {t('backtest.save.hint')}
             </p>
           </div>
@@ -79,16 +79,16 @@ export function SaveBacktestButton({ portfolio, result }: Props) {
 
       {/* Modal - Versione Semplificata */}
       {showModal && createPortal(
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full">
+        <div className="fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full">
             {/* Header */}
-            <div className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
-              <h2 className="text-xl font-bold text-slate-900">{t('backtest.save.modalTitle')}</h2>
+            <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white">{t('backtest.save.modalTitle')}</h2>
               <button
                 onClick={() => setShowModal(false)}
-                className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
               >
-                <svg className="w-6 h-6 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-6 h-6 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -98,20 +98,20 @@ export function SaveBacktestButton({ portfolio, result }: Props) {
             <div className="p-6 space-y-5">
               {/* Nome Input */}
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                   {t('backtest.save.strategyName')}
                 </label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-base"
+                  className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-base bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                   autoFocus
                 />
               </div>
 
               {/* Checkbox Preferiti */}
-              <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-lg border border-slate-200">
+              <div className="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600">
                 <input
                   type="checkbox"
                   id="add-to-favorites"
@@ -119,23 +119,23 @@ export function SaveBacktestButton({ portfolio, result }: Props) {
                   onChange={(e) => setIsFavorite(e.target.checked)}
                   className="w-5 h-5 text-emerald-600 rounded focus:ring-2 focus:ring-emerald-500"
                 />
-                <label htmlFor="add-to-favorites" className="text-sm font-medium text-slate-700 cursor-pointer">
+                <label htmlFor="add-to-favorites" className="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer">
                   {t('backtest.save.addToFavorites')}
                 </label>
               </div>
 
               {/* Counter */}
-              <div className="flex items-center justify-center gap-2 text-sm text-slate-600 pt-2">
+              <div className="flex items-center justify-center gap-2 text-sm text-slate-600 dark:text-slate-400 pt-2">
                 <span>{t('backtest.save.counter')}</span>
-                <span className="font-bold text-slate-900">{savedBacktests.length}/100</span>
+                <span className="font-bold text-slate-900 dark:text-white">{savedBacktests.length}/100</span>
               </div>
             </div>
 
             {/* Footer */}
-            <div className="bg-slate-50 border-t border-slate-200 px-6 py-4 flex items-center justify-end gap-3 rounded-b-2xl">
+            <div className="bg-slate-50 dark:bg-slate-700 border-t border-slate-200 dark:border-slate-600 px-6 py-4 flex items-center justify-end gap-3 rounded-b-2xl">
               <button
                 onClick={() => setShowModal(false)}
-                className="px-6 py-2.5 border border-slate-300 text-slate-700 rounded-lg font-semibold hover:bg-slate-100 transition-colors"
+                className="px-6 py-2.5 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg font-semibold hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors"
               >
                 {t('common:actions.cancel')}
               </button>
@@ -145,7 +145,7 @@ export function SaveBacktestButton({ portfolio, result }: Props) {
                 className={`px-6 py-2.5 rounded-lg font-semibold transition-colors ${
                   name.trim().length >= 3 && !isSaving
                     ? 'bg-emerald-600 text-white hover:bg-emerald-700'
-                    : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                    : 'bg-slate-200 dark:bg-slate-600 text-slate-400 dark:text-slate-500 cursor-not-allowed'
                 }`}
               >
                 {isSaving ? (
