@@ -89,7 +89,7 @@ export function BacktestResults({ result }: Props) {
   }));
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 overflow-x-hidden max-w-full">
       {/* METRICHE CHIAVE */}
       <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-8">
         <div className="flex items-center justify-between mb-6">
@@ -294,23 +294,23 @@ export function BacktestResults({ result }: Props) {
             {t('backtest.results.yearlyBreakdown.title')}
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 md:hidden">{t('backtest.results.yearlyBreakdown.scrollHint')}</p>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto -mx-8 px-8 md:mx-0 md:px-0" style={{ WebkitOverflowScrolling: 'touch' }}>
             <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
               <thead className="bg-slate-50 dark:bg-slate-700">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                  <th className="px-2 md:px-6 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
                     {t('backtest.results.yearlyBreakdown.columns.year')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                  <th className="px-2 md:px-6 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
                     {t('backtest.results.yearlyBreakdown.columns.portfolioValue')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                  <th className="px-2 md:px-6 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
                     {t('backtest.results.yearlyBreakdown.columns.invested')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                  <th className="px-2 md:px-6 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
                     {t('backtest.results.yearlyBreakdown.columns.yearlyReturn')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                  <th className="px-2 md:px-6 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
                     {t('backtest.results.yearlyBreakdown.columns.cumulativeReturn')}
                   </th>
                 </tr>
@@ -319,19 +319,19 @@ export function BacktestResults({ result }: Props) {
                 {yearlyBreakdown.map((row) => {
                   return (
                     <tr key={row.year} className="hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-900 dark:text-white">
+                      <td className="px-2 md:px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-900 dark:text-white">
                         {row.year}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900 dark:text-white">
+                      <td className="px-2 md:px-6 py-4 whitespace-nowrap text-sm text-slate-900 dark:text-white">
                         {formatCurrency(row.portfolioValue)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-400">
+                      <td className="px-2 md:px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-400">
                         {formatCurrency(row.investedCapital)}
                       </td>
-                      <td className={`px-6 py-4 whitespace-nowrap text-sm font-semibold ${getValueColor(row.yearlyReturn)}`}>
+                      <td className={`px-2 md:px-6 py-4 whitespace-nowrap text-sm font-semibold ${getValueColor(row.yearlyReturn)}`}>
                         {formatPercentage(row.yearlyReturn)}
                       </td>
-                      <td className={`px-6 py-4 whitespace-nowrap text-sm font-semibold ${getValueColor(row.cumulativeReturn)}`}>
+                      <td className={`px-2 md:px-6 py-4 whitespace-nowrap text-sm font-semibold ${getValueColor(row.cumulativeReturn)}`}>
                         {formatPercentage(row.cumulativeReturn)}
                       </td>
                     </tr>

@@ -194,15 +194,15 @@ export function ComparisonView({ backtests, onClose }: Props) {
               {t('app:comparison.metricsTitle')}
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 md:hidden">{t('app:comparison.scrollHint')}</p>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto -mx-4 px-4 md:-mx-6 md:px-6" style={{ WebkitOverflowScrolling: 'touch' }}>
               <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl">
                 <thead className="bg-slate-50 dark:bg-slate-700">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase">
+                    <th className="px-2 md:px-6 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase">
                       {t('app:comparison.metricColumn')}
                     </th>
                     {backtests.map(bt => (
-                      <th key={bt.id} className="px-6 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase">
+                      <th key={bt.id} className="px-2 md:px-6 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase">
                         {bt.name}
                       </th>
                     ))}
@@ -211,7 +211,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
                 <tbody className="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
                   {/* Rendimento Totale */}
                   <tr>
-                    <td className="px-6 py-4 text-sm font-medium text-slate-900 dark:text-white">
+                    <td className="px-2 md:px-6 py-4 text-sm font-medium text-slate-900 dark:text-white">
                       {t('app:comparison.metrics.totalReturn')}
                     </td>
                     {backtests.map((bt, index) => {
@@ -219,7 +219,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
                       return (
                         <td
                           key={bt.id}
-                          className={`px-6 py-4 text-sm font-semibold ${
+                          className={`px-2 md:px-6 py-4 text-sm font-semibold ${
                             isWinner ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-900 dark:text-white'
                           }`}
                         >
@@ -232,7 +232,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
 
                   {/* Media Annua */}
                   <tr>
-                    <td className="px-6 py-4 text-sm font-medium text-slate-900 dark:text-white">
+                    <td className="px-2 md:px-6 py-4 text-sm font-medium text-slate-900 dark:text-white">
                       {t('app:comparison.metrics.averageAnnualReturn')}
                     </td>
                     {backtests.map((bt, index) => {
@@ -240,7 +240,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
                       return (
                         <td
                           key={bt.id}
-                          className={`px-6 py-4 text-sm font-semibold ${
+                          className={`px-2 md:px-6 py-4 text-sm font-semibold ${
                             isWinner ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-900 dark:text-white'
                           }`}
                         >
@@ -253,7 +253,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
 
                   {/* Max Drawdown */}
                   <tr>
-                    <td className="px-6 py-4 text-sm font-medium text-slate-900 dark:text-white">
+                    <td className="px-2 md:px-6 py-4 text-sm font-medium text-slate-900 dark:text-white">
                       {t('app:comparison.metrics.maxDrawdown')}
                     </td>
                     {backtests.map((bt, index) => {
@@ -261,7 +261,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
                       return (
                         <td
                           key={bt.id}
-                          className={`px-6 py-4 text-sm font-semibold ${
+                          className={`px-2 md:px-6 py-4 text-sm font-semibold ${
                             isWinner ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'
                           }`}
                         >
@@ -274,7 +274,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
 
                   {/* Valore Finale */}
                   <tr>
-                    <td className="px-6 py-4 text-sm font-medium text-slate-900 dark:text-white">
+                    <td className="px-2 md:px-6 py-4 text-sm font-medium text-slate-900 dark:text-white">
                       {t('app:comparison.metrics.finalValue')}
                     </td>
                     {backtests.map((bt, index) => {
@@ -282,7 +282,7 @@ export function ComparisonView({ backtests, onClose }: Props) {
                       return (
                         <td
                           key={bt.id}
-                          className={`px-6 py-4 text-sm font-semibold ${
+                          className={`px-2 md:px-6 py-4 text-sm font-semibold ${
                             isWinner ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-900 dark:text-white'
                           }`}
                         >
@@ -295,11 +295,11 @@ export function ComparisonView({ backtests, onClose }: Props) {
 
                   {/* Best Asset */}
                   <tr>
-                    <td className="px-6 py-4 text-sm font-medium text-slate-900 dark:text-white">
+                    <td className="px-2 md:px-6 py-4 text-sm font-medium text-slate-900 dark:text-white">
                       {t('app:comparison.metrics.bestAsset')}
                     </td>
                     {backtests.map(bt => (
-                      <td key={bt.id} className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
+                      <td key={bt.id} className="px-2 md:px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
                         {bt.result.metrics.bestAsset}
                         {' '}
                         ({formatPercentage(bt.result.metrics.bestAssetReturn || 0)})
