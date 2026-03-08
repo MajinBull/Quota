@@ -1,13 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import logoQuota from '../assets/logo-quota.png';
+import logoQuotaDark from '../assets/logo-quota.png';
+import logoQuotaLight from '../assets/logo-quota-light.png';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { SEO } from '../components/SEO';
+import { useTheme } from '../contexts/ThemeContext';
 
 export function LandingPage() {
   const navigate = useNavigate();
   const { t } = useTranslation(['landing', 'common']);
+  const { isDark } = useTheme();
 
   // Get feature and steps data with typing
   const features = t('landing:features.list', { returnObjects: true }) as Array<{ title: string; description: string }>;
@@ -21,7 +24,7 @@ export function LandingPage() {
       <header className="border-b border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 md:py-4">
           <div className="flex items-center justify-between gap-2 md:gap-4">
-            <img src={logoQuota} alt="QUOTA" className="h-8 md:h-10" />
+            <img src={isDark ? logoQuotaLight : logoQuotaDark} alt="QUOTA" className="h-8 md:h-10" />
             <div className="flex items-center gap-2 md:gap-3">
               <div className="scale-90">
                 <ThemeToggle />

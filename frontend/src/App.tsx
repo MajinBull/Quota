@@ -13,14 +13,17 @@ import { UpgradeModal } from './components/auth/UpgradeModal';
 import { usePortfolioStore } from './stores/portfolioStore';
 import { executeBacktestRemote } from './services/backtestService';
 import type { BacktestResult } from './types';
-import logoQuota from './assets/logo-quota.png';
+import logoQuotaDark from './assets/logo-quota.png';
+import logoQuotaLight from './assets/logo-quota-light.png';
 import { Analytics } from '@vercel/analytics/react';
+import { useTheme } from './contexts/ThemeContext';
 
 type ActiveView = 'configuration' | 'risultati' | 'backtest_salvati';
 
 function AppContent() {
   const { t } = useTranslation(['app', 'common']);
   const { user, loading, canRunBacktest, updateLocalBacktestCount } = useAuth();
+  const { isDark } = useTheme();
   const { portfolio, getTotalAllocation } = usePortfolioStore();
   const [result, setResult] = useState<BacktestResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -132,7 +135,7 @@ function AppContent() {
             {/* Logo + Profile (Mobile) */}
             <div className="flex items-center justify-between w-full md:w-auto py-2 md:py-0">
               <div className="flex-shrink-0">
-                <img src={logoQuota} alt="QUOTA" className="h-10 md:h-12" />
+                <img src={isDark ? logoQuotaLight : logoQuotaDark} alt="QUOTA" className="h-10 md:h-12" />
               </div>
               {/* User Profile Button - Mobile */}
               <div className="md:hidden flex items-center gap-2">
