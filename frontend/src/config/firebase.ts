@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { initializeFirestore } from 'firebase/firestore';
 import { getFunctions } from 'firebase/functions';
 
 const firebaseConfig = {
@@ -15,6 +15,11 @@ const firebaseConfig = {
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-export const db = getFirestore(app);
+
+// Initialize Firestore with long polling for ALL platforms (WebSocket issues in WebView)
+export const db = initializeFirestore(app, {
+  experimentalForceLongPolling: true,
+});
+
 export const functions = getFunctions(app);
 export const googleProvider = new GoogleAuthProvider();

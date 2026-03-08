@@ -116,6 +116,16 @@ canvas,
   touch-action: pan-x pan-y;
 }
 
+/* Nascondi scrollbar ma mantieni scroll funzionale */
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
 /* Checkbox rotondo custom */
 .checkbox-round {
   appearance: none;

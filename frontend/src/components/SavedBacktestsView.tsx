@@ -56,7 +56,7 @@ export function SavedBacktestsView({ onLoadBacktest }: Props) {
   );
 
   return (
-    <div className="space-y-8 min-h-[calc(100vh-200px)]">
+    <div className="space-y-4 md:space-y-8 min-h-[calc(100vh-200px)]">
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
           <div className="flex flex-col items-center gap-4">
@@ -76,11 +76,11 @@ export function SavedBacktestsView({ onLoadBacktest }: Props) {
 
       {/* BOTTONE CONFRONTA STICKY (sempre visibile) */}
       <div className="fixed bottom-4 left-1/2 -translate-x-1/2 md:left-auto md:right-5 md:translate-x-0 z-10 w-[calc(100%-2rem)] max-w-sm md:w-96">
-        <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl dark:shadow-slate-900 p-4">
+        <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl dark:shadow-slate-900 p-3 md:p-4">
           <button
             onClick={handleCompareClick}
             disabled={selectedForComparison.length < 2}
-            className={`w-full py-4 px-6 rounded-xl font-semibold text-base transition-all duration-200 ${
+            className={`w-full py-3 md:py-4 px-4 md:px-6 rounded-xl font-semibold text-sm md:text-base transition-all duration-200 ${
               selectedForComparison.length >= 2
                 ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40'
                 : 'bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed'

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PortfolioBuilder } from './components/PortfolioBuilder';
 import { PortfolioTemplates } from './components/PortfolioTemplates';
@@ -28,6 +28,25 @@ function AppContent() {
   const [activeView, setActiveView] = useState<ActiveView>('configuration');
   const [isTemplatesModalOpen, setIsTemplatesModalOpen] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [headerExpanded, setHeaderExpanded] = useState(true);
+  const hasScrolledRef = useRef(false);
+
+  // Hide header on first scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!hasScrolledRef.current && window.scrollY > 10) {
+        hasScrolledRef.current = true;
+        setHeaderExpanded(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const toggleHeader = () => {
+    setHeaderExpanded(!headerExpanded);
+  };
 
   const totalAllocation = getTotalAllocation();
   const isValidPortfolio = totalAllocation === 100 && portfolio.allocations.length > 0;
@@ -100,11 +119,18 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-stone-50 dark:bg-slate-950">
       {/* Header */}
-      <header className="border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 sticky top-0 z-40">
-        <div className="px-4 py-3 md:px-8 md:py-4">
-          <div className="flex flex-col md:flex-row items-center md:justify-between gap-3 md:gap-0">
+      <header className={`border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 sticky top-0 z-40 relative overflow-visible ${
+        headerExpanded ? 'translate-y-0' : 'md:translate-y-0 -translate-y-[58px] -mb-[58px]'
+      }`}
+        style={{
+          transition: 'transform 400ms cubic-bezier(0.4, 0.0, 0.2, 1), margin 400ms cubic-bezier(0.4, 0.0, 0.2, 1)',
+          willChange: 'transform'
+        }}
+      >
+        <div className="px-4 md:px-8">
+          <div className="flex flex-col md:flex-row items-center md:justify-between md:py-4">
             {/* Logo + Profile (Mobile) */}
-            <div className="flex items-center justify-between w-full md:w-auto">
+            <div className="flex items-center justify-between w-full md:w-auto py-2 md:py-0">
               <div className="flex-shrink-0">
                 <img src={logoQuota} alt="QUOTA" className="h-10 md:h-12" />
               </div>
@@ -115,10 +141,10 @@ function AppContent() {
             </div>
 
             {/* Tab Switcher - responsive layout */}
-            <div className="flex gap-2 w-full md:w-auto md:absolute md:left-1/2 md:transform md:-translate-x-1/2 md:gap-3">
+            <div className="flex gap-2 w-full md:w-auto md:absolute md:left-1/2 md:transform md:-translate-x-1/2 md:gap-3 py-1.5 md:py-0">
               <button
                 onClick={() => setActiveView('configuration')}
-                className={`flex-1 md:flex-none px-3 py-2 md:px-8 md:py-3 rounded-xl font-semibold text-xs md:text-base transition-all ${
+                className={`flex-1 md:flex-none px-3 py-2 md:px-8 md:py-3 rounded-xl font-semibold text-xs md:text-base transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                   activeView === 'configuration'
                     ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30'
                     : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
@@ -130,7 +156,7 @@ function AppContent() {
               <button
                 onClick={() => setActiveView('risultati')}
                 disabled={!result}
-                className={`flex-1 md:flex-none px-3 py-2 md:px-8 md:py-3 rounded-xl font-semibold text-xs md:text-base transition-all ${
+                className={`flex-1 md:flex-none px-3 py-2 md:px-8 md:py-3 rounded-xl font-semibold text-xs md:text-base transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                   activeView === 'risultati' && result
                     ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30'
                     : result
@@ -143,7 +169,7 @@ function AppContent() {
               </button>
               <button
                 onClick={() => setActiveView('backtest_salvati')}
-                className={`flex-1 md:flex-none px-3 py-2 md:px-8 md:py-3 rounded-xl font-semibold text-xs md:text-base transition-all ${
+                className={`flex-1 md:flex-none px-3 py-2 md:px-8 md:py-3 rounded-xl font-semibold text-xs md:text-base transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                   activeView === 'backtest_salvati'
                     ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30'
                     : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
@@ -160,10 +186,21 @@ function AppContent() {
             </div>
           </div>
         </div>
+
+        {/* Menu Toggle Button - part of header, positioned at bottom right */}
+        <button
+          onClick={toggleHeader}
+          className="md:hidden absolute bottom-0 right-2 translate-y-full px-3 py-1.5 rounded-b-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 border border-t-0 border-slate-200 dark:border-slate-700"
+          aria-label={headerExpanded ? "Nascondi header" : "Espandi header"}
+        >
+          <svg className={`w-4 h-4 text-slate-600 dark:text-slate-300 transition-transform ${headerExpanded ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-[1800px] mx-auto p-4 md:p-8">
+      <main className="max-w-[1800px] mx-auto p-2 md:p-6">
         {error && (
           <div className="bg-red-50 dark:bg-red-900/35 border border-red-200 dark:border-red-700 rounded-xl p-4 mb-6">
             <div className="flex items-start gap-3">
@@ -185,11 +222,11 @@ function AppContent() {
 
             {/* Run Backtest Button - Sticky Bottom */}
             <div className="fixed bottom-4 left-1/2 -translate-x-1/2 md:left-auto md:right-5 md:translate-x-0 z-10 w-[calc(100%-2rem)] max-w-sm md:w-96">
-              <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl dark:shadow-slate-900 p-4">
+              <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl dark:shadow-slate-900 p-3 md:p-4">
                 <button
                   onClick={handleRunBacktest}
                   disabled={!isValidPortfolio || isLoading}
-                  className={`w-full py-4 px-6 rounded-xl font-semibold text-base transition-all duration-200 ${
+                  className={`w-full py-3 md:py-4 px-4 md:px-6 rounded-xl font-semibold text-sm md:text-base transition-all duration-200 ${
                     isValidPortfolio && !isLoading
                       ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40'
                       : 'bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed'

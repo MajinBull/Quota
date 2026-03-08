@@ -115,11 +115,11 @@ export function AssetDetailsModal({ symbol, onClose }: Props) {
   const startIndex = defaultStartIndex >= 0 ? defaultStartIndex : 0;
 
   const modalContent = (
-    <div className="fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
       {/* Outer container: rounded corners + overflow hidden (clips scrollbar) */}
-      <div className="rounded-2xl overflow-hidden w-full max-w-full lg:max-w-4xl max-h-[90vh]">
+      <div className="rounded-2xl overflow-hidden w-full max-w-full lg:max-w-4xl max-h-[80vh] md:max-h-[90vh]">
         {/* Inner container: white bg + scrollable */}
-        <div className="bg-white dark:bg-slate-800 overflow-y-auto max-h-[90vh] focus:outline-none relative">
+        <div className="bg-white dark:bg-slate-800 overflow-y-auto overscroll-contain max-h-[80vh] md:max-h-[90vh] focus:outline-none relative">
           {/* Sticky button container - height 0 to not occupy space */}
           <div className="sticky top-0 h-0 z-50">
             <button
@@ -134,7 +134,7 @@ export function AssetDetailsModal({ symbol, onClose }: Props) {
           </div>
 
         {/* Content */}
-        <div className="p-6">
+        <div className="p-3 md:p-6">
           {isLoading && (
             <div className="flex items-center justify-center py-12">
               <div className="flex flex-col items-center gap-3">
@@ -217,7 +217,7 @@ export function AssetDetailsModal({ symbol, onClose }: Props) {
               </div>
 
               {/* Price Chart */}
-              <div className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 [&_*]:focus:outline-none [&_*]:outline-none">
+              <div className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 md:p-6 [&_*]:focus:outline-none [&_*]:outline-none">
                 <div className="mb-4">
                   <h3 className="text-lg font-bold text-slate-900 dark:text-white uppercase tracking-wide text-sm mb-2">
                     {t('assetDetails.chart.title')}
@@ -226,9 +226,9 @@ export function AssetDetailsModal({ symbol, onClose }: Props) {
                     {t('assetDetails.chart.subtitle')}
                   </div>
                 </div>
-                <div className="h-[450px]">
+                <div className="h-[450px] -ml-4 md:ml-0">
                   <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={chartData} style={{ outline: 'none' }}>
+                  <AreaChart data={chartData} style={{ outline: 'none' }} margin={{ left: -20, right: 0, top: 0, bottom: 0 }}>
                     <defs>
                       <linearGradient id="priceGradient" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.3}/>
@@ -245,6 +245,7 @@ export function AssetDetailsModal({ symbol, onClose }: Props) {
                       tick={{ fontSize: 12, fill: axisColor }}
                       tickFormatter={(value) => formatCurrency(value)}
                       domain={['auto', 'auto']}
+                      width={60}
                     />
                     <Tooltip
                       formatter={(value: number | undefined) => value !== undefined ? formatCurrency(value) : ''}
@@ -281,7 +282,7 @@ export function AssetDetailsModal({ symbol, onClose }: Props) {
 
               {/* Extended Info Section - Only show if data available */}
               {(translatedLongDescription || assetInfo?.provider || assetInfo?.inceptionDate || assetInfo?.expenseRatio || assetInfo?.aum || assetInfo?.website) && (
-                <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6">
+                <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 md:p-6">
                   <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wide mb-4">
                     {t('assetDetails.info.title')}
                   </h3>

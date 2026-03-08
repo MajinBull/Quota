@@ -127,11 +127,11 @@ export function RebalanceModal({ backtest, backtestName, onClose }: Props) {
   if (!backtest) return null;
 
   const modalContent = (
-    <div className="fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
       {/* Outer container: rounded corners + overflow hidden */}
-      <div className="rounded-2xl overflow-hidden w-full max-w-4xl max-h-[90vh]">
+      <div className="rounded-2xl overflow-hidden w-full max-w-4xl max-h-[80vh] md:max-h-[90vh]">
         {/* Inner container: white bg + scrollable */}
-        <div className="bg-white dark:bg-slate-800 overflow-y-auto max-h-[90vh] focus:outline-none relative">
+        <div className="bg-white dark:bg-slate-800 overflow-y-auto overscroll-contain max-h-[80vh] md:max-h-[90vh] focus:outline-none relative">
           {/* Close button - sticky in top-right corner */}
           <button
             onClick={handleClose}

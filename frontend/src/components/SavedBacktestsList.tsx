@@ -68,7 +68,7 @@ export function SavedBacktestsList({ onViewBacktest, onRebalance }: Props) {
   return (
     <div>
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4 mb-4 md:mb-6">
         <h2 className="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-wide text-sm">
           {t('savedBacktests.title', { count: sortedBacktests.length })}
         </h2>
@@ -98,7 +98,7 @@ export function SavedBacktestsList({ onViewBacktest, onRebalance }: Props) {
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2 md:space-y-3">
           {sortedBacktests.map((backtest) => (
             <div
               key={backtest.id}
@@ -266,169 +266,115 @@ export function SavedBacktestsList({ onViewBacktest, onRebalance }: Props) {
               </div>
 
               {/* Layout Mobile/Tablet (visibile su schermi < 1280px) */}
-              <div className="xl:hidden p-4 space-y-4">
-                {/* Header: Stella + Nome + Edit + Checkbox Confronta */}
+              <div className="xl:hidden p-3 space-y-2">
+                {/* Riga 1: Stella + Nome a sinistra, Asset chips a destra */}
                 <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-start gap-3 flex-1 min-w-0">
-                    {/* Stella */}
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
                     <button
                       onClick={() => toggleFavorite(backtest.id)}
-                      className={`text-2xl hover:scale-110 transition-all flex-shrink-0 ${
+                      className={`text-lg hover:scale-110 transition-all flex-shrink-0 ${
                         backtest.isFavorite ? 'text-yellow-400' : 'text-slate-300 dark:text-slate-600'
                       }`}
                       title={backtest.isFavorite ? t('savedBacktests.actions.removeFromFavorites') : t('savedBacktests.actions.addToFavorites')}
                     >
                       ★
                     </button>
-
-                    {/* Nome + Data */}
-                    <div className="flex-1 min-w-0">
-                      {renameId === backtest.id ? (
-                        <div className="flex items-center gap-2 mb-2">
-                          <input
-                            type="text"
-                            value={renameName}
-                            onChange={(e) => setRenameName(e.target.value)}
-                            className="flex-1 px-3 py-1.5 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
-                            autoFocus
-                          />
-                          <button
-                            onClick={handleRenameSave}
-                            className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold"
-                          >
-                            ✓
-                          </button>
-                          <button
-                            onClick={() => setRenameId(null)}
-                            className="px-3 py-1.5 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold"
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-2">
-                          <h4 className="font-bold text-slate-900 dark:text-white text-sm truncate">
-                            {backtest.name}
-                          </h4>
-                          <button
-                            onClick={() => handleRenameStart(backtest.id, backtest.name)}
-                            className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 rounded transition-colors flex-shrink-0"
-                            title={t('savedBacktests.actions.rename')}
-                          >
-                            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                          </button>
-                        </div>
-                      )}
-
-                      <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-1">
-                        <span>📅 {formatDate(backtest.savedAt)}</span>
-                        <span>•</span>
-                        <span className="uppercase font-medium">
-                          {backtest.portfolio.investmentStrategy === 'lump_sum' ? 'LS' : 'PAC'}
-                        </span>
-                        <span>•</span>
-                        <span className="capitalize">🔄 {backtest.portfolio.rebalanceFrequency}</span>
+                    <h4 className="font-bold text-slate-900 dark:text-white text-sm truncate">
+                      {backtest.name}
+                    </h4>
+                  </div>
+                  <div className="flex flex-wrap gap-1 justify-end">
+                    {backtest.portfolio.allocations.slice(0, 3).map((alloc) => (
+                      <div
+                        key={alloc.symbol}
+                        className="px-2 py-0.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded text-[10px] font-medium text-slate-700 dark:text-slate-300"
+                      >
+                        {alloc.symbol} {alloc.percentage}%
                       </div>
-                    </div>
-                  </div>
-
-                  {/* Checkbox Confronta */}
-                  <div className="flex flex-col items-center gap-1.5 flex-shrink-0">
-                    <div className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wide">
-                      {t('savedBacktests.actions.compare')}
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={selectedForComparison.includes(backtest.id)}
-                      onChange={() => toggleSelection(backtest.id)}
-                      disabled={!selectedForComparison.includes(backtest.id) && selectedForComparison.length >= 3}
-                      className="w-6 h-6 text-indigo-600 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 cursor-pointer"
-                      title={selectedForComparison.length >= 3 && !selectedForComparison.includes(backtest.id) ? "Massimo 3 backtest selezionabili" : "Seleziona per confronto"}
-                    />
+                    ))}
+                    {backtest.portfolio.allocations.length > 3 && (
+                      <span className="text-slate-400 dark:text-slate-500 text-xs">...</span>
+                    )}
                   </div>
                 </div>
 
-                {/* Allocazioni */}
-                <div className="flex flex-wrap gap-1.5">
-                  {backtest.portfolio.allocations.map((alloc) => (
-                    <div
-                      key={alloc.symbol}
-                      className="px-2 py-1 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-300"
-                    >
-                      {alloc.symbol} {alloc.percentage}%
-                    </div>
-                  ))}
+                {/* Riga 2: Data */}
+                <div className="text-xs text-slate-500 dark:text-slate-400">
+                  📅 {formatDate(backtest.result.startDate)} - {formatDate(backtest.result.endDate)}
                 </div>
 
-                {/* Metriche Grid 2x2 */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl p-3 text-center">
-                    <div className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wide mb-1">
-                      {t('app:savedBacktests.columns.invested')}
-                    </div>
-                    <div className="text-base font-bold text-slate-900 dark:text-white">
-                      {formatCurrency(backtest.result.metrics.totalInvested)}
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl p-3 text-center">
-                    <div className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wide mb-1">
-                      {t('app:savedBacktests.columns.finalValue')}
-                    </div>
-                    <div className="text-base font-bold text-slate-900 dark:text-white">
-                      {formatCurrency(backtest.result.metrics.finalValue)}
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl p-3 text-center">
-                    <div className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wide mb-1">
+                {/* Riga 3: Metriche in fila orizzontale */}
+                <div className="flex gap-2 overflow-x-auto -mx-2 px-2 hide-scrollbar" style={{ WebkitOverflowScrolling: 'touch' }}>
+                  <div className="bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg p-2 text-center min-w-[80px]">
+                    <div className="text-[9px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wide mb-1">
                       {t('app:savedBacktests.columns.return')}
                     </div>
-                    <div className={`text-base font-bold ${getValueColor(backtest.result.metrics.totalReturn)}`}>
+                    <div className={`text-sm font-bold ${getValueColor(backtest.result.metrics.totalReturn)}`}>
                       {formatPercentage(backtest.result.metrics.totalReturn)}
                     </div>
                   </div>
 
-                  <div className="bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl p-3 text-center">
-                    <div className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wide mb-1">
+                  <div className="bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg p-2 text-center min-w-[80px]">
+                    <div className="text-[9px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wide mb-1">
+                      {t('app:savedBacktests.columns.finalValue')}
+                    </div>
+                    <div className="text-sm font-bold text-slate-900 dark:text-white">
+                      {formatCurrency(backtest.result.metrics.finalValue)}
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg p-2 text-center min-w-[80px]">
+                    <div className="text-[9px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wide mb-1">
+                      {t('app:savedBacktests.columns.invested')}
+                    </div>
+                    <div className="text-sm font-bold text-slate-900 dark:text-white">
+                      {formatCurrency(backtest.result.metrics.totalInvested)}
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg p-2 text-center min-w-[80px]">
+                    <div className="text-[9px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wide mb-1">
                       {t('app:savedBacktests.columns.drawdown')}
                     </div>
-                    <div className={`text-base font-bold ${getValueColor(backtest.result.metrics.maxDrawdown)}`}>
+                    <div className={`text-sm font-bold ${getValueColor(backtest.result.metrics.maxDrawdown)}`}>
                       {formatPercentage(backtest.result.metrics.maxDrawdown)}
                     </div>
                   </div>
                 </div>
 
-                {/* Azioni */}
-                <div className="flex flex-col gap-2 pt-2 border-t border-slate-200 dark:border-slate-700">
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => onViewBacktest(backtest)}
-                      className="flex-1 px-4 py-2.5 bg-slate-700 dark:bg-slate-600 hover:bg-slate-800 dark:hover:bg-slate-500 text-white rounded-lg text-sm font-semibold transition-colors"
-                    >
-                      {t('savedBacktests.actions.view')}
-                    </button>
-                    <button
-                      onClick={() => onRebalance(backtest)}
-                      className="flex-1 px-4 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-semibold transition-colors"
-                    >
-                      {t('savedBacktests.actions.rebalance')}
-                    </button>
-                  </div>
+                {/* Riga 4: Bottoni azioni + checkbox */}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => onViewBacktest(backtest)}
+                    className="flex-1 px-3 py-2 bg-slate-700 dark:bg-slate-600 hover:bg-slate-800 dark:hover:bg-slate-500 text-white rounded-lg text-xs font-semibold transition-colors"
+                  >
+                    {t('savedBacktests.actions.view')}
+                  </button>
+                  <button
+                    onClick={() => onRebalance(backtest)}
+                    className="flex-1 px-3 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-semibold transition-colors"
+                  >
+                    {t('savedBacktests.actions.rebalance')}
+                  </button>
                   <button
                     onClick={() => setProjectionBacktest(backtest)}
-                    className="w-full px-4 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-semibold transition-colors"
+                    className="px-2 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-semibold transition-colors"
                   >
-                    📈 {t('app:projection.button')}
+                    📈
                   </button>
                   <button
                     onClick={() => handleDeleteClick(backtest.id, backtest.name)}
-                    className="w-full px-4 py-2.5 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 border border-red-200 dark:border-red-800 hover:border-red-300 dark:hover:border-red-700 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 rounded-lg text-sm font-semibold transition-colors"
+                    className="px-2 py-2 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 rounded-lg text-xs font-semibold transition-colors"
                   >
-                    {t('savedBacktests.actions.delete')}
+                    🗑️
                   </button>
+                  <input
+                    type="checkbox"
+                    checked={selectedForComparison.includes(backtest.id)}
+                    onChange={() => toggleSelection(backtest.id)}
+                    disabled={!selectedForComparison.includes(backtest.id) && selectedForComparison.length >= 3}
+                    className="w-5 h-5 text-indigo-600 rounded focus:outline-none cursor-pointer"
+                  />
                 </div>
               </div>
             </div>

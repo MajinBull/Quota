@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   LineChart,
   Line,
@@ -36,10 +36,15 @@ export function BacktestResults({ result }: Props) {
   const { t } = useTranslation('app');
   const { isDark } = useTheme();
   const { metrics, equityCurve, assetPerformances, yearlyBreakdown, portfolio, startDate, endDate } = result;
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  // Scroll to top when component mounts
+  // Detect mobile viewport
   useEffect(() => {
-    window.scrollTo(0, 0);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   // Chart colors based on theme
@@ -61,8 +66,8 @@ export function BacktestResults({ result }: Props) {
     index % samplingInterval === 0 || index === chartData.length - 1
   );
 
-  // Calculate X-axis tick interval for uniform vertical grid lines (target ~10 lines)
-  const xAxisTickInterval = Math.floor(sampledData.length / 10);
+  // Calculate X-axis tick interval for uniform vertical grid lines (target ~5 lines on mobile, ~10 on desktop)
+  const xAxisTickInterval = isMobile ? Math.floor(sampledData.length / 4) : Math.floor(sampledData.length / 10);
 
   // Prepare multi-asset performance data with dates
   const assetChartData = equityCurve.map((point, index) => {
@@ -89,21 +94,21 @@ export function BacktestResults({ result }: Props) {
   }));
 
   return (
-    <div className="space-y-8 overflow-x-hidden max-w-full">
+    <div className="space-y-4 md:space-y-8 overflow-x-hidden max-w-full">
       {/* METRICHE CHIAVE */}
-      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-8">
-        <div className="flex items-center justify-between mb-6">
+      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 md:p-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 md:mb-6 gap-2">
           <h2 className="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-wide text-sm">
             {t('backtest.results.title')}
           </h2>
-          <div className="text-slate-600 dark:text-slate-400 text-sm">
+          <div className="text-slate-600 dark:text-slate-400 text-xs md:text-sm">
             <span className="font-medium">{t('backtest.results.period')} </span>
             {formatDateRange(startDate, endDate)}
           </div>
         </div>
 
         {/* Key Metrics Grid - responsive */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 md:gap-4">
           <MetricCard
             label={t('backtest.results.metrics.finalValue')}
             value={formatCurrency(metrics.finalValue)}
@@ -141,13 +146,13 @@ export function BacktestResults({ result }: Props) {
       </div>
 
       {/* CRESCITA PORTFOLIO + ALLOCAZIONE - Side by Side */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Crescita Portfolio (65% width = 2 columns) */}
-        <div className="lg:col-span-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-8">
-          <h3 className="text-xl font-bold mb-6 text-slate-900 dark:text-white uppercase tracking-wide text-sm">
+        <div className="lg:col-span-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 md:p-8">
+          <h3 className="text-xl font-bold mb-3 md:mb-6 text-slate-900 dark:text-white uppercase tracking-wide text-sm">
             {t('backtest.results.charts.portfolioGrowth')}
           </h3>
-          <ResponsiveContainer width="100%" height={400}>
+          <ResponsiveContainer width="100%" height={isMobile ? 280 : 400}>
             <LineChart data={sampledData}>
               <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
               <XAxis
@@ -192,21 +197,23 @@ export function BacktestResults({ result }: Props) {
         </div>
 
         {/* Allocazione Portfolio (35% width = 1 column) */}
-        <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-8">
-          <h3 className="text-xl font-bold mb-6 text-slate-900 dark:text-white uppercase tracking-wide text-sm">
+        <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 md:p-8">
+          <h3 className="text-xl font-bold mb-3 md:mb-6 text-slate-900 dark:text-white uppercase tracking-wide text-sm">
             {t('backtest.results.charts.allocation')}
           </h3>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={isMobile ? 220 : 300}>
             <PieChart>
               <Pie
                 data={pieData}
                 cx="50%"
-                cy="50%"
+                cy={isMobile ? "45%" : "50%"}
                 labelLine={false}
                 label={({ value }) => `${value}%`}
-                outerRadius={80}
+                outerRadius={isMobile ? 70 : 80}
                 fill="#8884d8"
                 dataKey="value"
+                isAnimationActive={false}
+                activeShape={undefined}
               >
                 {pieData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
@@ -217,7 +224,12 @@ export function BacktestResults({ result }: Props) {
                   backgroundColor: isDark ? '#1e293b' : '#ffffff',
                   border: `1px solid ${isDark ? '#475569' : '#e2e8f0'}`,
                   borderRadius: '8px',
-                  color: isDark ? '#f1f5f9' : '#0f172a'
+                  fontSize: isMobile ? '11px' : '12px',
+                  padding: isMobile ? '6px 8px' : '8px 12px',
+                  color: isDark ? '#ffffff' : '#0f172a'
+                }}
+                itemStyle={{
+                  color: isDark ? '#ffffff' : '#0f172a'
                 }}
               />
             </PieChart>
@@ -245,12 +257,12 @@ export function BacktestResults({ result }: Props) {
 
       {/* PERFORMANCE PER ASSET */}
       {assetPerformances.length > 0 && (
-        <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-8">
-          <h3 className="text-xl font-bold mb-6 text-slate-900 dark:text-white uppercase tracking-wide text-sm">
+        <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 md:p-8">
+          <h3 className="text-xl font-bold mb-3 md:mb-6 text-slate-900 dark:text-white uppercase tracking-wide text-sm">
             {t('backtest.results.charts.assetPerformance')}
           </h3>
-          <ResponsiveContainer width="100%" height={400}>
-            <LineChart data={sampledAssetData}>
+          <ResponsiveContainer width="100%" height={isMobile ? 350 : 400}>
+            <LineChart data={sampledAssetData} margin={{ left: isMobile ? -20 : 0, right: 0, top: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
               <XAxis
                 dataKey="formattedDate"
@@ -259,27 +271,34 @@ export function BacktestResults({ result }: Props) {
               />
               <YAxis
                 tick={{ fontSize: 12, fill: axisColor }}
-                label={{ value: t('backtest.results.charts.indexLabel'), angle: -90, position: 'insideLeft', fill: axisColor }}
+                width={isMobile ? 50 : 60}
               />
               <Tooltip
                 labelFormatter={(label) => `${t('backtest.results.charts.tooltipDate')} ${label}`}
+                formatter={(value: number | undefined) => (value !== undefined ? value.toFixed(2) : '-')}
                 contentStyle={{
                   backgroundColor: isDark ? '#1e293b' : '#ffffff',
                   border: `1px solid ${isDark ? '#475569' : '#e2e8f0'}`,
                   borderRadius: '8px',
+                  fontSize: isMobile ? '11px' : '12px',
+                  padding: isMobile ? '6px 8px' : '8px 12px',
                   color: isDark ? '#f1f5f9' : '#0f172a'
                 }}
+                itemStyle={{
+                  fontSize: isMobile ? '11px' : '12px',
+                  padding: '2px 0'
+                }}
               />
-              <Legend wrapperStyle={{ color: isDark ? '#cbd5e1' : '#64748b' }} />
+              {!isMobile && <Legend wrapperStyle={{ color: isDark ? '#cbd5e1' : '#64748b' }} />}
               {assetPerformances.map((asset, index) => (
                 <Line
                   key={asset.symbol}
                   type="monotone"
                   dataKey={asset.symbol}
                   stroke={COLORS[index % COLORS.length]}
-                  strokeWidth={2}
+                  strokeWidth={isMobile ? 3 : 2}
                   dot={false}
-                  name={ASSET_METADATA[asset.symbol]?.name || asset.symbol}
+                  name={asset.symbol}
                 />
               ))}
             </LineChart>
@@ -289,8 +308,8 @@ export function BacktestResults({ result }: Props) {
 
       {/* BREAKDOWN ANNO PER ANNO */}
       {yearlyBreakdown.length > 0 && (
-        <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-8">
-          <h3 className="text-xl font-bold mb-4 text-slate-900 dark:text-white uppercase tracking-wide text-sm">
+        <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 md:p-8">
+          <h3 className="text-xl font-bold mb-2 md:mb-4 text-slate-900 dark:text-white uppercase tracking-wide text-sm">
             {t('backtest.results.yearlyBreakdown.title')}
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 md:hidden">{t('backtest.results.yearlyBreakdown.scrollHint')}</p>
@@ -362,9 +381,9 @@ function MetricCard({ label, value, positive, negative }: MetricCardProps) {
   if (negative) colorClass = getValueColor(-1);
 
   return (
-    <div className="bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl p-5">
-      <div className="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wide mb-2">{label}</div>
-      <div className={`text-2xl font-bold ${colorClass}`}>{value}</div>
+    <div className="bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl p-3 md:p-5">
+      <div className="text-[10px] md:text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wide mb-1 md:mb-2">{label}</div>
+      <div className={`text-base md:text-2xl font-bold ${colorClass}`}>{value}</div>
     </div>
   );
 }

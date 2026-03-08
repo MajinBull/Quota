@@ -470,7 +470,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
   return (
     <div className="space-y-8">
       {/* STRATEGIA E PARAMETRI */}
-      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 md:p-8">
+      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 md:p-6">
         <h2 className="text-xl font-bold mb-4 md:mb-6 text-slate-900 dark:text-white uppercase tracking-wide text-sm">
           {t('strategy.title')}
         </h2>
@@ -548,7 +548,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                     type="number"
                     value={portfolio.initialCapital}
                     onChange={(e) => setInitialCapital(parseFloat(e.target.value) || 0)}
-                    className="w-full pl-7 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                    className="w-full pl-7 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:border-indigo-500 text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                     min="1"
                     step="100"
                   />
@@ -567,7 +567,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                           type="number"
                           value={portfolio.pacAmount || 500}
                           onChange={(e) => setPACAmount(parseFloat(e.target.value) || 0)}
-                          className="w-full pl-7 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                          className="w-full pl-7 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:border-indigo-500 text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                           min="1"
                           step="100"
                         />
@@ -575,7 +575,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                       <select
                         value={portfolio.pacFrequency || 'monthly'}
                         onChange={(e) => setPACFrequency(e.target.value as any)}
-                        className="w-32 sm:w-36 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm appearance-none bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                        className="w-32 sm:w-36 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:border-indigo-500 text-sm appearance-none bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                       >
                         <option value="monthly">{t('strategy.frequency.monthly')}</option>
                         <option value="quarterly">{t('strategy.frequency.quarterly')}</option>
@@ -592,7 +592,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                 <select
                   value={portfolio.rebalanceFrequency}
                   onChange={(e) => setRebalanceFrequency(e.target.value as any)}
-                  className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm appearance-none bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                  className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:border-indigo-500 text-sm appearance-none bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                 >
                   <option value="none">{t('strategy.frequency.none')}</option>
                   <option value="monthly">{t('strategy.frequency.monthly')}</option>
@@ -607,7 +607,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                 <select
                   value={portfolio.startYear || 'auto'}
                   onChange={(e) => setStartYear(e.target.value === 'auto' ? undefined : parseInt(e.target.value))}
-                  className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm appearance-none bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                  className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:border-indigo-500 text-sm appearance-none bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                 >
                   <option value="auto">{t('strategy.startYear.auto')}</option>
                   <option value="2005">2005</option>
@@ -622,7 +622,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
       </div>
 
       {/* AGGIUNGI ASSET */}
-      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 md:p-8">
+      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 md:p-6">
         {/* Header with Title and Search */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4 md:mb-6">
           <h2 className="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-wide text-sm">
@@ -636,7 +636,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
               placeholder={t('portfolio.addAssets.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
+              className="w-full pl-10 pr-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:border-indigo-500 text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
             />
             <svg
               className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500"
@@ -674,7 +674,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm appearance-none bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+              className="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:border-indigo-500 text-sm appearance-none bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
             >
               <option value="name-az">{t('portfolio.addAssets.sortOptions.nameAZ')}</option>
               <option value="name-za">{t('portfolio.addAssets.sortOptions.nameZA')}</option>
@@ -749,7 +749,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
       </div>
 
       {/* ALLOCAZIONE PORTFOLIO */}
-      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 md:p-8">
+      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 md:p-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 md:mb-6">
           <h2 className="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-wide text-sm">
             {t('portfolio.allocation.title')}

@@ -36,8 +36,8 @@ export function ProjectionModal({ backtestResult, backtestName, onClose }: Props
   const axisColor = isDark ? '#94a3b8' : '#64748b';
 
   return (
-    <div className="fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
-      <div className="bg-white dark:bg-slate-800 rounded-xl max-w-4xl w-full max-h-[92vh] overflow-y-auto overscroll-contain my-4">
+    <div className="fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-slate-800 rounded-xl max-w-4xl w-full max-h-[80vh] md:max-h-[92vh] overflow-y-auto overscroll-contain">
         {/* Header with close button */}
         <div className="sticky top-0 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-4 py-3 flex items-center justify-between z-10 rounded-t-xl">
           <div>

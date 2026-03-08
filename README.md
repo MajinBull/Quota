@@ -306,6 +306,37 @@ npm run build
 
 Il build ottimizzato sarà in `frontend/dist/` - deployabile su Vercel, Netlify, GitHub Pages, ecc.
 
+## 📱 Mobile App (Android)
+
+QUOTA è disponibile anche come **app Android nativa** tramite Capacitor.
+
+### Quick Start Mobile
+
+```bash
+cd frontend
+
+# Build APK per test
+build-mobile.bat
+
+# APK generato in: android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+### Workflow Completo
+
+- **[Development Workflow](DEVELOPMENT-WORKFLOW.md)** - Guida completa sviluppo web + mobile
+- **[Play Store Release Checklist](PLAY-STORE-RELEASE-CHECKLIST.md)** - Checklist rilascio ogni 2-3 settimane
+- **[Mobile Development Guide](frontend/MOBILE-DEVELOPMENT.md)** - Setup e configurazione mobile
+
+### Differenze Mobile vs Web
+
+| Feature | Web | Android |
+|---------|-----|---------|
+| Landing page | Mostra marketing | Bypass → app diretta |
+| Google Sign-In | Popup browser | SDK nativo Android |
+| Deploy | Auto (Vercel) | Manuale (Play Store) |
+
+---
+
 ## 🎯 Stato Attuale (Marzo 2026)
 
 ✅ **Completato**:
@@ -317,6 +348,9 @@ Il build ottimizzato sarà in `frontend/dist/` - deployabile su Vercel, Netlify,
 - SEO ottimizzato (robots.txt, sitemap.xml, meta tags)
 - 70+ asset con dati storici aggiornati
 - Grafici interattivi e metriche avanzate
+- **🆕 App Android nativa** con Google Sign-In e landing page bypass
+- **🆕 Sistema dark/light theme** persistente
+- **🆕 Categoria Stocks** con 20 aziende principali
 
 ## 🚀 Roadmap Futura
 
@@ -337,7 +371,7 @@ Il build ottimizzato sarà in `frontend/dist/` - deployabile su Vercel, Netlify,
 **Low Priority**
 - [ ] Social features (condivisione portfolio pubblici)
 - [ ] API pubblica per backtest
-- [ ] Mobile app (React Native)
+- [ ] iOS app (Capacitor)
 - [ ] Più asset (forex, futures, azioni singole)
 
 ## ⚠️ Disclaimer & Note Importanti

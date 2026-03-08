@@ -19,15 +19,19 @@ export function LandingPage() {
       <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
         {/* Header */}
       <header className="border-b border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-8 py-4">
-          <div className="flex items-center justify-between gap-4">
-            <img src={logoQuota} alt="QUOTA" className="h-10" />
-            <div className="flex items-center gap-3">
-              <ThemeToggle />
-              <LanguageSwitcher />
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 md:py-4">
+          <div className="flex items-center justify-between gap-2 md:gap-4">
+            <img src={logoQuota} alt="QUOTA" className="h-8 md:h-10" />
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="scale-90">
+                <ThemeToggle />
+              </div>
+              <div className="scale-90">
+                <LanguageSwitcher />
+              </div>
               <button
                 onClick={() => navigate('/app')}
-                className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold text-sm transition-all shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40"
+                className="px-3 md:px-6 py-2 md:py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold text-xs md:text-sm transition-all shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40"
               >
                 {t('landing:header.cta')}
               </button>
@@ -37,30 +41,30 @@ export function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-8 py-20 text-center">
-        <div className="inline-block px-4 py-2 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full text-sm font-semibold mb-6">
+      <section className="max-w-7xl mx-auto px-4 md:px-8 py-12 md:py-20 text-center">
+        <div className="inline-block px-3 md:px-4 py-1.5 md:py-2 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full text-xs md:text-sm font-semibold mb-4 md:mb-6">
           {t('landing:hero.badge')}
         </div>
-        <h1 className="text-5xl md:text-6xl font-bold text-slate-900 dark:text-white mb-6">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-white mb-4 md:mb-6 px-2">
           {t('landing:hero.title')}<br />
           <span className="text-indigo-600 dark:text-indigo-400">{t('landing:hero.titleHighlight')}</span>
         </h1>
-        <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto mb-4 leading-relaxed">
+        <p className="text-base md:text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto mb-3 md:mb-4 leading-relaxed px-2">
           {t('landing:hero.subtitle')}
         </p>
-        <p className="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto mb-10">
+        <p className="text-sm md:text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto mb-8 md:mb-10 px-2">
           {t('landing:hero.description')}
         </p>
         <button
           onClick={() => navigate('/app')}
-          className="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold text-lg transition-all shadow-xl shadow-indigo-500/30 hover:shadow-2xl hover:shadow-indigo-500/40"
+          className="px-8 md:px-10 py-3.5 md:py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold text-lg md:text-xl transition-all shadow-xl shadow-indigo-500/30 hover:shadow-2xl hover:shadow-indigo-500/40"
         >
           {t('landing:hero.cta')}
         </button>
       </section>
 
       {/* Features Grid */}
-      <section className="max-w-7xl mx-auto px-8 py-16">
+      <section className="max-w-7xl mx-auto px-4 md:px-8 py-12 md:py-16">
         <h2 className="text-3xl font-bold text-slate-900 dark:text-white text-center mb-3">
           {t('landing:features.title')}
         </h2>
@@ -149,8 +153,8 @@ export function LandingPage() {
       </section>
 
       {/* How It Works */}
-      <section className="bg-slate-50 dark:bg-slate-900/50 py-16">
-        <div className="max-w-7xl mx-auto px-8">
+      <section className="bg-slate-50 dark:bg-slate-900/50 py-12 md:py-16">
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
           <h2 className="text-3xl font-bold text-slate-900 dark:text-white text-center mb-12">
             {t('landing:howItWorks.title')}
           </h2>
@@ -171,16 +175,16 @@ export function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="max-w-5xl mx-auto px-8 py-20 text-center">
-        <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-6">
+      <section className="max-w-5xl mx-auto px-4 md:px-8 py-12 md:py-20 text-center">
+        <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4 md:mb-6 px-2">
           {t('landing:cta.title')}
         </h2>
-        <p className="text-lg text-slate-600 dark:text-slate-300 mb-8">
+        <p className="text-base md:text-lg text-slate-600 dark:text-slate-300 mb-6 md:mb-8 px-2">
           {t('landing:cta.subtitle')}
         </p>
         <button
           onClick={() => navigate('/app')}
-          className="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold text-lg transition-all shadow-xl shadow-indigo-500/30 hover:shadow-2xl hover:shadow-indigo-500/40"
+          className="px-6 md:px-8 py-3 md:py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold text-base md:text-lg transition-all shadow-xl shadow-indigo-500/30 hover:shadow-2xl hover:shadow-indigo-500/40"
         >
           {t('landing:cta.button')}
         </button>
@@ -188,7 +192,7 @@ export function LandingPage() {
 
       {/* Footer */}
       <footer className="border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 mt-12">
-        <div className="max-w-7xl mx-auto px-8 py-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             <div className="text-slate-600 dark:text-slate-300 text-sm">
               <span className="font-semibold text-slate-900 dark:text-white">{t('common:footer.brand')}</span>
