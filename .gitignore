@@ -58,3 +58,23 @@ coverage/
 
 # Vercel
 .vercel
+
+# Mobile App (Android) - Development only, not for web production
+frontend/android/
+frontend/capacitor.config.ts
+frontend/src/pages/RootRedirect.tsx
+frontend/src/utils/capacitor.ts
+frontend/build-mobile.bat
+frontend/build-and-install.bat
+frontend/build-playstore-release.bat
+DEVELOPMENT-WORKFLOW.md
+PLAY-STORE-RELEASE-CHECKLIST.md
+WEB-VS-MOBILE-GUIDE.md
+frontend/MOBILE-DEVELOPMENT.md
+
+# Claude settings (local)
+.claude/settings.local.json
+
+# Temporary files
+nul
+public/
