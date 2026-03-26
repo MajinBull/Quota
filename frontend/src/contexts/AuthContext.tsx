@@ -158,7 +158,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const canRunBacktest = (): boolean => {
     if (!user) return false;
     if (user.isPremium) return true;
-    return user.backtestExecutionCount < 20; // Free tier: 20 backtests
+    return true; // All users can run backtests (premium: no ads, free: with ads)
   };
 
   const value: AuthContextType = {

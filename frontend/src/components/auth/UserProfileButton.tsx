@@ -35,10 +35,6 @@ export function UserProfileButton({ onUpgrade }: Props) {
     await logout();
   };
 
-  const usedBacktests = user.backtestExecutionCount;
-  const maxBacktests = user.isPremium ? '∞' : '20';
-  const progressPercentage = user.isPremium ? 0 : Math.min((usedBacktests / 20) * 100, 100);
-
   return (
     <div className="relative" ref={dropdownRef}>
       {/* Profile Button */}
@@ -60,7 +56,7 @@ export function UserProfileButton({ onUpgrade }: Props) {
             {user.isPremium ? (
               <span className="text-emerald-600 dark:text-emerald-400 font-semibold">✓ Premium</span>
             ) : (
-              `${usedBacktests}/${maxBacktests} backtest`
+              <span className="text-slate-600 dark:text-slate-400">Free (con pubblicità)</span>
             )}
           </p>
         </div>
@@ -103,30 +99,14 @@ export function UserProfileButton({ onUpgrade }: Props) {
                   {t('profile.dropdown.active')}
                 </span>
               ) : (
-                <span className="text-sm font-bold text-slate-900 dark:text-white">{t('profile.dropdown.backtestsUsed', { used: usedBacktests })}</span>
+                <span className="text-xs text-slate-600 dark:text-slate-400">Backtest con pubblicità</span>
               )}
             </div>
 
             {!user.isPremium && (
-              <>
-                <div className="w-full h-2 bg-slate-200 dark:bg-slate-600 rounded-full overflow-hidden mb-2">
-                  <div
-                    className={`h-full transition-all duration-300 ${
-                      progressPercentage >= 100
-                        ? 'bg-red-500'
-                        : progressPercentage >= 80
-                        ? 'bg-amber-500'
-                        : 'bg-indigo-600'
-                    }`}
-                    style={{ width: `${progressPercentage}%` }}
-                  />
-                </div>
-                <p className="text-xs text-slate-600 dark:text-slate-400">
-                  {usedBacktests >= 20
-                    ? t('profile.dropdown.limitReached')
-                    : t('profile.dropdown.backtestsRemaining', { remaining: 20 - usedBacktests })}
-                </p>
-              </>
+              <p className="text-xs text-slate-600 dark:text-slate-400">
+                Guarda un video di 30s per ogni backtest o passa a Premium per rimuovere le pubblicità
+              </p>
             )}
           </div>
 
@@ -148,9 +128,9 @@ export function UserProfileButton({ onUpgrade }: Props) {
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-slate-900 dark:text-white">
-                      {t('profile.dropdown.upgrade')}
+                      Passa a Premium
                     </p>
-                    <p className="text-xs text-slate-600 dark:text-slate-400">{t('profile.dropdown.upgradeSubtitle')}</p>
+                    <p className="text-xs text-slate-600 dark:text-slate-400">Backtest istantanei senza pubblicità</p>
                   </div>
                   <svg className="w-5 h-5 text-slate-400 dark:text-slate-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

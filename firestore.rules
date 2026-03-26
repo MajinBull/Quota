@@ -9,12 +9,13 @@ service cloud.firestore {
       // Allow creating user document (for signup)
       allow create: if request.auth != null && request.auth.uid == userId;
 
-      // CRITICAL SECURITY: Prevent users from modifying isPremium or backtestExecutionCount
-      // These fields can only be modified by Cloud Functions (via Firebase Admin SDK)
+      // CRITICAL SECURITY: Prevent users from modifying isPremium
+      // This field can only be modified by Cloud Functions (via Firebase Admin SDK)
+      // Note: backtestExecutionCount is now just an analytics counter, not a security-critical limit
       allow update: if request.auth != null
                     && request.auth.uid == userId
                     && (!request.resource.data.diff(resource.data).affectedKeys()
-                         .hasAny(['isPremium', 'backtestExecutionCount']));
+                         .hasAny(['isPremium']));
     }
 
     // Backtests collection - users can only access their own backtests

@@ -10,6 +10,7 @@ import { useAuth } from './contexts/AuthContext';
 import { AuthModal } from './components/auth/AuthModal';
 import { UserProfileButton } from './components/auth/UserProfileButton';
 import { UpgradeModal } from './components/auth/UpgradeModal';
+import { AdModal } from './components/AdModal';
 import { usePortfolioStore } from './stores/portfolioStore';
 import { executeBacktestRemote } from './services/backtestService';
 import type { BacktestResult } from './types';
@@ -22,7 +23,7 @@ type ActiveView = 'configuration' | 'risultati' | 'backtest_salvati';
 
 function AppContent() {
   const { t } = useTranslation(['app', 'common']);
-  const { user, loading, canRunBacktest, updateLocalBacktestCount } = useAuth();
+  const { user, loading, updateLocalBacktestCount } = useAuth();
   const { isDark } = useTheme();
   const { portfolio, getTotalAllocation } = usePortfolioStore();
   const [result, setResult] = useState<BacktestResult | null>(null);
@@ -31,6 +32,8 @@ function AppContent() {
   const [activeView, setActiveView] = useState<ActiveView>('configuration');
   const [isTemplatesModalOpen, setIsTemplatesModalOpen] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [showAdModal, setShowAdModal] = useState(false);
+  const [adCompletionToken, setAdCompletionToken] = useState<string | null>(null);
   const [headerExpanded, setHeaderExpanded] = useState(true);
   const hasScrolledRef = useRef(false);
 
@@ -75,26 +78,49 @@ function AppContent() {
   }
 
   const handleRunBacktest = async () => {
-    // Check free tier limit BEFORE running backtest
-    if (!canRunBacktest()) {
-      setShowUpgradeModal(true);
+    // Premium users: execute immediately without ads
+    if (user?.isPremium) {
+      executeBacktest();
       return;
     }
 
+    // Free users: check if ad token exists
+    if (!adCompletionToken) {
+      // No token: show ad modal first
+      setShowAdModal(true);
+      return;
+    }
+
+    // Token exists: execute backtest with token
+    executeBacktest();
+  };
+
+  const handleAdCompleted = (token: string) => {
+    setAdCompletionToken(token);
+    setShowAdModal(false);
+    // Auto-trigger backtest after ad completion
+    executeBacktest();
+  };
+
+  const executeBacktest = async () => {
     setIsLoading(true);
     setError(null);
     setResult(null);
 
     try {
-      // Execute backtest via Cloud Function (includes server-side limit enforcement)
-      const { result: backtestResult, remainingBacktests } = await executeBacktestRemote(portfolio);
+      // Execute backtest via Cloud Function (includes server-side token validation)
+      const { result: backtestResult, remainingBacktests } = await executeBacktestRemote(
+        portfolio,
+        adCompletionToken
+      );
 
       if (backtestResult) {
         setResult(backtestResult);
 
-        // Update local counter based on server response
-        // For premium users, remainingBacktests is -1
-        // For free users, calculate current count from remaining
+        // Consume token after successful backtest
+        setAdCompletionToken(null);
+
+        // Update local counter for analytics (optional)
         if (user && !user.isPremium && remainingBacktests >= 0) {
           const currentCount = 20 - remainingBacktests;
           updateLocalBacktestCount(currentCount);
@@ -108,8 +134,12 @@ function AppContent() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : t('app:errors.unknownError');
 
-      // Check if it's the limit exceeded error
-      if (errorMessage.includes('limite mensile') || errorMessage.includes('Premium')) {
+      // Check if it's a token validation error
+      if (errorMessage.includes('pubblicitario') || errorMessage.includes('Token')) {
+        // Token invalid/expired: clear it and show ad modal again
+        setAdCompletionToken(null);
+        setError(errorMessage);
+      } else if (errorMessage.includes('Premium')) {
         setShowUpgradeModal(true);
       } else {
         setError(errorMessage);
@@ -279,6 +309,15 @@ function AppContent() {
                     </p>
                   </div>
                 )}
+
+                {/* Free user hint: watch ad to run backtest */}
+                {!user?.isPremium && isValidPortfolio && !isLoading && (
+                  <div className="mt-3 p-3 bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-200 dark:border-indigo-800 rounded-lg">
+                    <p className="text-xs text-indigo-900 dark:text-indigo-200 text-center">
+                      📺 Guarda un video di 30s per eseguire il backtest
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -353,6 +392,14 @@ function AppContent() {
       {/* Upgrade Modal */}
       {showUpgradeModal && (
         <UpgradeModal onClose={() => setShowUpgradeModal(false)} />
+      )}
+
+      {/* Ad Modal (for free users) */}
+      {showAdModal && (
+        <AdModal
+          onAdCompleted={handleAdCompleted}
+          onClose={() => setShowAdModal(false)}
+        />
       )}
     </div>
   );

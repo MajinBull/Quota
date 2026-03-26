@@ -1,6 +1,5 @@
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '../../contexts/AuthContext';
 
 interface Props {
   onClose: () => void;
@@ -8,7 +7,6 @@ interface Props {
 
 export function UpgradeModal({ onClose }: Props) {
   const { t } = useTranslation('auth');
-  const { user } = useAuth();
 
   const features = t('upgrade.features', { returnObjects: true }) as Array<{ title: string; description: string }>;
 
@@ -23,10 +21,10 @@ export function UpgradeModal({ onClose }: Props) {
             </svg>
           </div>
           <h2 className="text-xl md:text-2xl font-bold text-white mb-1 md:mb-2">
-            {t('upgrade.title')}
+            Backtest Illimitati Senza Pubblicità
           </h2>
           <p className="text-sm md:text-base text-indigo-100">
-            {t('upgrade.subtitle', { count: user?.backtestExecutionCount || 20 })}
+            Salta le pubblicità e risparmia tempo con Premium
           </p>
         </div>
 

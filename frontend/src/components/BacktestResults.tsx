@@ -165,7 +165,7 @@ export function BacktestResults({ result }: Props) {
                 tickFormatter={(value) => formatCurrency(value)}
               />
               <Tooltip
-                formatter={(value: number | undefined) => value !== undefined ? formatCurrency(value) : ''}
+                formatter={((value: number | undefined) => value !== undefined ? formatCurrency(value) : '') as any}
                 labelFormatter={(label) => `${t('backtest.results.charts.tooltipDate')} ${label}`}
                 contentStyle={{
                   backgroundColor: isDark ? '#1e293b' : '#ffffff',
@@ -275,7 +275,7 @@ export function BacktestResults({ result }: Props) {
               />
               <Tooltip
                 labelFormatter={(label) => `${t('backtest.results.charts.tooltipDate')} ${label}`}
-                formatter={(value: number | undefined) => (value !== undefined ? value.toFixed(2) : '-')}
+                formatter={((value: number | undefined) => (value !== undefined ? value.toFixed(2) : '-')) as any}
                 contentStyle={{
                   backgroundColor: isDark ? '#1e293b' : '#ffffff',
                   border: `1px solid ${isDark ? '#475569' : '#e2e8f0'}`,

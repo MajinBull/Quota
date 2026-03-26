@@ -114,7 +114,7 @@ export function ProjectionView({ backtestResult }: Props) {
                 padding: '12px',
                 color: isDark ? '#f1f5f9' : '#0f172a'
               }}
-              formatter={(value: number | undefined) => value !== undefined ? formatCurrency(value) : ''}
+              formatter={((value: number | undefined) => value !== undefined ? formatCurrency(value) : '') as any}
               labelStyle={{ fontWeight: 'bold', marginBottom: '8px' }}
             />
             <Legend />

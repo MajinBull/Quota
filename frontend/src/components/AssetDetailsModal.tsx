@@ -248,7 +248,7 @@ export function AssetDetailsModal({ symbol, onClose }: Props) {
                       width={60}
                     />
                     <Tooltip
-                      formatter={(value: number | undefined) => value !== undefined ? formatCurrency(value) : ''}
+                      formatter={((value: number | undefined) => value !== undefined ? formatCurrency(value) : '') as any}
                       labelFormatter={(label) => `${t('assetDetails.chart.tooltip')} ${label}`}
                       contentStyle={{
                         backgroundColor: isDark ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
