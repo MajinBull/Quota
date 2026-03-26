@@ -98,20 +98,23 @@ function AppContent() {
   const handleAdCompleted = (token: string) => {
     setAdCompletionToken(token);
     setShowAdModal(false);
-    // Auto-trigger backtest after ad completion
-    executeBacktest();
+    // Auto-trigger backtest after ad completion - pass token directly!
+    executeBacktest(token);
   };
 
-  const executeBacktest = async () => {
+  const executeBacktest = async (tokenOverride?: string) => {
     setIsLoading(true);
     setError(null);
     setResult(null);
 
     try {
+      // Use tokenOverride if provided, otherwise use state (for manual retries)
+      const tokenToUse = tokenOverride !== undefined ? tokenOverride : adCompletionToken;
+
       // Execute backtest via Cloud Function (includes server-side token validation)
       const { result: backtestResult, remainingBacktests } = await executeBacktestRemote(
         portfolio,
-        adCompletionToken
+        tokenToUse
       );
 
       if (backtestResult) {

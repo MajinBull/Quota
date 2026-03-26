@@ -30,56 +30,68 @@ function validateAdCompletionToken(
   expectedUserId: string
 ): boolean {
   try {
+    console.log('🔍 Validating token:', { token: token.substring(0, 50) + '...', expectedUserId });
+
     const parts = token.split('|');
+    console.log('📋 Token parts:', { count: parts.length, parts: parts.map(p => p.substring(0, 20) + '...') });
+
     if (parts.length !== 4) {
-      console.warn('Token validation failed: invalid format (expected 4 parts)');
+      console.error('❌ Token validation failed: invalid format (expected 4 parts, got', parts.length, ')');
       return false;
     }
 
     const [userId, timestampStr, nonce, signature] = parts;
 
     // 1. Verify userId matches
+    console.log('🆔 UserId check:', { received: userId, expected: expectedUserId, match: userId === expectedUserId });
     if (userId !== expectedUserId) {
-      console.warn('Token validation failed: userId mismatch');
+      console.error('❌ Token validation failed: userId mismatch');
       return false;
     }
 
     // 2. Verify timestamp (must be <5 minutes old)
     const timestamp = parseInt(timestampStr, 10);
     if (isNaN(timestamp)) {
-      console.warn('Token validation failed: invalid timestamp');
+      console.error('❌ Token validation failed: invalid timestamp:', timestampStr);
       return false;
     }
 
     const now = Date.now();
     const ageMinutes = (now - timestamp) / 1000 / 60;
 
+    console.log('⏰ Timestamp check:', {
+      received: timestamp,
+      now,
+      ageMinutes: ageMinutes.toFixed(2),
+      valid: ageMinutes >= 0 && ageMinutes <= 5
+    });
+
     if (ageMinutes > 5) {
-      console.warn(`Token validation failed: expired (${ageMinutes.toFixed(1)} minutes old)`);
+      console.error(`❌ Token validation failed: expired (${ageMinutes.toFixed(1)} minutes old)`);
       return false;
     }
 
     if (ageMinutes < 0) {
-      console.warn('Token validation failed: timestamp in future');
+      console.error(`❌ Token validation failed: timestamp in future (${ageMinutes.toFixed(1)} minutes)`);
       return false;
     }
 
     // 3. Nonce verification (currently just check it exists)
     if (!nonce || nonce.length === 0) {
-      console.warn('Token validation failed: missing nonce');
+      console.error('❌ Token validation failed: missing nonce');
       return false;
     }
 
     // 4. Signature verification (basic - can be enhanced with HMAC later)
     if (!signature || signature.length === 0) {
-      console.warn('Token validation failed: missing signature');
+      console.error('❌ Token validation failed: missing signature');
       return false;
     }
 
-    console.log(`Token validated successfully for user ${userId} (age: ${ageMinutes.toFixed(1)}m)`);
+    console.log(`✅ Token validated successfully for user ${userId} (age: ${ageMinutes.toFixed(1)}m)`);
     return true;
   } catch (error) {
-    console.error('Token validation error:', error);
+    console.error('💥 Token validation exception:', error);
     return false;
   }
 }

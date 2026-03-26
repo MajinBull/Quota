@@ -55,9 +55,19 @@ export function AdModal({ onAdCompleted, onClose }: AdModalProps) {
 
   // Generate token when countdown reaches 0
   useEffect(() => {
+    console.log('⏱️ Countdown state:', { countdown, hasUser: !!user, adError });
+
     if (countdown === 0 && user && !adError) {
+      console.log('✅ Generating token now...');
       const token = generateToken(user.uid);
       onAdCompleted(token);
+    } else if (countdown === 0) {
+      console.log('❌ Token NOT generated:', {
+        countdown,
+        hasUser: !!user,
+        userId: user?.uid,
+        adError
+      });
     }
   }, [countdown, user, onAdCompleted, adError]);
 
@@ -66,7 +76,18 @@ export function AdModal({ onAdCompleted, onClose }: AdModalProps) {
     const nonce = crypto.randomUUID();
     const payload = `${userId}|${timestamp}|${nonce}`;
     const signature = btoa(payload);
-    return `${payload}|${signature}`;
+    const fullToken = `${payload}|${signature}`;
+
+    // DEBUG: Log token generation
+    console.log('🎟️ Token generated:', {
+      userId,
+      timestamp,
+      nonce,
+      fullToken,
+      parts: fullToken.split('|').length
+    });
+
+    return fullToken;
   }
 
   return (
