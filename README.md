@@ -8,7 +8,7 @@ App live: [quota-ochre.vercel.app](https://quota-ochre.vercel.app)
 > al sito crypto e non devono essere usati come destinazione di questo codice.
 
 QUOTA simula portafogli multi-asset con dati storici giornalieri, PAC,
-ribilanciamento e leva da 1× a 3×. Il calcolo avviene interamente nel browser:
+ribilanciamento e leva da 1× a 5×. Il calcolo avviene interamente nel browser:
 non serve un server Hetzner, una Cloud Function o un worker remoto.
 
 ## Architettura
@@ -32,7 +32,10 @@ Vercel static hosting
   rendimento. Rendimento totale, CAGR, volatilità e drawdown sono
   time-weighted.
 - La leva include debito, costo di finanziamento sui giorni di calendario e
-  liquidazione quando il patrimonio netto raggiunge zero.
+  liquidazione quando il patrimonio netto raggiunge zero. Sono disponibili
+  due modelli distinti: rapporto di leva fisso (con reset giornaliero, mensile,
+  trimestrale o annuale) e importo del debito fisso. Il reset della leva è
+  indipendente dal ribilanciamento delle allocazioni.
 - La cartella `functions/` è codice storico e non è inclusa nel deploy Firebase.
 
 ## Sicurezza
@@ -62,7 +65,7 @@ npm run lint
 ```
 
 I test deterministici coprono intervallo comune tra asset, PAC, calendari di
-mercato misti, costo della leva e liquidazione.
+mercato misti, costo della leva, modelli e frequenze di reset e liquidazione.
 
 ## Dati e limiti del modello
 

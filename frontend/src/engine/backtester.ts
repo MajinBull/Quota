@@ -297,15 +297,20 @@ function simulatePortfolio(
   let cash = portfolio.initialCapital;
   let totalInvested = portfolio.initialCapital;
   let lastRebalanceDate = allDates[0];
+  let lastLeverageResetDate = allDates[0];
   let lastPACDate = allDates[0];
   let previousValue = portfolio.initialCapital;
   let performanceIndex = 100;
   let debt = 0;
   let totalInterestPaid = 0;
-  let maxEffectiveLeverage = portfolio.leverage ?? 1;
   let liquidated = false;
   let liquidationDate: string | undefined;
-  const leverage = Math.max(1, Math.min(3, portfolio.leverage ?? 1));
+  const leverage = Math.max(1, Math.min(5, portfolio.leverage ?? 1));
+  let maxEffectiveLeverage = leverage;
+  // Legacy saved portfolios predate this field and retain their original
+  // fixed-debt behavior. New portfolios default to fixed_ratio in the store.
+  const leverageType = portfolio.leverageType ?? 'fixed_debt';
+  const leverageResetFrequency = portfolio.leverageResetFrequency ?? 'daily';
   const annualFinancingRate = Math.max(0, portfolio.annualFinancingRate ?? 0) / 100;
 
   // Initialize asset performances
@@ -354,14 +359,28 @@ function simulatePortfolio(
       }
     }
 
-    // Check if we need to rebalance
+    // Asset allocation and leverage resets are independent. A fixed-ratio
+    // portfolio can resize its gross exposure without resetting asset weights.
     const scheduledRebalance = canTradeAllAssets
       && shouldRebalanceOnDate(date, lastRebalanceDate, portfolio.rebalanceFrequency);
-    const shouldRebalance = positions.length === 0 ||
+    const initializing = positions.length === 0;
+    const shouldRebalanceAssets = initializing ||
       pacAdded ||
       scheduledRebalance;
+    const scheduledLeverageReset = !initializing
+      && leverage > 1
+      && leverageType === 'fixed_ratio'
+      && canTradeAllAssets
+      && shouldResetLeverageOnDate(date, lastLeverageResetDate, leverageResetFrequency);
+    const shouldAdjustPositions = shouldRebalanceAssets || scheduledLeverageReset;
 
-    if (shouldRebalance && activeAllocations.length > 0) {
+    if (shouldAdjustPositions && activeAllocations.length > 0) {
+      // A leverage-only reset preserves the weights that drifted since the last
+      // allocation rebalance. A true allocation event restores target weights.
+      const allocationsToUse = shouldRebalanceAssets
+        ? activeAllocations
+        : getCurrentPositionAllocations(positions, priceMap, date, lastKnownPrices);
+
       // Sell all positions (if any)
       if (positions.length > 0) {
         const liquidatedValue = liquidatePositions(positions, priceMap, date, lastKnownPrices);
@@ -377,17 +396,23 @@ function simulatePortfolio(
         liquidationDate = date;
       }
 
-      // Adjust borrowing to the target gross exposure. Old saved portfolios
-      // default to 1x and therefore retain the original behavior.
-      const targetGrossExposure = liquidated ? 0 : netEquity * leverage;
-      const targetDebt = liquidated ? 0 : Math.max(0, targetGrossExposure - netEquity);
-      cash += targetDebt - debt;
-      debt = targetDebt;
+      let targetGrossExposure = 0;
+      if (!liquidated) {
+        if (initializing || leverageType === 'fixed_ratio') {
+          // Fixed ratio: resize both debt and assets to the requested exposure.
+          targetGrossExposure = netEquity * leverage;
+          const targetDebt = Math.max(0, targetGrossExposure - netEquity);
+          cash += targetDebt - debt;
+          debt = targetDebt;
+        } else {
+          // Fixed debt: keep the outstanding loan (including accrued interest).
+          // Selling and repurchasing assets must not silently increase borrowing.
+          targetGrossExposure = cash;
+        }
+      }
 
-      // Buy new positions according to ACTIVE allocations (only available assets)
-      const totalValue = targetGrossExposure;
-      for (const allocation of activeAllocations) {
-        const targetValue = totalValue * (allocation.percentage / 100);
+      for (const allocation of allocationsToUse) {
+        const targetValue = targetGrossExposure * (allocation.percentage / 100);
         const price = getPrice(allocation.symbol, date, priceMap, lastKnownPrices);
 
         if (price > 0) {
@@ -405,6 +430,9 @@ function simulatePortfolio(
       // (NOT for PAC-triggered rebalances, to keep scheduled timing correct)
       if (scheduledRebalance) {
         lastRebalanceDate = date;
+      }
+      if (leverageType === 'fixed_ratio') {
+        lastLeverageResetDate = date;
       }
     }
 
@@ -561,6 +589,29 @@ function liquidatePositions(
 }
 
 /**
+ * Preserve drifted asset weights during a leverage-only reset.
+ */
+function getCurrentPositionAllocations(
+  positions: AssetPosition[],
+  priceMap: Map<string, Map<string, number>>,
+  date: string,
+  lastKnownPrices: Map<string, number>
+): PortfolioAllocation[] {
+  const values = positions.map(position => ({
+    symbol: position.symbol,
+    value: position.shares * getPrice(position.symbol, date, priceMap, lastKnownPrices),
+  }));
+  const totalValue = values.reduce((sum, position) => sum + position.value, 0);
+
+  if (totalValue <= 0) return [];
+
+  return values.map(position => ({
+    symbol: position.symbol,
+    percentage: (position.value / totalValue) * 100,
+  }));
+}
+
+/**
  * Determine if rebalancing should occur on this date
  */
 function shouldRebalanceOnDate(
@@ -582,6 +633,30 @@ function shouldRebalanceOnDate(
       return differenceInDays(current, addYears(last, 1)) >= 0;
     default:
       return false;
+  }
+}
+
+/**
+ * Determine when a fixed leverage ratio must be restored. This schedule is
+ * deliberately separate from the asset-allocation rebalance schedule.
+ */
+function shouldResetLeverageOnDate(
+  currentDate: string,
+  lastResetDate: string,
+  frequency: NonNullable<Portfolio['leverageResetFrequency']>
+): boolean {
+  if (frequency === 'daily') return currentDate !== lastResetDate;
+
+  const current = parseISO(currentDate);
+  const last = parseISO(lastResetDate);
+
+  switch (frequency) {
+    case 'monthly':
+      return differenceInDays(current, addMonths(last, 1)) >= 0;
+    case 'quarterly':
+      return differenceInDays(current, addMonths(last, 3)) >= 0;
+    case 'yearly':
+      return differenceInDays(current, addYears(last, 1)) >= 0;
   }
 }
 

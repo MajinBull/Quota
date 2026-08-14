@@ -1,5 +1,12 @@
 import { create } from 'zustand';
-import type { Portfolio, PortfolioAllocation, InvestmentStrategy, PACFrequency } from '../types';
+import type {
+  Portfolio,
+  PortfolioAllocation,
+  InvestmentStrategy,
+  PACFrequency,
+  LeverageType,
+  LeverageResetFrequency,
+} from '../types';
 
 interface PortfolioStore {
   portfolio: Portfolio;
@@ -14,6 +21,8 @@ interface PortfolioStore {
   setRebalanceFrequency: (frequency: Portfolio['rebalanceFrequency']) => void;
   setStartYear: (year: number | undefined) => void;
   setLeverage: (leverage: number) => void;
+  setLeverageType: (type: LeverageType) => void;
+  setLeverageResetFrequency: (frequency: LeverageResetFrequency) => void;
   setAnnualFinancingRate: (rate: number) => void;
   resetPortfolio: () => void;
   getTotalAllocation: () => number;
@@ -28,6 +37,8 @@ const DEFAULT_PORTFOLIO: Portfolio = {
   pacFrequency: 'monthly',
   rebalanceFrequency: 'yearly',
   leverage: 1,
+  leverageType: 'fixed_ratio',
+  leverageResetFrequency: 'daily',
   annualFinancingRate: 5
 };
 
@@ -128,7 +139,19 @@ export const usePortfolioStore = create<PortfolioStore>((set, get) => ({
 
   setLeverage: (leverage: number) => {
     set((state) => ({
-      portfolio: { ...state.portfolio, leverage: Math.max(1, Math.min(3, leverage)) }
+      portfolio: { ...state.portfolio, leverage: Math.max(1, Math.min(5, leverage)) }
+    }));
+  },
+
+  setLeverageType: (leverageType: LeverageType) => {
+    set((state) => ({
+      portfolio: { ...state.portfolio, leverageType }
+    }));
+  },
+
+  setLeverageResetFrequency: (leverageResetFrequency: LeverageResetFrequency) => {
+    set((state) => ({
+      portfolio: { ...state.portfolio, leverageResetFrequency }
     }));
   },
 

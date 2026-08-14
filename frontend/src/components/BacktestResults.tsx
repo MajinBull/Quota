@@ -154,8 +154,20 @@ export function BacktestResults({ result }: Props) {
         </div>
 
         {(portfolio.leverage ?? 1) > 1 && (
-          <div className="mt-4 grid grid-cols-2 gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 md:grid-cols-5 dark:border-amber-800 dark:bg-amber-900/20">
+          <div className="mt-4 grid grid-cols-2 gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 md:grid-cols-4 lg:grid-cols-7 dark:border-amber-800 dark:bg-amber-900/20">
             <MetricCard label={t('backtest.results.metrics.leverage')} value={`${(portfolio.leverage ?? 1).toFixed(2)}×`} positive={false} />
+            <MetricCard
+              label={t('backtest.results.metrics.leverageModel')}
+              value={t(`strategy.leverageTypes.${(portfolio.leverageType ?? 'fixed_debt') === 'fixed_ratio' ? 'fixedRatio' : 'fixedDebt'}`)}
+              positive={false}
+            />
+            <MetricCard
+              label={t('backtest.results.metrics.leverageReset')}
+              value={(portfolio.leverageType ?? 'fixed_debt') === 'fixed_ratio'
+                ? t(`strategy.frequency.${portfolio.leverageResetFrequency ?? 'daily'}`)
+                : '—'}
+              positive={false}
+            />
             <MetricCard label={t('backtest.results.metrics.financingRate')} value={`${(portfolio.annualFinancingRate ?? 0).toFixed(2)}%`} positive={false} />
             <MetricCard label={t('backtest.results.metrics.interestPaid')} value={formatCurrency(metrics.totalInterestPaid ?? 0)} positive={false} negative={(metrics.totalInterestPaid ?? 0) > 0} />
             <MetricCard label={t('backtest.results.metrics.finalDebt')} value={formatCurrency(metrics.finalDebt ?? 0)} positive={false} />

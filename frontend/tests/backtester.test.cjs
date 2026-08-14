@@ -114,7 +114,7 @@ test('values on the union calendar while keeping the first date jointly tradable
   closeTo(result.equityCurve[1].value, 100.5);
 });
 
-test('accrues financing cost on leveraged exposure using elapsed calendar days', () => {
+test('legacy portfolios without a leverage model keep fixed-debt behavior', () => {
   const result = runBacktestWithData(portfolio({
     leverage: 2,
     annualFinancingRate: 10,
@@ -125,6 +125,74 @@ test('accrues financing cost on leveraged exposure using elapsed calendar days',
   closeTo(result.metrics.totalInterestPaid, 10);
   closeTo(result.metrics.finalDebt, 110);
   closeTo(result.metrics.totalReturn, -10);
+});
+
+test('resets a fixed leverage ratio independently from asset rebalancing', () => {
+  const result = runBacktestWithData(portfolio({
+    leverage: 2,
+    leverageType: 'fixed_ratio',
+    leverageResetFrequency: 'monthly',
+    rebalanceFrequency: 'none',
+  }), new Map([['AAA', asset('AAA', [
+    ['2024-01-02', 100],
+    ['2024-01-03', 80],
+    ['2024-02-02', 90],
+  ])]]));
+
+  assert.ok(result);
+  closeTo(result.equityCurve[1].debt, 100);
+  closeTo(result.equityCurve[2].debt, 80);
+  closeTo(result.equityCurve[2].grossExposure, 160);
+  closeTo(result.metrics.finalValue, 80);
+});
+
+test('daily fixed ratio resets exposure and captures volatility drag', () => {
+  const result = runBacktestWithData(portfolio({
+    leverage: 2,
+    leverageType: 'fixed_ratio',
+    leverageResetFrequency: 'daily',
+  }), new Map([['AAA', asset('AAA', [
+    ['2024-01-02', 100],
+    ['2024-01-03', 80],
+    ['2024-01-04', 100],
+  ])]]));
+
+  assert.ok(result);
+  closeTo(result.metrics.finalValue, 90);
+  closeTo(result.metrics.totalReturn, -10);
+  assert.equal(result.metrics.liquidated, false);
+});
+
+test('fixed debt keeps the original loan instead of resetting leverage', () => {
+  const result = runBacktestWithData(portfolio({
+    leverage: 2,
+    leverageType: 'fixed_debt',
+  }), new Map([['AAA', asset('AAA', [
+    ['2024-01-02', 100],
+    ['2024-01-03', 80],
+    ['2024-01-04', 100],
+  ])]]));
+
+  assert.ok(result);
+  closeTo(result.metrics.finalValue, 100);
+  closeTo(result.metrics.finalDebt, 100);
+  closeTo(result.metrics.totalReturn, 0);
+});
+
+test('supports 5x fixed ratio and liquidates after a loss greater than 20 percent', () => {
+  const result = runBacktestWithData(portfolio({
+    leverage: 5,
+    leverageType: 'fixed_ratio',
+    leverageResetFrequency: 'daily',
+  }), new Map([['AAA', asset('AAA', [
+    ['2024-01-02', 100],
+    ['2024-01-03', 79],
+  ])]]));
+
+  assert.ok(result);
+  assert.equal(result.metrics.liquidated, true);
+  assert.equal(result.metrics.liquidationDate, '2024-01-03');
+  closeTo(result.metrics.finalValue, 0);
 });
 
 test('liquidates when losses exhaust equity', () => {

@@ -26,15 +26,25 @@
       "rebalance": "Rebalancing:",
       "startYear": "Start Year:",
       "leverage": "Leverage:",
+      "leverageType": "Leverage model:",
+      "leverageReset": "Leverage reset:",
       "financingRate": "Annual cost:"
     },
     "frequency": {
+      "daily": "Daily",
       "monthly": "Monthly",
       "quarterly": "Quarterly",
       "yearly": "Yearly",
       "none": "None"
     },
-    "leverageWarning": "Leverage amplifies gains and losses. Interest accrues on debt over actual elapsed days and the portfolio may be liquidated if equity reaches zero.",
+    "leverageTypes": {
+      "fixedRatio": "Fixed ratio",
+      "fixedDebt": "Fixed debt"
+    },
+    "leverageWarnings": {
+      "fixedRatio": "The ratio is restored at the selected frequency, on dates when every asset can be traded, without rebalancing asset weights. Effective leverage can exceed the target between resets; compounding can differ greatly from simply multiplying the return.",
+      "fixedDebt": "The initial debt remains fixed and accrues interest: effective leverage rises when equity falls and the portfolio may be liquidated."
+    },
     "startYear": {
       "auto": "Automatic"
     }
@@ -106,6 +116,8 @@
         "volatility": "Annual Volatility",
         "bestAsset": "Best Asset",
         "leverage": "Initial leverage",
+        "leverageModel": "Leverage model",
+        "leverageReset": "Leverage reset",
         "financingRate": "Annual cost",
         "interestPaid": "Interest accrued",
         "finalDebt": "Final debt",

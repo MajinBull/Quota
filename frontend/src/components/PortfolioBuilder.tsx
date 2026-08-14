@@ -202,6 +202,8 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
     setRebalanceFrequency,
     setStartYear,
     setLeverage,
+    setLeverageType,
+    setLeverageResetFrequency,
     setAnnualFinancingRate,
     getTotalAllocation
   } = usePortfolioStore();
@@ -614,14 +616,46 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                   onChange={(e) => setLeverage(parseFloat(e.target.value))}
                   className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:border-indigo-500 text-sm appearance-none bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                 >
-                  {[1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3].map((value) => (
+                  {Array.from({ length: 17 }, (_, index) => 1 + index * 0.25).map((value) => (
                     <option key={value} value={value}>{value.toFixed(2).replace('.00', '')}×</option>
                   ))}
                 </select>
               </div>
 
               {(portfolio.leverage ?? 1) > 1 && (
-                <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-900/20">
+                <div className="space-y-3 rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-900/20">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                    <label className="text-sm font-medium text-amber-900 dark:text-amber-200 sm:w-32 sm:flex-shrink-0">
+                      {t('strategy.fields.leverageType')}
+                    </label>
+                    <select
+                      value={portfolio.leverageType ?? 'fixed_debt'}
+                      onChange={(e) => setLeverageType(e.target.value as 'fixed_debt' | 'fixed_ratio')}
+                      className="flex-1 px-3 py-2 border border-amber-300 dark:border-amber-700 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                    >
+                      <option value="fixed_ratio">{t('strategy.leverageTypes.fixedRatio')}</option>
+                      <option value="fixed_debt">{t('strategy.leverageTypes.fixedDebt')}</option>
+                    </select>
+                  </div>
+
+                  {(portfolio.leverageType ?? 'fixed_debt') === 'fixed_ratio' && (
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                      <label className="text-sm font-medium text-amber-900 dark:text-amber-200 sm:w-32 sm:flex-shrink-0">
+                        {t('strategy.fields.leverageReset')}
+                      </label>
+                      <select
+                        value={portfolio.leverageResetFrequency ?? 'daily'}
+                        onChange={(e) => setLeverageResetFrequency(e.target.value as 'daily' | 'monthly' | 'quarterly' | 'yearly')}
+                        className="flex-1 px-3 py-2 border border-amber-300 dark:border-amber-700 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                      >
+                        <option value="daily">{t('strategy.frequency.daily')}</option>
+                        <option value="monthly">{t('strategy.frequency.monthly')}</option>
+                        <option value="quarterly">{t('strategy.frequency.quarterly')}</option>
+                        <option value="yearly">{t('strategy.frequency.yearly')}</option>
+                      </select>
+                    </div>
+                  )}
+
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                     <label className="text-sm font-medium text-amber-900 dark:text-amber-200 sm:w-32 sm:flex-shrink-0">
                       {t('strategy.fields.financingRate')}
@@ -640,7 +674,9 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                     </div>
                   </div>
                   <p className="mt-2 text-xs text-amber-800 dark:text-amber-300">
-                    {t('strategy.leverageWarning')}
+                    {t((portfolio.leverageType ?? 'fixed_debt') === 'fixed_ratio'
+                      ? 'strategy.leverageWarnings.fixedRatio'
+                      : 'strategy.leverageWarnings.fixedDebt')}
                   </p>
                 </div>
               )}

@@ -26,15 +26,25 @@
       "rebalance": "Rebilanciamento:",
       "startYear": "Anno Inizio:",
       "leverage": "Leva:",
+      "leverageType": "Modello leva:",
+      "leverageReset": "Reset leva:",
       "financingRate": "Costo annuo:"
     },
     "frequency": {
+      "daily": "Giornaliero",
       "monthly": "Mensile",
       "quarterly": "Trimestrale",
       "yearly": "Annuale",
       "none": "Nessuno"
     },
-    "leverageWarning": "La leva amplifica guadagni e perdite. Gli interessi sono applicati al debito sui giorni effettivamente trascorsi e il portafoglio può essere liquidato se il patrimonio raggiunge zero.",
+    "leverageTypes": {
+      "fixedRatio": "Rapporto fisso",
+      "fixedDebt": "Debito fisso"
+    },
+    "leverageWarnings": {
+      "fixedRatio": "Il rapporto viene riportato al target con la frequenza scelta, nelle date in cui tutti gli asset sono negoziabili, senza ribilanciarne i pesi. Tra due reset la leva effettiva può superare il target; il compounding può produrre risultati molto diversi dal semplice multiplo del rendimento.",
+      "fixedDebt": "Il debito iniziale resta fisso e matura interessi: quando il patrimonio scende, la leva effettiva aumenta e il portafoglio può essere liquidato."
+    },
     "startYear": {
       "auto": "Automatico"
     }
@@ -106,6 +116,8 @@
         "volatility": "Volatilità Annuale",
         "bestAsset": "Best Asset",
         "leverage": "Leva iniziale",
+        "leverageModel": "Modello leva",
+        "leverageReset": "Reset leva",
         "financingRate": "Costo annuo",
         "interestPaid": "Interessi maturati",
         "finalDebt": "Debito finale",

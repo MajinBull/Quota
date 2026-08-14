@@ -49,6 +49,9 @@ export type InvestmentStrategy = 'lump_sum' | 'pac';
 // PAC frequency
 export type PACFrequency = 'monthly' | 'quarterly' | 'yearly';
 
+export type LeverageType = 'fixed_debt' | 'fixed_ratio';
+export type LeverageResetFrequency = 'daily' | 'monthly' | 'quarterly' | 'yearly';
+
 // Portfolio configuration
 export interface Portfolio {
   name: string;
@@ -59,7 +62,9 @@ export interface Portfolio {
   pacFrequency?: PACFrequency; // How often to invest (only for PAC)
   rebalanceFrequency: 'none' | 'monthly' | 'quarterly' | 'yearly';
   startYear?: number; // Optional: year to start backtest (if not set, uses earliest common date)
-  leverage?: number; // Gross portfolio exposure multiplier (1 = no leverage)
+  leverage?: number; // Gross portfolio exposure multiplier (1 = no leverage, max 5)
+  leverageType?: LeverageType; // Missing on legacy portfolios means fixed debt
+  leverageResetFrequency?: LeverageResetFrequency; // Only for fixed leverage ratio
   annualFinancingRate?: number; // Annual percentage cost applied to borrowed capital
 }
 
