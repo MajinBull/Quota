@@ -1,6 +1,11 @@
 # QUOTA — Portfolio Backtest Platform
 
-App live: [quota.finance](https://quota.finance)
+App live: [quota-ochre.vercel.app](https://quota-ochre.vercel.app)
+
+> **Mappatura Vercel:** questo repository è il sito Portfolio e deve essere
+> distribuito esclusivamente nel progetto Vercel `quota`. Il progetto
+> `supremo-toro` e i domini `quota.finance` / `www.quota.finance` appartengono
+> al sito crypto e non devono essere usati come destinazione di questo codice.
 
 QUOTA simula portafogli multi-asset con dati storici giornalieri, PAC,
 ribilanciamento e leva da 1× a 3×. Il calcolo avviene interamente nel browser:
@@ -75,8 +80,19 @@ mercato misti, costo della leva e liquidazione.
 
 ## Deploy
 
-Il frontend è pubblicato su Vercel. Firebase distribuisce soltanto regole e
-indici Firestore:
+Prima di un deploy manuale verificare il collegamento locale:
+
+```bash
+vercel link --project quota
+vercel project inspect quota
+vercel --prod
+```
+
+L'output del deploy deve indicare `Deploying quota` e l'alias
+`https://quota-ochre.vercel.app`. Non aggiungere redirect verso
+`quota.finance`.
+
+Firebase distribuisce soltanto regole e indici Firestore:
 
 ```bash
 firebase deploy --only firestore:rules,firestore:indexes
