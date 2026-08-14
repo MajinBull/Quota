@@ -221,6 +221,78 @@ test('applies the same simple leverage multiplier to each PAC contribution', () 
   closeTo(result.metrics.totalReturn, 0);
 });
 
+test('SuperStrategy closes the basket at 10 percent over average and restarts', () => {
+  const result = runBacktestWithData(portfolio({
+    investmentStrategy: 'super_strategy',
+    leverage: 1,
+  }), new Map([['AAA', asset('AAA', [
+    ['2024-01-02', 100],
+    ['2024-01-03', 90],
+    ['2024-01-04', 104],
+    ['2024-01-05', 105],
+  ])]]));
+
+  assert.ok(result);
+  // Two equal $10 tranches at 100 and 90 have a weighted average of
+  // 94.7368. A close at 104 is below TP, while 105 closes the basket.
+  closeTo(result.equityCurve[2].debt, 0);
+  closeTo(result.metrics.finalValue, 102.16666666666667);
+  closeTo(result.metrics.totalReturn, 2.1666666666666705);
+  assert.deepEqual(result.metrics.superStrategy, {
+    completedCycles: 1,
+    totalEntries: 3,
+    openTranches: 1,
+    maxOpenTranches: 2,
+  });
+});
+
+test('SuperStrategy keeps at most ten fixed tranches open without a stop loss', () => {
+  const prices = [['2024-01-01', 100]];
+  for (let index = 1; index <= 11; index++) {
+    prices.push([
+      `2024-01-${String(index + 1).padStart(2, '0')}`,
+      100 * Math.pow(0.9, index),
+    ]);
+  }
+
+  const result = runBacktestWithData(portfolio({
+    investmentStrategy: 'super_strategy',
+    leverage: 1,
+  }), new Map([['AAA', asset('AAA', prices)]]));
+
+  assert.ok(result);
+  assert.equal(result.metrics.liquidated, false);
+  assert.deepEqual(result.metrics.superStrategy, {
+    completedCycles: 0,
+    totalEntries: 10,
+    openTranches: 10,
+    maxOpenTranches: 10,
+  });
+});
+
+test('SuperStrategy applies leverage to tranches with shared account margin', () => {
+  const result = runBacktestWithData(portfolio({
+    investmentStrategy: 'super_strategy',
+    leverage: 5,
+    allocations: [
+      { symbol: 'AAA', percentage: 10 },
+      { symbol: 'BBB', percentage: 90 },
+    ],
+  }), new Map([
+    ['AAA', asset('AAA', [['2024-01-02', 100], ['2024-01-03', 1]])],
+    ['BBB', asset('BBB', [['2024-01-02', 100], ['2024-01-03', 100]])],
+  ]));
+
+  assert.ok(result);
+  // First tranches deploy 10% of each asset budget: $50 gross in total,
+  // financed by $40 debt. AAA can lose almost all its tranche while the
+  // shared account remains alive because BBB and unused cash cover it.
+  closeTo(result.equityCurve[0].grossExposure, 50);
+  closeTo(result.equityCurve[0].debt, 40);
+  closeTo(result.metrics.finalValue, 95.05);
+  assert.equal(result.metrics.liquidated, false);
+});
+
 test('supports 5x fixed ratio and liquidates after a loss greater than 20 percent', () => {
   const result = runBacktestWithData(portfolio({
     leverage: 5,

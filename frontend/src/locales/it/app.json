@@ -19,6 +19,11 @@
       "name": "PAC (Piano di Accumulo)",
       "description": "Investi importi fissi a intervalli regolari nel tempo. Riduce l'impatto della volatilità attraverso il dollar-cost averaging e permette di costruire il portafoglio gradualmente."
     },
+    "superStrategy": {
+      "name": "SuperStrategy",
+      "description": "Bot automatico separato per ogni asset: sui prezzi di chiusura giornalieri apre tranche fisse del 10%, aggiunge una tranche dopo ogni discesa del 10% dall'ultimo ingresso e chiude tutto al 10% sopra il prezzo medio. Massimo 10 tranche, nessuno stop loss. Le tranche restano calcolate sul capitale iniziale assegnato.",
+      "leverageDescription": "La prima tranche usa il 10% del capitale assegnato a ogni asset e viene moltiplicata per {{leverage}}×. L'esposizione iniziale complessiva è {{grossPercentage}}% del conto; le tranche successive condividono lo stesso margine."
+    },
     "fields": {
       "capital": "Capitale:",
       "firstPayment": "Primo versamento:",
@@ -89,7 +94,8 @@
       "addToFavorites": "Aggiungi ai preferiti",
       "removeFromFavorites": "Rimuovi dai preferiti",
       "viewDetails": "Visualizza dettagli asset",
-      "leveragedExposure": "Esposizione: {{percentage}}% · {{amount}}"
+      "leveragedExposure": "Esposizione: {{percentage}}% · {{amount}}",
+      "superStrategyTranche": "Prima tranche: {{percentage}}% · {{amount}}"
     }
   },
   "backtest": {
@@ -128,7 +134,12 @@
         "financingRate": "Costo annuo",
         "interestPaid": "Interessi maturati",
         "finalDebt": "Debito finale",
-        "maxLeverage": "Leva massima"
+        "maxLeverage": "Leva massima",
+        "maxAccountExposure": "Esposizione massima/conto",
+        "completedCycles": "Cicli completati",
+        "totalEntries": "Ingressi totali",
+        "openTranches": "Tranche ancora aperte",
+        "maxOpenTranches": "Massimo tranche aperte"
       },
       "liquidated": "Portafoglio liquidato il {{date}} perché il patrimonio netto ha raggiunto zero.",
       "charts": {

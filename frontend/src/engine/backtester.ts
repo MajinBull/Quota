@@ -17,6 +17,19 @@ interface AssetPosition {
   targetPercentage: number;
 }
 
+interface SimulationResult {
+  equityCurve: EquityPoint[];
+  assetPerformances: Map<string, Array<number | null>>;
+  totalInvested: number;
+  yearlyData: Map<number, { value: number; invested: number }>;
+  totalInterestPaid: number;
+  finalDebt: number;
+  maxEffectiveLeverage: number;
+  liquidated: boolean;
+  liquidationDate?: string;
+  superStrategy?: NonNullable<PerformanceMetrics['superStrategy']>;
+}
+
 // Future use: detailed portfolio snapshot tracking
 // interface PortfolioSnapshot {
 //   date: string;
@@ -73,13 +86,9 @@ export function runBacktestWithData(
     const priceMap = buildPriceMap(assetDataMap);
 
     // 4. Run simulation
-    const simResult = simulatePortfolio(
-      portfolio,
-      priceMap,
-      assetDataMap,
-      startDate,
-      endDate
-    );
+    const simResult = portfolio.investmentStrategy === 'super_strategy'
+      ? simulateSuperStrategy(portfolio, priceMap, assetDataMap, startDate, endDate)
+      : simulatePortfolio(portfolio, priceMap, assetDataMap, startDate, endDate);
 
     // 5. Build asset performances array
     const assetPerformances: AssetPerformance[] = [];
@@ -140,6 +149,9 @@ export function runBacktestWithData(
       simResult.liquidated,
       simResult.liquidationDate
     );
+    if (simResult.superStrategy) {
+      metrics.superStrategy = simResult.superStrategy;
+    }
 
     return {
       portfolio,
@@ -259,17 +271,7 @@ function simulatePortfolio(
   assetDataMap: Map<string, AssetData>,
   startDate: string,
   endDate: string
-): {
-  equityCurve: EquityPoint[];
-  assetPerformances: Map<string, Array<number | null>>;
-  totalInvested: number;
-  yearlyData: Map<number, { value: number; invested: number }>;
-  totalInterestPaid: number;
-  finalDebt: number;
-  maxEffectiveLeverage: number;
-  liquidated: boolean;
-  liquidationDate?: string;
-} {
+): SimulationResult {
   const equityCurve: EquityPoint[] = [];
   const positions: AssetPosition[] = [];
 
@@ -531,6 +533,239 @@ function simulatePortfolio(
     maxEffectiveLeverage,
     liquidated,
     liquidationDate
+  };
+}
+
+interface SuperStrategyAssetState {
+  symbol: string;
+  trancheCapital: number;
+  shares: number;
+  grossCost: number;
+  borrowedPrincipal: number;
+  trancheCount: number;
+  lastEntryPrice?: number;
+  completedCycles: number;
+  totalEntries: number;
+}
+
+/**
+ * SuperStrategy uses ten equal capital tranches per asset. Orders are evaluated
+ * on fresh daily closes to avoid inventing an intraday path from OHLC bars:
+ * first entry immediately, another entry after each 10% drop from the previous
+ * entry, and a basket exit 10% above the weighted average. There is no stop.
+ * All positions, cash and debt belong to one cross-margin account.
+ */
+function simulateSuperStrategy(
+  portfolio: Portfolio,
+  priceMap: Map<string, Map<string, number>>,
+  assetDataMap: Map<string, AssetData>,
+  startDate: string,
+  endDate: string
+): SimulationResult {
+  const TRANCHE_FRACTION = 0.10;
+  const GRID_DROP = 0.10;
+  const TAKE_PROFIT = 0.10;
+  const MAX_TRANCHES = 10;
+
+  const commonTradingDates = getCommonTradingDates(priceMap, startDate, endDate);
+  if (commonTradingDates.length === 0) {
+    throw new Error('No common trading dates found for the selected assets');
+  }
+
+  const firstTradingDate = commonTradingDates[0];
+  const lastTradingDate = commonTradingDates[commonTradingDates.length - 1];
+  const allDates = getValuationDates(priceMap, firstTradingDate, lastTradingDate);
+  const leverage = Math.max(1, Math.min(5, portfolio.leverage ?? 1));
+  const annualFinancingRate = Math.max(0, portfolio.annualFinancingRate ?? 0) / 100;
+
+  const states = new Map<string, SuperStrategyAssetState>();
+  for (const allocation of portfolio.allocations) {
+    states.set(allocation.symbol, {
+      symbol: allocation.symbol,
+      trancheCapital: portfolio.initialCapital * (allocation.percentage / 100) * TRANCHE_FRACTION,
+      shares: 0,
+      grossCost: 0,
+      borrowedPrincipal: 0,
+      trancheCount: 0,
+      completedCycles: 0,
+      totalEntries: 0,
+    });
+  }
+
+  const equityCurve: EquityPoint[] = [];
+  const assetPerformances = new Map<string, Array<number | null>>();
+  const assetInitialPrices = new Map<string, number>();
+  const lastKnownPrices = new Map<string, number>();
+  const yearlyData = new Map<number, { value: number; invested: number }>();
+  portfolio.allocations.forEach(allocation => assetPerformances.set(allocation.symbol, []));
+
+  let cash = portfolio.initialCapital;
+  let debt = 0;
+  let totalInterestPaid = 0;
+  let previousValue = portfolio.initialCapital;
+  let performanceIndex = 100;
+  let maxEffectiveLeverage = 0;
+  let maxOpenTranches = 0;
+  let liquidated = false;
+  let liquidationDate: string | undefined;
+
+  const openTranche = (state: SuperStrategyAssetState, price: number) => {
+    if (state.trancheCount >= MAX_TRANCHES || price <= 0) return;
+
+    const grossNotional = state.trancheCapital * leverage;
+    const borrowing = state.trancheCapital * (leverage - 1);
+    cash += borrowing - grossNotional;
+    debt += borrowing;
+    state.shares += grossNotional / price;
+    state.grossCost += grossNotional;
+    state.borrowedPrincipal += borrowing;
+    state.trancheCount += 1;
+    state.totalEntries += 1;
+    state.lastEntryPrice = price;
+  };
+
+  const closeCycle = (state: SuperStrategyAssetState, price: number) => {
+    cash += state.shares * price;
+    cash -= state.borrowedPrincipal;
+    debt = Math.max(0, debt - state.borrowedPrincipal);
+    state.shares = 0;
+    state.grossCost = 0;
+    state.borrowedPrincipal = 0;
+    state.trancheCount = 0;
+    state.lastEntryPrice = undefined;
+    state.completedCycles += 1;
+  };
+
+  for (let i = 0; i < allDates.length; i++) {
+    const date = allDates[i];
+    const year = getYear(parseISO(date));
+
+    if (i > 0 && debt > 0 && annualFinancingRate > 0) {
+      const elapsedDays = Math.max(0, differenceInDays(parseISO(date), parseISO(allDates[i - 1])));
+      const interest = debt * annualFinancingRate * (elapsedDays / 365);
+      debt += interest;
+      totalInterestPaid += interest;
+    }
+
+    for (const allocation of portfolio.allocations) {
+      const freshPrice = priceMap.get(allocation.symbol)?.get(date);
+      if (freshPrice && freshPrice > 0) {
+        lastKnownPrices.set(allocation.symbol, freshPrice);
+      }
+    }
+
+    // Each asset trades independently on its own fresh close. A cycle that
+    // reaches TP is closed and immediately restarted at that same close.
+    for (const state of states.values()) {
+      const freshPrice = priceMap.get(state.symbol)?.get(date);
+      if (!freshPrice || freshPrice <= 0) continue;
+
+      if (state.trancheCount === 0) {
+        openTranche(state, freshPrice);
+        continue;
+      }
+
+      const averageEntry = state.grossCost / state.shares;
+      if (freshPrice >= averageEntry * (1 + TAKE_PROFIT) * (1 - 1e-10)) {
+        closeCycle(state, freshPrice);
+        openTranche(state, freshPrice);
+      } else if (
+        state.trancheCount < MAX_TRANCHES &&
+        state.lastEntryPrice !== undefined &&
+        freshPrice <= state.lastEntryPrice * (1 - GRID_DROP) * (1 + 1e-10)
+      ) {
+        openTranche(state, freshPrice);
+      }
+    }
+
+    maxOpenTranches = Math.max(
+      maxOpenTranches,
+      Array.from(states.values()).reduce((sum, state) => sum + state.trancheCount, 0)
+    );
+
+    for (const allocation of portfolio.allocations) {
+      const assetData = assetDataMap.get(allocation.symbol);
+      const values = assetPerformances.get(allocation.symbol)!;
+      if (!assetData || date < assetData.start_date || date > assetData.end_date) {
+        values.push(null);
+        continue;
+      }
+
+      const price = getPrice(allocation.symbol, date, priceMap, lastKnownPrices);
+      if (price <= 0) {
+        values.push(null);
+      } else if (!assetInitialPrices.has(allocation.symbol)) {
+        assetInitialPrices.set(allocation.symbol, price);
+        values.push(100);
+      } else {
+        values.push((price / assetInitialPrices.get(allocation.symbol)!) * 100);
+      }
+    }
+
+    let positionsValue = 0;
+    for (const state of states.values()) {
+      positionsValue += state.shares * getPrice(state.symbol, date, priceMap, lastKnownPrices);
+    }
+
+    let totalValue = cash + positionsValue - debt;
+    let grossExposure = positionsValue;
+    if (totalValue <= 0) {
+      for (const state of states.values()) {
+        state.shares = 0;
+        state.grossCost = 0;
+        state.borrowedPrincipal = 0;
+        state.trancheCount = 0;
+      }
+      cash = 0;
+      debt = 0;
+      totalValue = 0;
+      grossExposure = 0;
+      liquidated = true;
+      liquidationDate = date;
+    }
+
+    if (totalValue > 0) {
+      maxEffectiveLeverage = Math.max(maxEffectiveLeverage, grossExposure / totalValue);
+    }
+    const dailyReturn = i > 0 && previousValue > 0
+      ? ((totalValue / previousValue) - 1) * 100
+      : 0;
+    performanceIndex *= Math.max(0, 1 + dailyReturn / 100);
+
+    equityCurve.push({
+      date,
+      value: totalValue,
+      returns: dailyReturn,
+      investedCapital: portfolio.initialCapital,
+      debt,
+      grossExposure,
+      performanceIndex,
+    });
+
+    if (liquidated || i === allDates.length - 1 || getYear(parseISO(allDates[i + 1])) !== year) {
+      yearlyData.set(year, { value: totalValue, invested: portfolio.initialCapital });
+    }
+
+    previousValue = totalValue;
+    if (liquidated) break;
+  }
+
+  return {
+    equityCurve,
+    assetPerformances,
+    totalInvested: portfolio.initialCapital,
+    yearlyData,
+    totalInterestPaid,
+    finalDebt: debt,
+    maxEffectiveLeverage,
+    liquidated,
+    liquidationDate,
+    superStrategy: {
+      completedCycles: Array.from(states.values()).reduce((sum, state) => sum + state.completedCycles, 0),
+      totalEntries: Array.from(states.values()).reduce((sum, state) => sum + state.totalEntries, 0),
+      openTranches: Array.from(states.values()).reduce((sum, state) => sum + state.trancheCount, 0),
+      maxOpenTranches,
+    },
   };
 }
 

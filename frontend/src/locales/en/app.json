@@ -19,6 +19,11 @@
       "name": "DCA (Dollar Cost Averaging)",
       "description": "Invest fixed amounts at regular intervals. Reduces volatility impact through dollar-cost averaging and allows gradual portfolio building."
     },
+    "superStrategy": {
+      "name": "SuperStrategy",
+      "description": "A separate automated bot for every asset: on daily closing prices it opens fixed 10% tranches, adds one after each 10% drop from the latest entry, and closes everything 10% above the weighted average. Maximum 10 tranches and no stop loss. Tranches remain based on the initially assigned capital.",
+      "leverageDescription": "The first tranche uses 10% of the capital assigned to each asset and is multiplied by {{leverage}}×. Total initial exposure is {{grossPercentage}}% of the account; later tranches share the same margin."
+    },
     "fields": {
       "capital": "Capital:",
       "firstPayment": "Initial Investment:",
@@ -89,7 +94,8 @@
       "addToFavorites": "Add to favorites",
       "removeFromFavorites": "Remove from favorites",
       "viewDetails": "View asset details",
-      "leveragedExposure": "Exposure: {{percentage}}% · {{amount}}"
+      "leveragedExposure": "Exposure: {{percentage}}% · {{amount}}",
+      "superStrategyTranche": "First tranche: {{percentage}}% · {{amount}}"
     }
   },
   "backtest": {
@@ -128,7 +134,12 @@
         "financingRate": "Annual cost",
         "interestPaid": "Interest accrued",
         "finalDebt": "Final debt",
-        "maxLeverage": "Maximum leverage"
+        "maxLeverage": "Maximum leverage",
+        "maxAccountExposure": "Maximum exposure/account",
+        "completedCycles": "Completed cycles",
+        "totalEntries": "Total entries",
+        "openTranches": "Open tranches",
+        "maxOpenTranches": "Maximum open tranches"
       },
       "liquidated": "Portfolio liquidated on {{date}} because net equity reached zero.",
       "charts": {

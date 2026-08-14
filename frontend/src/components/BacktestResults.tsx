@@ -172,7 +172,22 @@ export function BacktestResults({ result }: Props) {
             <MetricCard label={t('backtest.results.metrics.financingRate')} value={`${(portfolio.annualFinancingRate ?? 0).toFixed(2)}%`} positive={false} />
             <MetricCard label={t('backtest.results.metrics.interestPaid')} value={formatCurrency(metrics.totalInterestPaid ?? 0)} positive={false} negative={(metrics.totalInterestPaid ?? 0) > 0} />
             <MetricCard label={t('backtest.results.metrics.finalDebt')} value={formatCurrency(metrics.finalDebt ?? 0)} positive={false} />
-            <MetricCard label={t('backtest.results.metrics.maxLeverage')} value={`${(metrics.maxEffectiveLeverage ?? portfolio.leverage ?? 1).toFixed(2)}×`} positive={false} />
+            <MetricCard
+              label={t(metrics.superStrategy
+                ? 'backtest.results.metrics.maxAccountExposure'
+                : 'backtest.results.metrics.maxLeverage')}
+              value={`${(metrics.maxEffectiveLeverage ?? portfolio.leverage ?? 1).toFixed(2)}×`}
+              positive={false}
+            />
+          </div>
+        )}
+
+        {metrics.superStrategy && (
+          <div className="mt-4 grid grid-cols-2 gap-2 rounded-xl border border-fuchsia-200 bg-fuchsia-50 p-3 md:grid-cols-4 dark:border-fuchsia-800 dark:bg-fuchsia-900/20">
+            <MetricCard label={t('backtest.results.metrics.completedCycles')} value={metrics.superStrategy.completedCycles.toString()} positive={true} />
+            <MetricCard label={t('backtest.results.metrics.totalEntries')} value={metrics.superStrategy.totalEntries.toString()} positive={false} />
+            <MetricCard label={t('backtest.results.metrics.openTranches')} value={metrics.superStrategy.openTranches.toString()} positive={false} />
+            <MetricCard label={t('backtest.results.metrics.maxOpenTranches')} value={metrics.superStrategy.maxOpenTranches.toString()} positive={false} />
           </div>
         )}
 

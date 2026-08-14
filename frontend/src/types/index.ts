@@ -44,7 +44,7 @@ export interface PortfolioAllocation {
 }
 
 // Investment strategy type
-export type InvestmentStrategy = 'lump_sum' | 'pac';
+export type InvestmentStrategy = 'lump_sum' | 'pac' | 'super_strategy';
 
 // PAC frequency
 export type PACFrequency = 'monthly' | 'quarterly' | 'yearly';
@@ -116,6 +116,12 @@ export interface PerformanceMetrics {
   bestAssetReturn?: number; // Return of best asset
   worstAsset?: string; // Symbol of worst performing asset
   worstAssetReturn?: number; // Return of worst asset
+  superStrategy?: {
+    completedCycles: number;
+    totalEntries: number;
+    openTranches: number;
+    maxOpenTranches: number;
+  };
 }
 
 // Complete backtest result

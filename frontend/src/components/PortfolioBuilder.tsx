@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePortfolioStore } from '../stores/portfolioStore';
 import { ASSET_METADATA, getAllCategories } from '../utils/dataLoader';
-import type { AssetCategory, PortfolioAllocation } from '../types';
+import type { AssetCategory, InvestmentStrategy, PortfolioAllocation } from '../types';
 import { formatCurrency } from '../utils/formatters';
 import { AssetDetailsModal } from './AssetDetailsModal';
 
@@ -207,9 +207,11 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
     getTotalAllocation
   } = usePortfolioStore();
 
+  const isSuperStrategy = portfolio.investmentStrategy === 'super_strategy';
   const leverage = portfolio.leverage ?? 1;
-  const grossInitialExposure = portfolio.initialCapital * leverage;
-  const financedCapital = portfolio.initialCapital * (leverage - 1);
+  const initialDeploymentFraction = isSuperStrategy ? 0.10 : 1;
+  const grossInitialExposure = portfolio.initialCapital * initialDeploymentFraction * leverage;
+  const financedCapital = portfolio.initialCapital * initialDeploymentFraction * (leverage - 1);
 
   // Category label helper
   const getCategoryLabel = (category: AssetCategory): string => {
@@ -496,7 +498,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                   {t('strategy.lumpSum.description')}
                 </p>
               </>
-            ) : (
+            ) : portfolio.investmentStrategy === 'pac' ? (
               <>
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-2 h-2 bg-indigo-600 rounded-full"></div>
@@ -506,13 +508,23 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                   {t('strategy.pac.description')}
                 </p>
               </>
+            ) : (
+              <>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 bg-fuchsia-500 rounded-full"></div>
+                  <h3 className="font-semibold text-slate-900 dark:text-white text-sm">{t('strategy.superStrategy.name')}</h3>
+                </div>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                  {t('strategy.superStrategy.description')}
+                </p>
+              </>
             )}
           </div>
 
           {/* Right side: Strategy selector and parameters */}
           <div className="flex-1 flex flex-col md:flex-row gap-4 md:gap-6">
             {/* Strategy Radio Buttons */}
-            <div className="flex flex-row md:flex-col gap-2 md:gap-3">
+            <div className="flex flex-col sm:flex-row md:flex-col gap-2 md:gap-3">
               <label className={`cursor-pointer px-4 py-2 rounded-lg font-medium text-sm transition-all whitespace-nowrap ${
                 portfolio.investmentStrategy === 'lump_sum'
                   ? 'bg-indigo-600 text-white'
@@ -522,7 +534,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                   type="radio"
                   value="lump_sum"
                   checked={portfolio.investmentStrategy === 'lump_sum'}
-                  onChange={(e) => setInvestmentStrategy(e.target.value as any)}
+                  onChange={(e) => setInvestmentStrategy(e.target.value as InvestmentStrategy)}
                   className="sr-only"
                 />
                 {t('strategy.lumpSum.name')}
@@ -536,10 +548,24 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                   type="radio"
                   value="pac"
                   checked={portfolio.investmentStrategy === 'pac'}
-                  onChange={(e) => setInvestmentStrategy(e.target.value as any)}
+                  onChange={(e) => setInvestmentStrategy(e.target.value as InvestmentStrategy)}
                   className="sr-only"
                 />
                 {t('strategy.pac.name')}
+              </label>
+              <label className={`cursor-pointer px-4 py-2 rounded-lg font-medium text-sm transition-all whitespace-nowrap ${
+                isSuperStrategy
+                  ? 'bg-fuchsia-600 text-white'
+                  : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
+              }`}>
+                <input
+                  type="radio"
+                  value="super_strategy"
+                  checked={isSuperStrategy}
+                  onChange={(e) => setInvestmentStrategy(e.target.value as InvestmentStrategy)}
+                  className="sr-only"
+                />
+                {t('strategy.superStrategy.name')}
               </label>
             </div>
 
@@ -595,19 +621,21 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
               )}
 
               {/* Rebilanciamento */}
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                <label className="text-sm font-medium text-slate-600 dark:text-slate-300 sm:w-32 sm:flex-shrink-0">{t('strategy.fields.rebalance')}</label>
-                <select
-                  value={portfolio.rebalanceFrequency}
-                  onChange={(e) => setRebalanceFrequency(e.target.value as any)}
-                  className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:border-indigo-500 text-sm appearance-none bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
-                >
-                  <option value="none">{t('strategy.frequency.none')}</option>
-                  <option value="monthly">{t('strategy.frequency.monthly')}</option>
-                  <option value="quarterly">{t('strategy.frequency.quarterly')}</option>
-                  <option value="yearly">{t('strategy.frequency.yearly')}</option>
-                </select>
-              </div>
+              {!isSuperStrategy && (
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                  <label className="text-sm font-medium text-slate-600 dark:text-slate-300 sm:w-32 sm:flex-shrink-0">{t('strategy.fields.rebalance')}</label>
+                  <select
+                    value={portfolio.rebalanceFrequency}
+                    onChange={(e) => setRebalanceFrequency(e.target.value as any)}
+                    className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:border-indigo-500 text-sm appearance-none bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                  >
+                    <option value="none">{t('strategy.frequency.none')}</option>
+                    <option value="monthly">{t('strategy.frequency.monthly')}</option>
+                    <option value="quarterly">{t('strategy.frequency.quarterly')}</option>
+                    <option value="yearly">{t('strategy.frequency.yearly')}</option>
+                  </select>
+                </div>
+              )}
 
               {/* Leva */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
@@ -628,9 +656,9 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
               {leverage > 1 && (
                 <div className="space-y-3 rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-900/20">
                   <p className="text-xs font-medium text-amber-900 dark:text-amber-200">
-                    {t('strategy.simpleLeverage.description', {
+                    {t(isSuperStrategy ? 'strategy.superStrategy.leverageDescription' : 'strategy.simpleLeverage.description', {
                       leverage: leverage.toFixed(2).replace('.00', ''),
-                      grossPercentage: (leverage * 100).toFixed(0),
+                      grossPercentage: (leverage * initialDeploymentFraction * 100).toFixed(0),
                     })}
                   </p>
 
@@ -898,12 +926,14 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                     value={allocation.percentage}
                     onChange={(newValue) => handleAllocationChange(allocation.symbol, newValue)}
                   />
-                  {leverage > 1 && (
+                  {(leverage > 1 || isSuperStrategy) && (
                     <div className="mt-2 text-center text-xs font-medium text-indigo-700 dark:text-indigo-300">
-                      {t('portfolio.allocation.leveragedExposure', {
-                        percentage: (allocation.percentage * leverage).toFixed(0),
+                      {t(isSuperStrategy
+                        ? 'portfolio.allocation.superStrategyTranche'
+                        : 'portfolio.allocation.leveragedExposure', {
+                        percentage: (allocation.percentage * leverage * initialDeploymentFraction).toFixed(0),
                         amount: formatCurrency(
-                          portfolio.initialCapital * (allocation.percentage / 100) * leverage
+                          portfolio.initialCapital * (allocation.percentage / 100) * leverage * initialDeploymentFraction
                         ),
                       })}
                     </div>

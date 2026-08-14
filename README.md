@@ -39,6 +39,20 @@ Vercel static hosting
   riceve lo stesso moltiplicatore.
 - La cartella `functions/` è codice storico e non è inclusa nel deploy Firebase.
 
+### SuperStrategy
+
+SuperStrategy è un percorso di simulazione separato e opzionale. Per ogni
+asset divide il capitale assegnato in dieci tranche nominali uguali: apre la
+prima sul primo close disponibile, aggiunge al massimo una tranche per close
+dopo una discesa del 10% dall'ultimo ingresso e chiude l'intero basket al 10%
+sopra il prezzo medio ponderato. Non usa stop loss; dopo il take profit riparte
+subito con una nuova prima tranche. La leva moltiplica ogni tranche e tutte le
+posizioni condividono il margine dell'intero conto. Le size restano basate
+sull'allocazione iniziale e i profitti non le aumentano automaticamente.
+
+La strategia usa esclusivamente chiusure giornaliere: non ricostruisce un
+percorso intraday e non apre più livelli nella stessa candela in caso di gap.
+
 ## Sicurezza
 
 Firebase Auth verifica l'identità. Le regole Firestore isolano i dati per UID,

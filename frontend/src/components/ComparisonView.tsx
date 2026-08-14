@@ -432,7 +432,11 @@ export function ComparisonView({ backtests, onClose }: Props) {
                     <div>
                       <span className="font-semibold text-slate-600 dark:text-slate-300">{t('app:comparison.config.strategy')}</span>
                       <p className="text-slate-900 dark:text-white">
-                        {backtest.portfolio.investmentStrategy === 'lump_sum' ? t('app:strategy.lumpSum.name') : t('app:strategy.pac.name')}
+                        {backtest.portfolio.investmentStrategy === 'lump_sum'
+                          ? t('app:strategy.lumpSum.name')
+                          : backtest.portfolio.investmentStrategy === 'pac'
+                            ? t('app:strategy.pac.name')
+                            : t('app:strategy.superStrategy.name')}
                       </p>
                     </div>
 
@@ -450,7 +454,11 @@ export function ComparisonView({ backtests, onClose }: Props) {
 
                     <div>
                       <span className="font-semibold text-slate-600 dark:text-slate-300">{t('app:comparison.config.rebalance')}</span>
-                      <p className="text-slate-900 dark:text-white capitalize">{backtest.portfolio.rebalanceFrequency}</p>
+                      <p className="text-slate-900 dark:text-white capitalize">
+                        {backtest.portfolio.investmentStrategy === 'super_strategy'
+                          ? '—'
+                          : backtest.portfolio.rebalanceFrequency}
+                      </p>
                     </div>
 
                     <div>
