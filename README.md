@@ -32,10 +32,11 @@ Vercel static hosting
   rendimento. Rendimento totale, CAGR, volatilità e drawdown sono
   time-weighted.
 - La leva include debito, costo di finanziamento sui giorni di calendario e
-  liquidazione quando il patrimonio netto raggiunge zero. Sono disponibili
-  due modelli distinti: rapporto di leva fisso (con reset giornaliero, mensile,
-  trimestrale o annuale) e importo del debito fisso. Il reset della leva è
-  indipendente dal ribilanciamento delle allocazioni.
+  liquidazione quando il patrimonio netto dell'intero conto raggiunge zero.
+  La size di ogni asset viene moltiplicata per la leva scelta e tutte le
+  posizioni condividono lo stesso margine; una perdita su un singolo asset non
+  causa quindi una liquidazione separata. Anche ogni nuovo versamento PAC
+  riceve lo stesso moltiplicatore.
 - La cartella `functions/` è codice storico e non è inclusa nel deploy Firebase.
 
 ## Sicurezza
@@ -65,7 +66,8 @@ npm run lint
 ```
 
 I test deterministici coprono intervallo comune tra asset, PAC, calendari di
-mercato misti, costo della leva, modelli e frequenze di reset e liquidazione.
+mercato misti, costo della leva, size per asset, margine condiviso e
+liquidazione dell'intero conto.
 
 ## Dati e limiti del modello
 

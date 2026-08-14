@@ -39,11 +39,17 @@
     },
     "leverageTypes": {
       "fixedRatio": "Rapporto fisso",
-      "fixedDebt": "Debito fisso"
+      "fixedDebt": "Margine condiviso"
     },
     "leverageWarnings": {
       "fixedRatio": "Il rapporto viene riportato al target con la frequenza scelta, nelle date in cui tutti gli asset sono negoziabili, senza ribilanciarne i pesi. Tra due reset la leva effettiva può superare il target; il compounding può produrre risultati molto diversi dal semplice multiplo del rendimento.",
       "fixedDebt": "Il debito iniziale resta fisso e matura interessi: quando il patrimonio scende, la leva effettiva aumenta e il portafoglio può essere liquidato."
+    },
+    "simpleLeverage": {
+      "description": "La size iniziale di ogni asset viene moltiplicata per {{leverage}}×. L'esposizione complessiva iniziale è {{grossPercentage}}% del capitale.",
+      "grossExposure": "Esposizione lorda iniziale",
+      "financedCapital": "Capitale finanziato",
+      "crossMargin": "Margine condiviso sull'intero conto: le singole posizioni non vengono liquidate separatamente. La liquidazione avviene solo quando il patrimonio netto complessivo raggiunge zero."
     },
     "startYear": {
       "auto": "Automatico"
@@ -82,7 +88,8 @@
       "remove": "Rimuovi",
       "addToFavorites": "Aggiungi ai preferiti",
       "removeFromFavorites": "Rimuovi dai preferiti",
-      "viewDetails": "Visualizza dettagli asset"
+      "viewDetails": "Visualizza dettagli asset",
+      "leveragedExposure": "Esposizione: {{percentage}}% · {{amount}}"
     }
   },
   "backtest": {

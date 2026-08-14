@@ -4,8 +4,6 @@ import type {
   PortfolioAllocation,
   InvestmentStrategy,
   PACFrequency,
-  LeverageType,
-  LeverageResetFrequency,
 } from '../types';
 
 interface PortfolioStore {
@@ -21,8 +19,6 @@ interface PortfolioStore {
   setRebalanceFrequency: (frequency: Portfolio['rebalanceFrequency']) => void;
   setStartYear: (year: number | undefined) => void;
   setLeverage: (leverage: number) => void;
-  setLeverageType: (type: LeverageType) => void;
-  setLeverageResetFrequency: (frequency: LeverageResetFrequency) => void;
   setAnnualFinancingRate: (rate: number) => void;
   resetPortfolio: () => void;
   getTotalAllocation: () => number;
@@ -37,8 +33,7 @@ const DEFAULT_PORTFOLIO: Portfolio = {
   pacFrequency: 'monthly',
   rebalanceFrequency: 'yearly',
   leverage: 1,
-  leverageType: 'fixed_ratio',
-  leverageResetFrequency: 'daily',
+  leverageType: 'fixed_debt',
   annualFinancingRate: 5
 };
 
@@ -139,19 +134,14 @@ export const usePortfolioStore = create<PortfolioStore>((set, get) => ({
 
   setLeverage: (leverage: number) => {
     set((state) => ({
-      portfolio: { ...state.portfolio, leverage: Math.max(1, Math.min(5, leverage)) }
-    }));
-  },
-
-  setLeverageType: (leverageType: LeverageType) => {
-    set((state) => ({
-      portfolio: { ...state.portfolio, leverageType }
-    }));
-  },
-
-  setLeverageResetFrequency: (leverageResetFrequency: LeverageResetFrequency) => {
-    set((state) => ({
-      portfolio: { ...state.portfolio, leverageResetFrequency }
+      portfolio: {
+        ...state.portfolio,
+        leverage: Math.max(1, Math.min(5, leverage)),
+        // New simulations always use simple position-size leverage with a
+        // single cross-margin account. Other models remain engine-only for
+        // backwards compatibility with already saved results.
+        leverageType: 'fixed_debt',
+      }
     }));
   },
 

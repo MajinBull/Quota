@@ -307,8 +307,9 @@ function simulatePortfolio(
   let liquidationDate: string | undefined;
   const leverage = Math.max(1, Math.min(5, portfolio.leverage ?? 1));
   let maxEffectiveLeverage = leverage;
-  // Legacy saved portfolios predate this field and retain their original
-  // fixed-debt behavior. New portfolios default to fixed_ratio in the store.
+  // Missing legacy fields and all new simulations use simple position-size
+  // leverage. fixed_ratio remains supported only to reproduce saved results
+  // created while that advanced model was exposed in the UI.
   const leverageType = portfolio.leverageType ?? 'fixed_debt';
   const leverageResetFrequency = portfolio.leverageResetFrequency ?? 'daily';
   const annualFinancingRate = Math.max(0, portfolio.annualFinancingRate ?? 0) / 100;
@@ -405,8 +406,14 @@ function simulatePortfolio(
           cash += targetDebt - debt;
           debt = targetDebt;
         } else {
-          // Fixed debt: keep the outstanding loan (including accrued interest).
-          // Selling and repurchasing assets must not silently increase borrowing.
+          // Simple position-size leverage with cross margin: keep existing debt
+          // fixed between cash flows, but apply the same multiplier to every new
+          // PAC contribution. Rebalancing alone never changes the loan.
+          const contributionBorrowing = pacAdded
+            ? externalFlow * (leverage - 1)
+            : 0;
+          cash += contributionBorrowing;
+          debt += contributionBorrowing;
           targetGrossExposure = cash;
         }
       }

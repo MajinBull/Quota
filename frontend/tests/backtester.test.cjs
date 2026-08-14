@@ -179,6 +179,48 @@ test('fixed debt keeps the original loan instead of resetting leverage', () => {
   closeTo(result.metrics.totalReturn, 0);
 });
 
+test('applies leverage to every asset size and shares margin across the account', () => {
+  const result = runBacktestWithData(portfolio({
+    leverage: 5,
+    leverageType: 'fixed_debt',
+    allocations: [
+      { symbol: 'AAA', percentage: 10 },
+      { symbol: 'BBB', percentage: 90 },
+    ],
+  }), new Map([
+    ['AAA', asset('AAA', [['2024-01-02', 100], ['2024-01-03', 1]])],
+    ['BBB', asset('BBB', [['2024-01-02', 100], ['2024-01-03', 100]])],
+  ]));
+
+  assert.ok(result);
+  // AAA starts with size 100 * 10% * 5 = 50 and loses 49.5. Its loss
+  // exceeds the unleveraged 10 allocation, but the shared account survives.
+  closeTo(result.metrics.finalValue, 50.5);
+  closeTo(result.metrics.finalDebt, 400);
+  closeTo(result.metrics.totalReturn, -49.5);
+  assert.equal(result.metrics.liquidated, false);
+});
+
+test('applies the same simple leverage multiplier to each PAC contribution', () => {
+  const result = runBacktestWithData(portfolio({
+    investmentStrategy: 'pac',
+    pacAmount: 50,
+    pacFrequency: 'monthly',
+    leverage: 3,
+    leverageType: 'fixed_debt',
+  }), new Map([['AAA', asset('AAA', [
+    ['2024-01-02', 100],
+    ['2024-02-02', 100],
+  ])]]));
+
+  assert.ok(result);
+  closeTo(result.metrics.totalInvested, 150);
+  closeTo(result.metrics.finalValue, 150);
+  closeTo(result.metrics.finalDebt, 300);
+  closeTo(result.equityCurve.at(-1).grossExposure, 450);
+  closeTo(result.metrics.totalReturn, 0);
+});
+
 test('supports 5x fixed ratio and liquidates after a loss greater than 20 percent', () => {
   const result = runBacktestWithData(portfolio({
     leverage: 5,

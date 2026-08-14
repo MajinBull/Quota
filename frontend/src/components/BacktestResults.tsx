@@ -36,6 +36,7 @@ export function BacktestResults({ result }: Props) {
   const { t } = useTranslation('app');
   const { isDark } = useTheme();
   const { metrics, equityCurve, assetPerformances, yearlyBreakdown, portfolio, startDate, endDate } = result;
+  const usesFixedRatio = portfolio.leverageType === 'fixed_ratio';
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   // Detect mobile viewport
@@ -154,20 +155,20 @@ export function BacktestResults({ result }: Props) {
         </div>
 
         {(portfolio.leverage ?? 1) > 1 && (
-          <div className="mt-4 grid grid-cols-2 gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 md:grid-cols-4 lg:grid-cols-7 dark:border-amber-800 dark:bg-amber-900/20">
+          <div className={`mt-4 grid grid-cols-2 gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 md:grid-cols-3 ${usesFixedRatio ? 'lg:grid-cols-7' : 'lg:grid-cols-6'} dark:border-amber-800 dark:bg-amber-900/20`}>
             <MetricCard label={t('backtest.results.metrics.leverage')} value={`${(portfolio.leverage ?? 1).toFixed(2)}×`} positive={false} />
             <MetricCard
               label={t('backtest.results.metrics.leverageModel')}
-              value={t(`strategy.leverageTypes.${(portfolio.leverageType ?? 'fixed_debt') === 'fixed_ratio' ? 'fixedRatio' : 'fixedDebt'}`)}
+              value={t(`strategy.leverageTypes.${usesFixedRatio ? 'fixedRatio' : 'fixedDebt'}`)}
               positive={false}
             />
-            <MetricCard
-              label={t('backtest.results.metrics.leverageReset')}
-              value={(portfolio.leverageType ?? 'fixed_debt') === 'fixed_ratio'
-                ? t(`strategy.frequency.${portfolio.leverageResetFrequency ?? 'daily'}`)
-                : '—'}
-              positive={false}
-            />
+            {usesFixedRatio && (
+              <MetricCard
+                label={t('backtest.results.metrics.leverageReset')}
+                value={t(`strategy.frequency.${portfolio.leverageResetFrequency ?? 'daily'}`)}
+                positive={false}
+              />
+            )}
             <MetricCard label={t('backtest.results.metrics.financingRate')} value={`${(portfolio.annualFinancingRate ?? 0).toFixed(2)}%`} positive={false} />
             <MetricCard label={t('backtest.results.metrics.interestPaid')} value={formatCurrency(metrics.totalInterestPaid ?? 0)} positive={false} negative={(metrics.totalInterestPaid ?? 0) > 0} />
             <MetricCard label={t('backtest.results.metrics.finalDebt')} value={formatCurrency(metrics.finalDebt ?? 0)} positive={false} />

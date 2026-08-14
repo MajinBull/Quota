@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { usePortfolioStore } from '../stores/portfolioStore';
 import { ASSET_METADATA, getAllCategories } from '../utils/dataLoader';
 import type { AssetCategory, PortfolioAllocation } from '../types';
+import { formatCurrency } from '../utils/formatters';
 import { AssetDetailsModal } from './AssetDetailsModal';
 
 interface AllocationSliderProps {
@@ -202,11 +203,13 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
     setRebalanceFrequency,
     setStartYear,
     setLeverage,
-    setLeverageType,
-    setLeverageResetFrequency,
     setAnnualFinancingRate,
     getTotalAllocation
   } = usePortfolioStore();
+
+  const leverage = portfolio.leverage ?? 1;
+  const grossInitialExposure = portfolio.initialCapital * leverage;
+  const financedCapital = portfolio.initialCapital * (leverage - 1);
 
   // Category label helper
   const getCategoryLabel = (category: AssetCategory): string => {
@@ -622,39 +625,25 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                 </select>
               </div>
 
-              {(portfolio.leverage ?? 1) > 1 && (
+              {leverage > 1 && (
                 <div className="space-y-3 rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-900/20">
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                    <label className="text-sm font-medium text-amber-900 dark:text-amber-200 sm:w-32 sm:flex-shrink-0">
-                      {t('strategy.fields.leverageType')}
-                    </label>
-                    <select
-                      value={portfolio.leverageType ?? 'fixed_debt'}
-                      onChange={(e) => setLeverageType(e.target.value as 'fixed_debt' | 'fixed_ratio')}
-                      className="flex-1 px-3 py-2 border border-amber-300 dark:border-amber-700 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
-                    >
-                      <option value="fixed_ratio">{t('strategy.leverageTypes.fixedRatio')}</option>
-                      <option value="fixed_debt">{t('strategy.leverageTypes.fixedDebt')}</option>
-                    </select>
-                  </div>
+                  <p className="text-xs font-medium text-amber-900 dark:text-amber-200">
+                    {t('strategy.simpleLeverage.description', {
+                      leverage: leverage.toFixed(2).replace('.00', ''),
+                      grossPercentage: (leverage * 100).toFixed(0),
+                    })}
+                  </p>
 
-                  {(portfolio.leverageType ?? 'fixed_debt') === 'fixed_ratio' && (
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                      <label className="text-sm font-medium text-amber-900 dark:text-amber-200 sm:w-32 sm:flex-shrink-0">
-                        {t('strategy.fields.leverageReset')}
-                      </label>
-                      <select
-                        value={portfolio.leverageResetFrequency ?? 'daily'}
-                        onChange={(e) => setLeverageResetFrequency(e.target.value as 'daily' | 'monthly' | 'quarterly' | 'yearly')}
-                        className="flex-1 px-3 py-2 border border-amber-300 dark:border-amber-700 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
-                      >
-                        <option value="daily">{t('strategy.frequency.daily')}</option>
-                        <option value="monthly">{t('strategy.frequency.monthly')}</option>
-                        <option value="quarterly">{t('strategy.frequency.quarterly')}</option>
-                        <option value="yearly">{t('strategy.frequency.yearly')}</option>
-                      </select>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="rounded-lg bg-white/80 px-3 py-2 dark:bg-slate-800/70">
+                      <div className="text-[11px] text-amber-700 dark:text-amber-300">{t('strategy.simpleLeverage.grossExposure')}</div>
+                      <div className="font-semibold text-amber-950 dark:text-amber-100">{formatCurrency(grossInitialExposure)}</div>
                     </div>
-                  )}
+                    <div className="rounded-lg bg-white/80 px-3 py-2 dark:bg-slate-800/70">
+                      <div className="text-[11px] text-amber-700 dark:text-amber-300">{t('strategy.simpleLeverage.financedCapital')}</div>
+                      <div className="font-semibold text-amber-950 dark:text-amber-100">{formatCurrency(financedCapital)}</div>
+                    </div>
+                  </div>
 
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                     <label className="text-sm font-medium text-amber-900 dark:text-amber-200 sm:w-32 sm:flex-shrink-0">
@@ -674,9 +663,7 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                     </div>
                   </div>
                   <p className="mt-2 text-xs text-amber-800 dark:text-amber-300">
-                    {t((portfolio.leverageType ?? 'fixed_debt') === 'fixed_ratio'
-                      ? 'strategy.leverageWarnings.fixedRatio'
-                      : 'strategy.leverageWarnings.fixedDebt')}
+                    {t('strategy.simpleLeverage.crossMargin')}
                   </p>
                 </div>
               )}
@@ -911,6 +898,16 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                     value={allocation.percentage}
                     onChange={(newValue) => handleAllocationChange(allocation.symbol, newValue)}
                   />
+                  {leverage > 1 && (
+                    <div className="mt-2 text-center text-xs font-medium text-indigo-700 dark:text-indigo-300">
+                      {t('portfolio.allocation.leveragedExposure', {
+                        percentage: (allocation.percentage * leverage).toFixed(0),
+                        amount: formatCurrency(
+                          portfolio.initialCapital * (allocation.percentage / 100) * leverage
+                        ),
+                      })}
+                    </div>
+                  )}
                 </div>
               );
             })}

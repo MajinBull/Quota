@@ -63,7 +63,7 @@ export interface Portfolio {
   rebalanceFrequency: 'none' | 'monthly' | 'quarterly' | 'yearly';
   startYear?: number; // Optional: year to start backtest (if not set, uses earliest common date)
   leverage?: number; // Gross portfolio exposure multiplier (1 = no leverage, max 5)
-  leverageType?: LeverageType; // Missing on legacy portfolios means fixed debt
+  leverageType?: LeverageType; // New runs use fixed_debt; fixed_ratio is kept for saved-result compatibility
   leverageResetFrequency?: LeverageResetFrequency; // Only for fixed leverage ratio
   annualFinancingRate?: number; // Annual percentage cost applied to borrowed capital
 }

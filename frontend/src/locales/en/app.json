@@ -39,11 +39,17 @@
     },
     "leverageTypes": {
       "fixedRatio": "Fixed ratio",
-      "fixedDebt": "Fixed debt"
+      "fixedDebt": "Cross margin"
     },
     "leverageWarnings": {
       "fixedRatio": "The ratio is restored at the selected frequency, on dates when every asset can be traded, without rebalancing asset weights. Effective leverage can exceed the target between resets; compounding can differ greatly from simply multiplying the return.",
       "fixedDebt": "The initial debt remains fixed and accrues interest: effective leverage rises when equity falls and the portfolio may be liquidated."
+    },
+    "simpleLeverage": {
+      "description": "The initial size of every asset is multiplied by {{leverage}}×. Total initial exposure is {{grossPercentage}}% of account equity.",
+      "grossExposure": "Initial gross exposure",
+      "financedCapital": "Financed capital",
+      "crossMargin": "Cross margin across the whole account: individual positions are not liquidated separately. Liquidation occurs only when total account equity reaches zero."
     },
     "startYear": {
       "auto": "Automatic"
@@ -82,7 +88,8 @@
       "remove": "Remove",
       "addToFavorites": "Add to favorites",
       "removeFromFavorites": "Remove from favorites",
-      "viewDetails": "View asset details"
+      "viewDetails": "View asset details",
+      "leveragedExposure": "Exposure: {{percentage}}% · {{amount}}"
     }
   },
   "backtest": {
