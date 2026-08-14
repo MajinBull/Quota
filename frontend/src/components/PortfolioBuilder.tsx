@@ -201,6 +201,8 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
     setPACFrequency,
     setRebalanceFrequency,
     setStartYear,
+    setLeverage,
+    setAnnualFinancingRate,
     getTotalAllocation
   } = usePortfolioStore();
 
@@ -289,12 +291,13 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
           return a.name.localeCompare(b.name);
         case 'name-za':
           return b.name.localeCompare(a.name);
-        case 'popularity':
+        case 'popularity': {
           // Sort by popularity_rank (lower number = more popular)
           // Assets without rank go to the end
           const rankA = a.popularity_rank ?? 9999;
           const rankB = b.popularity_rank ?? 9999;
           return rankA - rankB;
+        }
         default:
           return 0;
       }
@@ -600,6 +603,47 @@ export function PortfolioBuilder({ onOpenTemplates }: Props) {
                   <option value="yearly">{t('strategy.frequency.yearly')}</option>
                 </select>
               </div>
+
+              {/* Leva */}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                <label className="text-sm font-medium text-slate-600 dark:text-slate-300 sm:w-32 sm:flex-shrink-0">
+                  {t('strategy.fields.leverage')}
+                </label>
+                <select
+                  value={portfolio.leverage ?? 1}
+                  onChange={(e) => setLeverage(parseFloat(e.target.value))}
+                  className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:border-indigo-500 text-sm appearance-none bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                >
+                  {[1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3].map((value) => (
+                    <option key={value} value={value}>{value.toFixed(2).replace('.00', '')}×</option>
+                  ))}
+                </select>
+              </div>
+
+              {(portfolio.leverage ?? 1) > 1 && (
+                <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-900/20">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                    <label className="text-sm font-medium text-amber-900 dark:text-amber-200 sm:w-32 sm:flex-shrink-0">
+                      {t('strategy.fields.financingRate')}
+                    </label>
+                    <div className="relative flex-1">
+                      <input
+                        type="number"
+                        value={portfolio.annualFinancingRate ?? 5}
+                        onChange={(e) => setAnnualFinancingRate(parseFloat(e.target.value) || 0)}
+                        min="0"
+                        max="30"
+                        step="0.25"
+                        className="w-full px-3 py-2 pr-8 border border-amber-300 dark:border-amber-700 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                      />
+                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">%</span>
+                    </div>
+                  </div>
+                  <p className="mt-2 text-xs text-amber-800 dark:text-amber-300">
+                    {t('strategy.leverageWarning')}
+                  </p>
+                </div>
+              )}
 
               {/* Anno Inizio */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">

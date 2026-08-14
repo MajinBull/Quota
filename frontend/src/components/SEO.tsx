@@ -10,11 +10,11 @@ interface SEOProps {
   page?: 'landing' | 'app';
 }
 
-export function SEO({ page: _page = 'landing' }: SEOProps) {
+export function SEO({ page = 'landing' }: SEOProps) {
   const { t, i18n } = useTranslation('seo');
 
   const currentLang = i18n.language;
-  const siteUrl = 'https://quota.finance';
+  const siteUrl = page === 'app' ? 'https://quota.finance/app' : 'https://quota.finance';
   const defaultImage = `${siteUrl}/logo-quota.png`;
 
   return (

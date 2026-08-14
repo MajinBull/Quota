@@ -107,8 +107,12 @@ export function BacktestResults({ result }: Props) {
           </div>
         </div>
 
+        <p className="mb-4 text-xs text-slate-500 dark:text-slate-400">
+          {t('backtest.results.currencyDisclaimer')}
+        </p>
+
         {/* Key Metrics Grid - responsive */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 md:gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2 md:gap-4">
           <MetricCard
             label={t('backtest.results.metrics.finalValue')}
             value={formatCurrency(metrics.finalValue)}
@@ -135,6 +139,11 @@ export function BacktestResults({ result }: Props) {
             positive={false}
             negative={true}
           />
+          <MetricCard
+            label={t('backtest.results.metrics.volatility')}
+            value={formatPercentage(metrics.annualizedVolatility ?? 0)}
+            positive={false}
+          />
           {metrics.bestAsset && (
             <MetricCard
               label={t('backtest.results.metrics.bestAsset')}
@@ -143,6 +152,22 @@ export function BacktestResults({ result }: Props) {
             />
           )}
         </div>
+
+        {(portfolio.leverage ?? 1) > 1 && (
+          <div className="mt-4 grid grid-cols-2 gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 md:grid-cols-5 dark:border-amber-800 dark:bg-amber-900/20">
+            <MetricCard label={t('backtest.results.metrics.leverage')} value={`${(portfolio.leverage ?? 1).toFixed(2)}×`} positive={false} />
+            <MetricCard label={t('backtest.results.metrics.financingRate')} value={`${(portfolio.annualFinancingRate ?? 0).toFixed(2)}%`} positive={false} />
+            <MetricCard label={t('backtest.results.metrics.interestPaid')} value={formatCurrency(metrics.totalInterestPaid ?? 0)} positive={false} negative={(metrics.totalInterestPaid ?? 0) > 0} />
+            <MetricCard label={t('backtest.results.metrics.finalDebt')} value={formatCurrency(metrics.finalDebt ?? 0)} positive={false} />
+            <MetricCard label={t('backtest.results.metrics.maxLeverage')} value={`${(metrics.maxEffectiveLeverage ?? portfolio.leverage ?? 1).toFixed(2)}×`} positive={false} />
+          </div>
+        )}
+
+        {metrics.liquidated && (
+          <div role="alert" className="mt-4 rounded-xl border border-red-300 bg-red-50 p-4 text-sm font-semibold text-red-800 dark:border-red-700 dark:bg-red-900/30 dark:text-red-200">
+            {t('backtest.results.liquidated', { date: metrics.liquidationDate ? formatDate(metrics.liquidationDate) : '-' })}
+          </div>
+        )}
       </div>
 
       {/* CRESCITA PORTFOLIO + ALLOCAZIONE - Side by Side */}

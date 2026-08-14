@@ -9,21 +9,12 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [isDark, setIsDark] = useState<boolean>(false); // Start with light by default
-
-  useEffect(() => {
-    // Initialize theme on mount
+  const [isDark, setIsDark] = useState<boolean>(() => {
     const stored = localStorage.getItem('theme');
-    if (stored === 'dark') {
-      setIsDark(true);
-    } else if (stored === 'light') {
-      setIsDark(false);
-    } else {
-      // No stored preference, use OS preference
-      const osPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setIsDark(osPrefersDark);
-    }
-  }, []);
+    if (stored === 'dark') return true;
+    if (stored === 'light') return false;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
 
   useEffect(() => {
     // Apply theme to document

@@ -50,7 +50,7 @@ export async function signup(
         }
         // Successfully recovered - user is now logged in with document
         return;
-      } catch (recoveryError) {
+      } catch {
         // Re-throw original error
         throw error;
       }

@@ -26,7 +26,7 @@ interface AssetPosition {
 // }
 
 /**
- * Run backtest simulation for a given portfolio
+ * Run a backtest locally in the browser for a given portfolio.
  */
 export async function runBacktest(portfolio: Portfolio): Promise<BacktestResult | null> {
   try {
@@ -40,34 +40,33 @@ export async function runBacktest(portfolio: Portfolio): Promise<BacktestResult 
       assetDataMap.set(allocation.symbol, data);
     }
 
-    // 2. Determine date range
-    let startDate: string;
-    let endDate: string;
+    return runBacktestWithData(portfolio, assetDataMap);
+  } catch (error) {
+    console.error('Backtest error:', error);
+    return null;
+  }
+}
 
-    if (portfolio.startYear) {
-      // Use user-specified start year
-      startDate = `${portfolio.startYear}-01-01`;
+/**
+ * Deterministic core used by the browser worker and automated tests.
+ */
+export function runBacktestWithData(
+  portfolio: Portfolio,
+  assetDataMap: Map<string, AssetData>
+): BacktestResult | null {
+  try {
+    const commonRange = findCommonDateRange(Array.from(assetDataMap.values()));
+    if (!commonRange) {
+      throw new Error('No common date range found');
+    }
 
-      // Find earliest available date among all assets
-      const earliestDates = Array.from(assetDataMap.values()).map(d => d.start_date);
-      const overallEarliest = earliestDates.sort()[0];
-
-      // If requested start is before earliest data, use earliest data
-      if (startDate < overallEarliest) {
-        startDate = overallEarliest;
-      }
-
-      // Use latest end date available
-      const latestDates = Array.from(assetDataMap.values()).map(d => d.end_date);
-      endDate = latestDates.sort().reverse()[0];
-    } else {
-      // Use common date range (all assets available)
-      const dateRange = findCommonDateRange(Array.from(assetDataMap.values()));
-      if (!dateRange) {
-        throw new Error('No common date range found');
-      }
-      startDate = dateRange.start;
-      endDate = dateRange.end;
+    // A portfolio is simulated only while every selected asset is available.
+    // This avoids silently reallocating capital before a newer asset launches.
+    const requestedStart = portfolio.startYear ? `${portfolio.startYear}-01-01` : commonRange.start;
+    const startDate = requestedStart > commonRange.start ? requestedStart : commonRange.start;
+    const endDate = commonRange.end;
+    if (startDate > endDate) {
+      throw new Error('Selected start year is outside the common data range');
     }
 
     // 3. Build price map (symbol -> date -> close price)
@@ -88,8 +87,9 @@ export async function runBacktest(portfolio: Portfolio): Promise<BacktestResult 
       // Find last non-null value
       let finalIndex = 100;
       for (let i = values.length - 1; i >= 0; i--) {
-        if (values[i] !== null) {
-          finalIndex = values[i];
+        const value = values[i];
+        if (value !== null) {
+          finalIndex = value;
           break;
         }
       }
@@ -104,21 +104,20 @@ export async function runBacktest(portfolio: Portfolio): Promise<BacktestResult 
     // 6. Build yearly breakdown
     const yearlyBreakdown: YearlyBreakdown[] = [];
     const years = Array.from(simResult.yearlyData.keys()).sort();
-    let previousValue = portfolio.initialCapital;
-    let previousInvested = portfolio.initialCapital;
+    let cumulativeFactor = 1;
 
     years.forEach((year) => {
       const data = simResult.yearlyData.get(year)!;
-
-      // Calcolo corretto per PAC: considera il capitale aggiunto durante l'anno
-      // yearlyReturn = (guadagno_anno - capitale_aggiunto) / valore_inizio_anno
-      const capitalAddedThisYear = data.invested - previousInvested;
-      const valueChange = data.value - previousValue;
-      const yearlyReturn = previousValue > 0
-        ? ((valueChange - capitalAddedThisYear) / previousValue) * 100
-        : 0;
-
-      const cumulativeReturn = ((data.value - data.invested) / data.invested) * 100;
+      const yearPoints = simResult.equityCurve.filter(
+        point => getYear(parseISO(point.date)) === year
+      );
+      const yearlyFactor = yearPoints.reduce(
+        (factor, point) => factor * (1 + point.returns / 100),
+        1
+      );
+      const yearlyReturn = (yearlyFactor - 1) * 100;
+      cumulativeFactor *= yearlyFactor;
+      const cumulativeReturn = (cumulativeFactor - 1) * 100;
 
       yearlyBreakdown.push({
         year,
@@ -127,9 +126,6 @@ export async function runBacktest(portfolio: Portfolio): Promise<BacktestResult 
         yearlyReturn,
         cumulativeReturn
       });
-
-      previousValue = data.value;
-      previousInvested = data.invested;
     });
 
     // 7. Calculate metrics
@@ -138,7 +134,11 @@ export async function runBacktest(portfolio: Portfolio): Promise<BacktestResult 
       portfolio.initialCapital,
       simResult.totalInvested,
       assetPerformances,
-      yearlyBreakdown
+      simResult.totalInterestPaid,
+      simResult.finalDebt,
+      simResult.maxEffectiveLeverage,
+      simResult.liquidated,
+      simResult.liquidationDate
     );
 
     return {
@@ -147,8 +147,8 @@ export async function runBacktest(portfolio: Portfolio): Promise<BacktestResult 
       assetPerformances,
       yearlyBreakdown,
       metrics,
-      startDate,
-      endDate
+      startDate: simResult.equityCurve[0]?.date ?? startDate,
+      endDate: simResult.equityCurve.at(-1)?.date ?? endDate
     };
   } catch (error) {
     console.error('Backtest error:', error);
@@ -261,15 +261,20 @@ function simulatePortfolio(
   endDate: string
 ): {
   equityCurve: EquityPoint[];
-  assetPerformances: Map<string, number[]>;
+  assetPerformances: Map<string, Array<number | null>>;
   totalInvested: number;
   yearlyData: Map<number, { value: number; invested: number }>;
+  totalInterestPaid: number;
+  finalDebt: number;
+  maxEffectiveLeverage: number;
+  liquidated: boolean;
+  liquidationDate?: string;
 } {
   const equityCurve: EquityPoint[] = [];
   const positions: AssetPosition[] = [];
 
   // Track performance per asset (indexed to 100 at start)
-  const assetPerformances = new Map<string, number[]>();
+  const assetPerformances = new Map<string, Array<number | null>>();
   const assetInitialPrices = new Map<string, number>();
 
   // Track yearly snapshots
@@ -278,14 +283,30 @@ function simulatePortfolio(
   // Track last known prices for each asset (for missing data handling)
   const lastKnownPrices = new Map<string, number>();
 
-  // Get all unique dates sorted
-  const allDates = getAllTradingDates(priceMap, startDate, endDate);
+  // Valuations use the union of market calendars, while orders are allowed
+  // only on dates when every selected market has a fresh valid close.
+  const commonTradingDates = getCommonTradingDates(priceMap, startDate, endDate);
+  if (commonTradingDates.length === 0) {
+    throw new Error('No common trading dates found for the selected assets');
+  }
+  const firstTradingDate = commonTradingDates[0];
+  const lastTradingDate = commonTradingDates[commonTradingDates.length - 1];
+  const commonTradingDateSet = new Set(commonTradingDates);
+  const allDates = getValuationDates(priceMap, firstTradingDate, lastTradingDate);
 
   let cash = portfolio.initialCapital;
   let totalInvested = portfolio.initialCapital;
-  let lastRebalanceDate = startDate;
-  let lastPACDate = startDate;
+  let lastRebalanceDate = allDates[0];
+  let lastPACDate = allDates[0];
   let previousValue = portfolio.initialCapital;
+  let performanceIndex = 100;
+  let debt = 0;
+  let totalInterestPaid = 0;
+  let maxEffectiveLeverage = portfolio.leverage ?? 1;
+  let liquidated = false;
+  let liquidationDate: string | undefined;
+  const leverage = Math.max(1, Math.min(3, portfolio.leverage ?? 1));
+  const annualFinancingRate = Math.max(0, portfolio.annualFinancingRate ?? 0) / 100;
 
   // Initialize asset performances
   portfolio.allocations.forEach(alloc => {
@@ -295,6 +316,15 @@ function simulatePortfolio(
   for (let i = 0; i < allDates.length; i++) {
     const date = allDates[i];
     const year = getYear(parseISO(date));
+    const canTradeAllAssets = commonTradingDateSet.has(date);
+
+    // Financing accrues on actual elapsed calendar days, including weekends.
+    if (i > 0 && debt > 0 && annualFinancingRate > 0) {
+      const elapsedDays = Math.max(0, differenceInDays(parseISO(date), parseISO(allDates[i - 1])));
+      const interest = debt * annualFinancingRate * (elapsedDays / 365);
+      debt += interest;
+      totalInterestPaid += interest;
+    }
 
     // Update last known prices for all assets
     for (const allocation of portfolio.allocations) {
@@ -307,21 +337,26 @@ function simulatePortfolio(
     // Get active allocations for this date (only assets with available data)
     const activeAllocations = getActiveAllocations(portfolio, date, assetDataMap);
 
-    // Check if we need to add PAC capital
+    // Check if we need to add PAC capital. External flows are excluded from
+    // performance returns so deposits cannot appear as investment gains.
     let pacAdded = false;
+    let externalFlow = 0;
     if (portfolio.investmentStrategy === 'pac' && portfolio.pacAmount && portfolio.pacFrequency) {
-      const shouldAddPAC = shouldAddPACOnDate(date, lastPACDate, portfolio.pacFrequency);
+      const shouldAddPAC = canTradeAllAssets
+        && shouldAddPACOnDate(date, lastPACDate, portfolio.pacFrequency);
 
       if (shouldAddPAC && date !== startDate) {
         cash += portfolio.pacAmount;
         totalInvested += portfolio.pacAmount;
+        externalFlow = portfolio.pacAmount;
         lastPACDate = date;
         pacAdded = true;
       }
     }
 
     // Check if we need to rebalance
-    const scheduledRebalance = shouldRebalanceOnDate(date, lastRebalanceDate, portfolio.rebalanceFrequency);
+    const scheduledRebalance = canTradeAllAssets
+      && shouldRebalanceOnDate(date, lastRebalanceDate, portfolio.rebalanceFrequency);
     const shouldRebalance = positions.length === 0 ||
       pacAdded ||
       scheduledRebalance;
@@ -334,8 +369,23 @@ function simulatePortfolio(
         positions.length = 0;
       }
 
+      const netEquity = cash - debt;
+      if (netEquity <= 0) {
+        cash = 0;
+        debt = 0;
+        liquidated = true;
+        liquidationDate = date;
+      }
+
+      // Adjust borrowing to the target gross exposure. Old saved portfolios
+      // default to 1x and therefore retain the original behavior.
+      const targetGrossExposure = liquidated ? 0 : netEquity * leverage;
+      const targetDebt = liquidated ? 0 : Math.max(0, targetGrossExposure - netEquity);
+      cash += targetDebt - debt;
+      debt = targetDebt;
+
       // Buy new positions according to ACTIVE allocations (only available assets)
-      const totalValue = cash;
+      const totalValue = targetGrossExposure;
       for (const allocation of activeAllocations) {
         const targetValue = totalValue * (allocation.percentage / 100);
         const price = getPrice(allocation.symbol, date, priceMap, lastKnownPrices);
@@ -362,7 +412,7 @@ function simulatePortfolio(
     portfolio.allocations.forEach(alloc => {
       const assetData = assetDataMap.get(alloc.symbol);
       if (!assetData) {
-        assetPerformances.get(alloc.symbol)?.push(null as any);
+        assetPerformances.get(alloc.symbol)?.push(null);
         return;
       }
 
@@ -382,11 +432,11 @@ function simulatePortfolio(
             assetPerformances.get(alloc.symbol)?.push(indexedValue);
           }
         } else {
-          assetPerformances.get(alloc.symbol)?.push(null as any);
+          assetPerformances.get(alloc.symbol)?.push(null);
         }
       } else {
         // Asset not yet available - push null (line will not show on graph for these dates)
-        assetPerformances.get(alloc.symbol)?.push(null as any);
+        assetPerformances.get(alloc.symbol)?.push(null);
       }
     });
 
@@ -396,53 +446,103 @@ function simulatePortfolio(
       return sum + (pos.shares * price);
     }, 0);
 
-    const totalValue = positionsValue + cash;
-    const dailyReturn = previousValue > 0 ? ((totalValue - previousValue) / previousValue) * 100 : 0;
+    let totalValue = positionsValue + cash - debt;
+    const grossExposure = positionsValue + Math.max(0, cash);
+
+    if (totalValue <= 0 && !liquidated) {
+      positions.length = 0;
+      cash = 0;
+      debt = 0;
+      totalValue = 0;
+      liquidated = true;
+      liquidationDate = date;
+    }
+
+    if (totalValue > 0) {
+      maxEffectiveLeverage = Math.max(maxEffectiveLeverage, grossExposure / totalValue);
+    }
+    const dailyReturn = i > 0 && previousValue > 0
+      ? (((totalValue - externalFlow) / previousValue) - 1) * 100
+      : 0;
+    performanceIndex *= Math.max(0, 1 + dailyReturn / 100);
 
     equityCurve.push({
       date,
       value: totalValue,
       returns: dailyReturn,
-      investedCapital: totalInvested
+      investedCapital: totalInvested,
+      debt,
+      grossExposure,
+      performanceIndex
     });
 
     // Store year-end snapshot
-    if (i === allDates.length - 1 || getYear(parseISO(allDates[i + 1])) !== year) {
+    if (liquidated || i === allDates.length - 1 || getYear(parseISO(allDates[i + 1])) !== year) {
       yearlyData.set(year, { value: totalValue, invested: totalInvested });
     }
 
     previousValue = totalValue;
+
+    if (liquidated) break;
   }
 
   return {
     equityCurve,
     assetPerformances,
     totalInvested,
-    yearlyData
+    yearlyData,
+    totalInterestPaid,
+    finalDebt: debt,
+    maxEffectiveLeverage,
+    liquidated,
+    liquidationDate
   };
 }
 
 /**
- * Get all unique trading dates in range
+ * Dates on which every selected asset has a fresh, valid close. Portfolio
+ * orders are restricted to these dates so stale prices are never traded.
  */
-function getAllTradingDates(
+function getCommonTradingDates(
   priceMap: Map<string, Map<string, number>>,
   startDate: string,
   endDate: string
 ): string[] {
-  const datesSet = new Set<string>();
+  const maps = Array.from(priceMap.values());
+  if (maps.length === 0) return [];
 
-  // Collect all dates from all assets
-  for (const datePriceMap of priceMap.values()) {
-    for (const date of datePriceMap.keys()) {
-      if (date >= startDate && date <= endDate) {
-        datesSet.add(date);
+  return Array.from(maps[0].entries())
+    .filter(([date, price]) =>
+      date >= startDate &&
+      date <= endDate &&
+      price > 0 &&
+      maps.every(map => (map.get(date) ?? 0) > 0)
+    )
+    .map(([date]) => date)
+    .sort();
+}
+
+/**
+ * Valuation dates are the union of all selected market calendars. This keeps
+ * real crypto weekend moves (and different international holidays) while the
+ * execution path above still prevents orders against a stale close.
+ */
+function getValuationDates(
+  priceMap: Map<string, Map<string, number>>,
+  startDate: string,
+  endDate: string
+): string[] {
+  const dates = new Set<string>();
+
+  for (const map of priceMap.values()) {
+    for (const [date, price] of map.entries()) {
+      if (date >= startDate && date <= endDate && price > 0) {
+        dates.add(date);
       }
     }
   }
 
-  // Sort chronologically
-  return Array.from(datesSet).sort();
+  return Array.from(dates).sort();
 }
 
 /**
@@ -516,31 +616,52 @@ function calculateMetrics(
   initialCapital: number,
   totalInvested: number,
   assetPerformances: AssetPerformance[],
-  yearlyBreakdown: YearlyBreakdown[]
+  totalInterestPaid = 0,
+  finalDebt = 0,
+  maxEffectiveLeverage = 1,
+  liquidated = false,
+  liquidationDate?: string
 ): PerformanceMetrics {
   if (equityCurve.length === 0) {
     return createEmptyMetrics(initialCapital, totalInvested);
   }
 
   const finalValue = equityCurve[equityCurve.length - 1].value;
-  const totalReturn = ((finalValue - totalInvested) / totalInvested) * 100;
+  const totalFactor = equityCurve.reduce(
+    (factor, point) => factor * Math.max(0, 1 + point.returns / 100),
+    1
+  );
+  const totalReturn = (totalFactor - 1) * 100;
 
-  // Calculate average annual return from yearly breakdown
-  let averageAnnualReturn = 0;
-  if (yearlyBreakdown.length > 0) {
-    const sum = yearlyBreakdown.reduce((acc, year) => acc + year.yearlyReturn, 0);
-    averageAnnualReturn = sum / yearlyBreakdown.length;
-  }
+  // Time-weighted CAGR: deposits and withdrawals do not inflate performance.
+  const elapsedYears = Math.max(
+    0,
+    differenceInDays(
+      parseISO(equityCurve[equityCurve.length - 1].date),
+      parseISO(equityCurve[0].date)
+    ) / 365.25
+  );
+  const averageAnnualReturn = elapsedYears > 0
+    ? (Math.pow(totalFactor, 1 / elapsedYears) - 1) * 100
+    : totalReturn;
 
   // Calculate daily returns array
   const dailyReturns = equityCurve.slice(1).map(point => point.returns);
+  const meanReturn = dailyReturns.length > 0
+    ? dailyReturns.reduce((sum, value) => sum + value, 0) / dailyReturns.length
+    : 0;
+  const returnVariance = dailyReturns.length > 1
+    ? dailyReturns.reduce((sum, value) => sum + Math.pow(value - meanReturn, 2), 0) / (dailyReturns.length - 1)
+    : 0;
+  const observationsPerYear = elapsedYears > 0 ? dailyReturns.length / elapsedYears : 0;
+  const annualizedVolatility = Math.sqrt(returnVariance) * Math.sqrt(observationsPerYear);
 
   // Max Drawdown
   const { maxDrawdown, maxDrawdownDate } = calculateMaxDrawdown(equityCurve);
 
   // Best and worst days
-  const bestDay = Math.max(...dailyReturns);
-  const worstDay = Math.min(...dailyReturns);
+  const bestDay = dailyReturns.length > 0 ? Math.max(...dailyReturns) : 0;
+  const worstDay = dailyReturns.length > 0 ? Math.min(...dailyReturns) : 0;
 
   // Best and worst assets
   let bestAsset: string | undefined;
@@ -559,6 +680,7 @@ function calculateMetrics(
   return {
     totalReturn,
     averageAnnualReturn,
+    annualizedVolatility,
     maxDrawdown,
     maxDrawdownDate,
     bestDay,
@@ -566,6 +688,11 @@ function calculateMetrics(
     finalValue,
     initialValue: initialCapital,
     totalInvested,
+    totalInterestPaid,
+    finalDebt,
+    maxEffectiveLeverage,
+    liquidated,
+    liquidationDate,
     bestAsset,
     bestAssetReturn,
     worstAsset,
@@ -582,12 +709,13 @@ function calculateMaxDrawdown(equityCurve: EquityPoint[]): { maxDrawdown: number
   let peak = 0;
 
   for (const point of equityCurve) {
-    if (point.value > peak) {
-      peak = point.value;
+    const indexedValue = point.performanceIndex ?? point.value;
+    if (indexedValue > peak) {
+      peak = indexedValue;
     }
 
     // Drawdown deve essere negativo: (valore_corrente - picco) / picco
-    const drawdown = ((point.value - peak) / peak) * 100;
+    const drawdown = peak > 0 ? ((indexedValue - peak) / peak) * 100 : 0;
     if (drawdown < maxDrawdown) {
       maxDrawdown = drawdown;
       maxDrawdownDate = point.date;
@@ -604,6 +732,7 @@ function createEmptyMetrics(initialCapital: number, totalInvested: number): Perf
   return {
     totalReturn: 0,
     averageAnnualReturn: 0,
+    annualizedVolatility: 0,
     maxDrawdown: 0,
     maxDrawdownDate: '',
     bestDay: 0,

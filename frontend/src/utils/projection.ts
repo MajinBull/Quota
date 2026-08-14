@@ -52,16 +52,13 @@ export function calculateProjection(
   const { metrics, equityCurve } = backtestResult;
   const capital = initialCapital ?? metrics.finalValue;
 
-  // Calculate true CAGR (Compound Annual Growth Rate) using geometric mean
-  // CAGR = (Final Value / Initial Value)^(1/years) - 1
-  // This accounts for compounding effects, unlike arithmetic mean which overstates returns
-  const startDate = new Date(backtestResult.startDate);
-  const endDate = new Date(backtestResult.endDate);
-  const years = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25);
-  const cagr = Math.pow(metrics.finalValue / metrics.initialValue, 1 / years) - 1;
+  // The engine exposes a time-weighted CAGR, already neutralized for PAC flows.
+  const cagr = metrics.averageAnnualReturn / 100;
 
   // Calculate volatility (annualized standard deviation) from daily returns
-  const volatility = calculateVolatility(equityCurve);
+  const volatility = metrics.annualizedVolatility !== undefined
+    ? metrics.annualizedVolatility / 100
+    : calculateVolatility(equityCurve);
 
   // Apply volatility cap and calculate spread
   const volatilityCapped = Math.min(volatility, PROJECTION_CONFIG.volatilityCap);
@@ -127,20 +124,12 @@ function calculateCAGR(initialValue: number, finalValue: number, years: number):
  * Calculate annualized volatility from daily returns
  * Uses standard deviation of returns × sqrt(252 trading days)
  */
-function calculateVolatility(equityCurve: any[]): number {
+function calculateVolatility(equityCurve: BacktestResult['equityCurve']): number {
   if (equityCurve.length < 2) {
     return 0.15; // Default 15% if insufficient data
   }
 
-  // Calculate daily returns
-  const dailyReturns: number[] = [];
-  for (let i = 1; i < equityCurve.length; i++) {
-    const prevValue = equityCurve[i - 1].value;
-    const currentValue = equityCurve[i].value;
-    if (prevValue > 0) {
-      dailyReturns.push((currentValue - prevValue) / prevValue);
-    }
-  }
+  const dailyReturns = equityCurve.slice(1).map(point => point.returns / 100);
 
   if (dailyReturns.length === 0) {
     return 0.15; // Default 15%
@@ -155,8 +144,12 @@ function calculateVolatility(equityCurve: any[]): number {
     dailyReturns.reduce((sum, r) => sum + Math.pow(r - mean, 2), 0) / (dailyReturns.length - 1);
   const dailyStdDev = Math.sqrt(variance);
 
-  // Annualize (sqrt of 252 trading days)
-  const annualizedVolatility = dailyStdDev * Math.sqrt(252);
+  const elapsedYears = Math.max(
+    1 / 365.25,
+    (new Date(equityCurve.at(-1)!.date).getTime() - new Date(equityCurve[0].date).getTime()) /
+      (1000 * 60 * 60 * 24 * 365.25)
+  );
+  const annualizedVolatility = dailyStdDev * Math.sqrt(dailyReturns.length / elapsedYears);
 
   return annualizedVolatility;
 }

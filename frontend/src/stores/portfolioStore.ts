@@ -13,6 +13,8 @@ interface PortfolioStore {
   setPACFrequency: (frequency: PACFrequency) => void;
   setRebalanceFrequency: (frequency: Portfolio['rebalanceFrequency']) => void;
   setStartYear: (year: number | undefined) => void;
+  setLeverage: (leverage: number) => void;
+  setAnnualFinancingRate: (rate: number) => void;
   resetPortfolio: () => void;
   getTotalAllocation: () => number;
 }
@@ -24,7 +26,9 @@ const DEFAULT_PORTFOLIO: Portfolio = {
   initialCapital: 10000,
   pacAmount: 500,
   pacFrequency: 'monthly',
-  rebalanceFrequency: 'yearly'
+  rebalanceFrequency: 'yearly',
+  leverage: 1,
+  annualFinancingRate: 5
 };
 
 export const usePortfolioStore = create<PortfolioStore>((set, get) => ({
@@ -119,6 +123,18 @@ export const usePortfolioStore = create<PortfolioStore>((set, get) => ({
   setStartYear: (year: number | undefined) => {
     set((state) => ({
       portfolio: { ...state.portfolio, startYear: year }
+    }));
+  },
+
+  setLeverage: (leverage: number) => {
+    set((state) => ({
+      portfolio: { ...state.portfolio, leverage: Math.max(1, Math.min(3, leverage)) }
+    }));
+  },
+
+  setAnnualFinancingRate: (rate: number) => {
+    set((state) => ({
+      portfolio: { ...state.portfolio, annualFinancingRate: Math.max(0, Math.min(30, rate)) }
     }));
   },
 

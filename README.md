@@ -1,164 +1,86 @@
-# 📊 QUOTA - Portfolio Backtest Platform
+# QUOTA — Portfolio Backtest Platform
 
-🌐 **Live**: [quota.finance](https://quota.finance) | 📱 **Android App**: In sviluppo
+App live: [quota.finance](https://quota.finance)
 
-Piattaforma per simulare strategie di investimento con **70+ asset** e **30+ anni di dati storici**.
+QUOTA simula portafogli multi-asset con dati storici giornalieri, PAC,
+ribilanciamento e leva da 1× a 3×. Il calcolo avviene interamente nel browser:
+non serve un server Hetzner, una Cloud Function o un worker remoto.
 
----
+## Architettura
 
-## 🎯 COSA VUOI FARE?
+```text
+Vercel static hosting
+  ├─ React UI
+  ├─ Web Worker locale
+  │    ├─ carica /data/*.json
+  │    └─ esegue simulazione e metriche
+  └─ Firebase
+       ├─ Authentication
+       └─ Firestore (profilo e backtest salvati)
+```
 
-### 💻 Sviluppo Web (Quotidiano)
+- Il Web Worker mantiene parsing e simulazione fuori dal thread della UI.
+- Le date di valutazione sono l'unione dei calendari selezionati; acquisti,
+  PAC e ribilanciamenti avvengono solo quando tutti gli asset hanno un prezzo
+  fresco, evitando ordini su prezzi trascinati.
+- PAC e altri versamenti sono flussi esterni: non vengono conteggiati come
+  rendimento. Rendimento totale, CAGR, volatilità e drawdown sono
+  time-weighted.
+- La leva include debito, costo di finanziamento sui giorni di calendario e
+  liquidazione quando il patrimonio netto raggiunge zero.
+- La cartella `functions/` è codice storico e non è inclusa nel deploy Firebase.
+
+## Sicurezza
+
+Firebase Auth verifica l'identità. Le regole Firestore isolano i dati per UID,
+rendono immutabili i risultati salvati e impediscono al client di assegnarsi
+`isPremium: true`. Il calcolo locale non può essere usato come confine di
+sicurezza: eventuali funzioni Premium con valore economico devono essere
+autorizzate tramite custom claims o un endpoint verificato (per esempio un
+webhook di pagamento con Admin SDK).
+
+## Sviluppo
 
 ```bash
 cd frontend
+npm install
 npm run dev
 ```
 
-✅ Apri: http://localhost:5173
-✅ Modifica codice → Auto-reload
-✅ Push su GitHub → Auto-deploy Vercel
-
-### 📱 Testare App Android
+Verifiche:
 
 ```bash
 cd frontend
-build-mobile.bat
+npm test
+npm run build
+npm run lint
 ```
 
-✅ APK in: `android/app/build/outputs/apk/debug/app-debug.apk`
-✅ Copia su telefono e installa
+I test deterministici coprono intervallo comune tra asset, PAC, calendari di
+mercato misti, costo della leva e liquidazione.
 
-### 💾 Fare Backup
+## Dati e limiti del modello
+
+- I dataset pubblici sono in `frontend/public/data/` e vengono serviti da
+  Vercel con cache a scadenza, non immutabile.
+- Le quotazioni sono prevalentemente in USD. L'interfaccia visualizza euro come
+  unità di conto ma non applica il cambio storico EUR/USD.
+- Non sono inclusi spread, slippage, commissioni, fiscalità, dividendi non già
+  riflessi nei prezzi aggiustati o richieste di margine intraday.
+- L'ultimo aggiornamento del dataset attuale è febbraio/marzo 2026; prima di
+  usare il prodotto in produzione va automatizzato l'aggiornamento e il
+  controllo di qualità dei dati.
+- I risultati hanno finalità educative e non costituiscono consulenza
+  finanziaria; le performance passate non garantiscono risultati futuri.
+
+## Deploy
+
+Il frontend è pubblicato su Vercel. Firebase distribuisce soltanto regole e
+indici Firestore:
 
 ```bash
-backup-project.bat
+firebase deploy --only firestore:rules,firestore:indexes
 ```
 
-✅ Backup in: `C:\Users\edoni\Desktop\ETF ECC BACKUPS\`
-
-### 🚀 Deploy Produzione
-
-```bash
-git add .
-git commit -m "Descrizione modifiche"
-git push
-```
-
-✅ Vercel deploya automaticamente
-✅ Live su quota.finance in ~2 minuti
-
----
-
-## 📚 DOCUMENTAZIONE
-
-### Per Sviluppo Completo
-👉 **[DEV-GUIDE.md](DEV-GUIDE.md)** - Setup, sviluppo web/mobile, deploy, Play Store
-
-### Per Backup & Restore
-👉 **[BACKUP-GUIDE.md](BACKUP-GUIDE.md)** - Backup, restore, schedule, emergency
-
----
-
-## ⚡ Quick Reference
-
-### Comandi Essenziali
-
-```bash
-# Web Development
-npm run dev              # Dev server
-npm run build            # Build production
-npm run preview          # Preview build
-
-# Mobile Development
-build-mobile.bat         # Build APK debug
-npx cap sync android     # Sync web → Android
-npx cap open android     # Open in Android Studio
-
-# Backup & Deploy
-backup-project.bat       # Backup progetto
-git push                 # Deploy automatico
-```
-
-### Link Utili
-
-| Cosa | Dove |
-|------|------|
-| 🌐 App Live | [quota.finance](https://quota.finance) |
-| 📊 GitHub | [MajinBull/Quota](https://github.com/MajinBull/Quota) |
-| 🚀 Vercel Dashboard | [vercel.com/dashboard](https://vercel.com/dashboard) |
-| 🔥 Firebase Console | [console.firebase.google.com](https://console.firebase.google.com) |
-
----
-
-## 🛠️ Stack Tecnologico
-
-**Frontend**: React 19 + TypeScript + Vite + Tailwind CSS
-**Backend**: Firebase (Auth + Firestore)
-**Deploy**: Vercel (auto-deploy da GitHub)
-**Mobile**: Capacitor (Android native)
-
----
-
-## 📁 Struttura Progetto
-
-```
-QUOTA/
-├── frontend/              # App React
-│   ├── src/              # Codice sorgente
-│   ├── public/data/      # Dati storici JSON (70+ asset)
-│   ├── android/          # App Android (Capacitor)
-│   └── package.json
-├── data/                 # Backup dati locali
-├── README.md            # ← SEI QUI (dashboard)
-├── DEV-GUIDE.md         # Guida sviluppo completa
-└── BACKUP-GUIDE.md      # Guida backup completa
-```
-
----
-
-## ✨ Features
-
-✅ **70+ Asset**: ETF, crypto, commodities, bonds, real estate, stocks
-✅ **Backtest Storici**: Fino a 30+ anni di dati reali
-✅ **Salva & Confronta**: Fino a 4 strategie contemporaneamente
-✅ **Metriche Avanzate**: CAGR, Sharpe Ratio, Max Drawdown, volatilità
-✅ **i18n**: Italiano + Inglese
-✅ **Dark/Light Theme**: Persistente
-✅ **SEO Ottimizzato**: Meta tags, sitemap, robots.txt
-✅ **Mobile App**: Android nativa con Google Sign-In
-
----
-
-## 🚀 Prossime Release
-
-**High Priority:**
-- [ ] Miglioramenti UI/UX mobile
-- [ ] Export PDF/CSV risultati
-- [ ] Sistema pagamenti Stripe (Premium)
-
-**In Backlog:**
-- [ ] Portfolio optimizer
-- [ ] Pubblicazione Play Store
-- [ ] iOS app
-
----
-
-## ⚠️ Note Importanti
-
-- I risultati storici **non garantiscono** performance future
-- Tool per scopi **educativi**, non consulenza finanziaria
-- Non include costi transazione/tasse
-- Ultimo aggiornamento dati: Febbraio 2026
-
----
-
-## 🆘 Problemi?
-
-1. **Errori build**: Vedi [DEV-GUIDE.md](DEV-GUIDE.md) sezione "Troubleshooting"
-2. **Backup/Restore**: Vedi [BACKUP-GUIDE.md](BACKUP-GUIDE.md)
-3. **Firebase issues**: Controlla [Firebase Console](https://console.firebase.google.com)
-
----
-
-**Licenza**: MIT - Uso libero per scopi personali ed educativi
+Stack: React 19, TypeScript, Vite, Tailwind CSS, Firebase Auth/Firestore,
+Vercel.

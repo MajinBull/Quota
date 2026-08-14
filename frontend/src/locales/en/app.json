@@ -24,7 +24,9 @@
       "firstPayment": "Initial Investment:",
       "pacAmount": "DCA Amount:",
       "rebalance": "Rebalancing:",
-      "startYear": "Start Year:"
+      "startYear": "Start Year:",
+      "leverage": "Leverage:",
+      "financingRate": "Annual cost:"
     },
     "frequency": {
       "monthly": "Monthly",
@@ -32,6 +34,7 @@
       "yearly": "Yearly",
       "none": "None"
     },
+    "leverageWarning": "Leverage amplifies gains and losses. Interest accrues on debt over actual elapsed days and the portfolio may be liquidated if equity reaches zero.",
     "startYear": {
       "auto": "Automatic"
     }
@@ -93,15 +96,22 @@
     "results": {
       "title": "Key Metrics",
       "period": "Period:",
+      "currencyDisclaimer": "Prices are in USD: euro values are a unit of account and do not include historical EUR/USD conversion.",
       "metrics": {
         "finalValue": "Final Value",
         "invested": "Invested",
         "totalReturn": "Total Return",
-        "annualizedReturn": "Annual Avg",
+        "annualizedReturn": "CAGR",
         "maxDrawdown": "Max Drawdown",
         "volatility": "Annual Volatility",
-        "bestAsset": "Best Asset"
+        "bestAsset": "Best Asset",
+        "leverage": "Initial leverage",
+        "financingRate": "Annual cost",
+        "interestPaid": "Interest accrued",
+        "finalDebt": "Final debt",
+        "maxLeverage": "Maximum leverage"
       },
+      "liquidated": "Portfolio liquidated on {{date}} because net equity reached zero.",
       "charts": {
         "portfolioGrowth": "Portfolio Growth",
         "allocation": "Allocation",

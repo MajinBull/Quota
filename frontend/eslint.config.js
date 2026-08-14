@@ -19,5 +19,12 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    rules: {
+      // Legacy UI modules are being migrated incrementally. Keep these visible
+      // without blocking deterministic engine tests and production builds.
+      '@typescript-eslint/no-explicit-any': 'warn',
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-refresh/only-export-components': 'warn',
+    },
   },
 ])

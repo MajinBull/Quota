@@ -1,42 +1,79 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Users collection - users can only read/write their own document
-    match /users/{userId} {
-      allow read: if request.auth != null && request.auth.uid == userId;
-
-      // Allow creating user document (for signup)
-      allow create: if request.auth != null && request.auth.uid == userId;
-
-      // CRITICAL SECURITY: Prevent users from modifying isPremium
-      // This field can only be modified by Cloud Functions (via Firebase Admin SDK)
-      // Note: backtestExecutionCount is now just an analytics counter, not a security-critical limit
-      allow update: if request.auth != null
-                    && request.auth.uid == userId
-                    && (!request.resource.data.diff(resource.data).affectedKeys()
-                         .hasAny(['isPremium']));
+    function signedInAs(userId) {
+      return request.auth != null && request.auth.uid == userId;
     }
 
-    // Backtests collection - users can only access their own backtests
+    function validUserDocument() {
+      return request.resource.data.keys().hasAll([
+          'email', 'displayName', 'isPremium', 'backtestExecutionCount',
+          'createdAt', 'lastLogin'
+        ])
+        && request.resource.data.keys().hasOnly([
+          'email', 'displayName', 'isPremium', 'backtestExecutionCount',
+          'createdAt', 'lastLogin'
+        ])
+        && (request.resource.data.email is string || request.resource.data.email == null)
+        && (request.resource.data.displayName is string || request.resource.data.displayName == null)
+        && request.resource.data.isPremium is bool
+        && request.resource.data.backtestExecutionCount is int
+        && request.resource.data.backtestExecutionCount >= 0
+        && request.resource.data.createdAt is timestamp
+        && request.resource.data.lastLogin is timestamp;
+    }
+
+    function validBacktestDocument() {
+      return request.resource.data.keys().hasAll([
+          'userId', 'name', 'savedAt', 'isFavorite', 'portfolio', 'result'
+        ])
+        && request.resource.data.keys().hasOnly([
+          'userId', 'name', 'savedAt', 'isFavorite', 'portfolio', 'result'
+        ])
+        && request.resource.data.userId is string
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.name.size() <= 100
+        && request.resource.data.savedAt is timestamp
+        && request.resource.data.isFavorite is bool
+        && request.resource.data.portfolio is map
+        && request.resource.data.result is map;
+    }
+
+    match /users/{userId} {
+      allow read: if signedInAs(userId);
+
+      // A browser may create its profile, but it can never grant itself Premium.
+      allow create: if signedInAs(userId)
+                    && validUserDocument()
+                    && request.resource.data.isPremium == false
+                    && request.resource.data.backtestExecutionCount == 0;
+
+      // Premium can only be changed by trusted Admin SDK code (for example a
+      // verified payment webhook), which bypasses client security rules.
+      allow update: if signedInAs(userId)
+                    && validUserDocument()
+                    && request.resource.data.isPremium == resource.data.isPremium
+                    && request.resource.data.createdAt == resource.data.createdAt;
+
+      allow delete: if false;
+    }
+
     match /backtests/{backtestId} {
-      // Allow read if the backtest belongs to the authenticated user
-      allow read: if request.auth != null
-                  && resource.data.userId == request.auth.uid;
+      allow read, delete: if request.auth != null
+                          && resource.data.userId == request.auth.uid;
 
-      // Allow delete if the backtest belongs to the authenticated user
-      allow delete: if request.auth != null
-                    && resource.data.userId == request.auth.uid;
-
-      // Allow create only if userId matches authenticated user
       allow create: if request.auth != null
-                    && request.resource.data.userId == request.auth.uid;
+                    && request.resource.data.userId == request.auth.uid
+                    && validBacktestDocument();
 
-      // Allow update only if the backtest belongs to the authenticated user
-      // and they're not trying to change the userId
+      // Saved simulations are immutable. The UI may only rename/favorite them.
       allow update: if request.auth != null
                     && resource.data.userId == request.auth.uid
-                    && request.resource.data.userId == request.auth.uid;
+                    && request.resource.data.userId == request.auth.uid
+                    && request.resource.data.diff(resource.data).affectedKeys()
+                         .hasOnly(['name', 'isFavorite'])
+                    && validBacktestDocument();
     }
   }
 }

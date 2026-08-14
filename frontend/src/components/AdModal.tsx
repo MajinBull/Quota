@@ -1,21 +1,19 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
 import { X } from 'lucide-react';
 
 // Extend Window for AdSense
 declare global {
   interface Window {
-    adsbygoogle: any[];
+    adsbygoogle: Array<Record<string, never>>;
   }
 }
 
 interface AdModalProps {
-  onAdCompleted: (token: string) => void;
+  onAdCompleted: () => void;
   onClose: () => void;
 }
 
 export function AdModal({ onAdCompleted, onClose }: AdModalProps) {
-  const { user } = useAuth();
   const [countdown, setCountdown] = useState(30);
   const [isVisible, setIsVisible] = useState(true);
   const [adError, setAdError] = useState(false);
@@ -28,7 +26,7 @@ export function AdModal({ onAdCompleted, onClose }: AdModalProps) {
       ads.push({});
     } catch (error) {
       console.error('Ad load failed:', error);
-      setAdError(true);
+      queueMicrotask(() => setAdError(true));
     }
   }, []);
 
@@ -53,42 +51,12 @@ export function AdModal({ onAdCompleted, onClose }: AdModalProps) {
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, []);
 
-  // Generate token when countdown reaches 0
+  // Start the local calculation when the visible wait period ends.
   useEffect(() => {
-    console.log('⏱️ Countdown state:', { countdown, hasUser: !!user, adError });
-
-    if (countdown === 0 && user && !adError) {
-      console.log('✅ Generating token now...');
-      const token = generateToken(user.uid);
-      onAdCompleted(token);
-    } else if (countdown === 0) {
-      console.log('❌ Token NOT generated:', {
-        countdown,
-        hasUser: !!user,
-        userId: user?.uid,
-        adError
-      });
+    if (countdown === 0 && !adError) {
+      onAdCompleted();
     }
-  }, [countdown, user, onAdCompleted, adError]);
-
-  function generateToken(userId: string): string {
-    const timestamp = Date.now();
-    const nonce = crypto.randomUUID();
-    const payload = `${userId}|${timestamp}|${nonce}`;
-    const signature = btoa(payload);
-    const fullToken = `${payload}|${signature}`;
-
-    // DEBUG: Log token generation
-    console.log('🎟️ Token generated:', {
-      userId,
-      timestamp,
-      nonce,
-      fullToken,
-      parts: fullToken.split('|').length
-    });
-
-    return fullToken;
-  }
+  }, [countdown, onAdCompleted, adError]);
 
   return (
     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">

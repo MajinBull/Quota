@@ -24,7 +24,9 @@
       "firstPayment": "Primo versamento:",
       "pacAmount": "Importo PAC:",
       "rebalance": "Rebilanciamento:",
-      "startYear": "Anno Inizio:"
+      "startYear": "Anno Inizio:",
+      "leverage": "Leva:",
+      "financingRate": "Costo annuo:"
     },
     "frequency": {
       "monthly": "Mensile",
@@ -32,6 +34,7 @@
       "yearly": "Annuale",
       "none": "Nessuno"
     },
+    "leverageWarning": "La leva amplifica guadagni e perdite. Gli interessi sono applicati al debito sui giorni effettivamente trascorsi e il portafoglio può essere liquidato se il patrimonio raggiunge zero.",
     "startYear": {
       "auto": "Automatico"
     }
@@ -93,15 +96,22 @@
     "results": {
       "title": "Metriche Chiave",
       "period": "Periodo:",
+      "currencyDisclaimer": "Quotazioni in USD: i valori in euro sono una unità di conto e non includono il cambio storico EUR/USD.",
       "metrics": {
         "finalValue": "Valore Finale",
         "invested": "Investito",
         "totalReturn": "Rendimento Totale",
-        "annualizedReturn": "Media Annua",
+        "annualizedReturn": "CAGR",
         "maxDrawdown": "Max Drawdown",
         "volatility": "Volatilità Annuale",
-        "bestAsset": "Best Asset"
+        "bestAsset": "Best Asset",
+        "leverage": "Leva iniziale",
+        "financingRate": "Costo annuo",
+        "interestPaid": "Interessi maturati",
+        "finalDebt": "Debito finale",
+        "maxLeverage": "Leva massima"
       },
+      "liquidated": "Portafoglio liquidato il {{date}} perché il patrimonio netto ha raggiunto zero.",
       "charts": {
         "portfolioGrowth": "Crescita Portfolio",
         "allocation": "Allocazione",

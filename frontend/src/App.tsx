@@ -12,7 +12,7 @@ import { UserProfileButton } from './components/auth/UserProfileButton';
 import { UpgradeModal } from './components/auth/UpgradeModal';
 import { AdModal } from './components/AdModal';
 import { usePortfolioStore } from './stores/portfolioStore';
-import { executeBacktestRemote } from './services/backtestService';
+import { executeBacktestLocal } from './services/localBacktestService';
 import type { BacktestResult } from './types';
 import logoQuotaDark from './assets/logo-quota.png';
 import logoQuotaLight from './assets/logo-quota-light.png';
@@ -23,7 +23,7 @@ type ActiveView = 'configuration' | 'risultati' | 'backtest_salvati';
 
 function AppContent() {
   const { t } = useTranslation(['app', 'common']);
-  const { user, loading, updateLocalBacktestCount } = useAuth();
+  const { user, loading, incrementBacktestCount } = useAuth();
   const { isDark } = useTheme();
   const { portfolio, getTotalAllocation } = usePortfolioStore();
   const [result, setResult] = useState<BacktestResult | null>(null);
@@ -33,7 +33,6 @@ function AppContent() {
   const [isTemplatesModalOpen, setIsTemplatesModalOpen] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [showAdModal, setShowAdModal] = useState(false);
-  const [adCompletionToken, setAdCompletionToken] = useState<string | null>(null);
   const [headerExpanded, setHeaderExpanded] = useState(true);
   const hasScrolledRef = useRef(false);
 
@@ -80,54 +79,37 @@ function AppContent() {
   const handleRunBacktest = async () => {
     // Premium users: execute immediately without ads
     if (user?.isPremium) {
-      executeBacktest();
+      await executeBacktest();
       return;
     }
 
-    // Free users: check if ad token exists
-    if (!adCompletionToken) {
-      // No token: show ad modal first
-      setShowAdModal(true);
-      return;
-    }
-
-    // Token exists: execute backtest with token
-    executeBacktest();
+    // Free users wait for the ad modal before the local calculation starts.
+    setShowAdModal(true);
   };
 
-  const handleAdCompleted = (token: string) => {
-    setAdCompletionToken(token);
+  const handleAdCompleted = () => {
     setShowAdModal(false);
-    // Auto-trigger backtest after ad completion - pass token directly!
-    executeBacktest(token);
+    void executeBacktest();
   };
 
-  const executeBacktest = async (tokenOverride?: string) => {
+  const executeBacktest = async () => {
     setIsLoading(true);
     setError(null);
     setResult(null);
 
     try {
-      // Use tokenOverride if provided, otherwise use state (for manual retries)
-      const tokenToUse = tokenOverride !== undefined ? tokenOverride : adCompletionToken;
-
-      // Execute backtest via Cloud Function (includes server-side token validation)
-      const { result: backtestResult, remainingBacktests } = await executeBacktestRemote(
-        portfolio,
-        tokenToUse
-      );
+      // The simulation runs locally in the browser using the historical datasets
+      // shipped with the frontend. Firebase remains responsible only for identity
+      // and user data, so the app does not depend on paid Cloud Functions.
+      const backtestResult = await executeBacktestLocal(portfolio);
 
       if (backtestResult) {
         setResult(backtestResult);
 
-        // Consume token after successful backtest
-        setAdCompletionToken(null);
-
-        // Update local counter for analytics (optional)
-        if (user && !user.isPremium && remainingBacktests >= 0) {
-          const currentCount = 20 - remainingBacktests;
-          updateLocalBacktestCount(currentCount);
-        }
+        // Analytics is persisted in Firestore but never blocks a valid result.
+        void incrementBacktestCount().catch((counterError) => {
+          console.warn('Unable to persist backtest counter:', counterError);
+        });
 
         // Switch to results view after successful backtest
         setActiveView('risultati');
@@ -137,12 +119,7 @@ function AppContent() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : t('app:errors.unknownError');
 
-      // Check if it's a token validation error
-      if (errorMessage.includes('pubblicitario') || errorMessage.includes('Token')) {
-        // Token invalid/expired: clear it and show ad modal again
-        setAdCompletionToken(null);
-        setError(errorMessage);
-      } else if (errorMessage.includes('Premium')) {
+      if (errorMessage.includes('Premium')) {
         setShowUpgradeModal(true);
       } else {
         setError(errorMessage);
@@ -259,6 +236,16 @@ function AppContent() {
             {/* Run Backtest Button - Sticky Bottom */}
             <div className="fixed bottom-4 left-1/2 -translate-x-1/2 md:left-auto md:right-5 md:translate-x-0 z-10 w-[calc(100%-2rem)] max-w-sm md:w-96">
               <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl dark:shadow-slate-900 p-3 md:p-4">
+                {error && (
+                  <div
+                    role="alert"
+                    aria-live="assertive"
+                    className="mb-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/30 dark:text-red-200"
+                  >
+                    <p className="font-semibold">Backtest non eseguito</p>
+                    <p className="mt-0.5 text-xs">{error}</p>
+                  </div>
+                )}
                 <button
                   onClick={handleRunBacktest}
                   disabled={!isValidPortfolio || isLoading}

@@ -59,6 +59,8 @@ export interface Portfolio {
   pacFrequency?: PACFrequency; // How often to invest (only for PAC)
   rebalanceFrequency: 'none' | 'monthly' | 'quarterly' | 'yearly';
   startYear?: number; // Optional: year to start backtest (if not set, uses earliest common date)
+  leverage?: number; // Gross portfolio exposure multiplier (1 = no leverage)
+  annualFinancingRate?: number; // Annual percentage cost applied to borrowed capital
 }
 
 // Single data point in backtest equity curve
@@ -67,12 +69,15 @@ export interface EquityPoint {
   value: number;
   returns: number; // Daily return percentage
   investedCapital?: number; // Total capital invested up to this point (for PAC)
+  debt?: number;
+  grossExposure?: number;
+  performanceIndex?: number; // Time-weighted growth index, neutralized for external cash flows
 }
 
 // Performance data for a single asset
 export interface AssetPerformance {
   symbol: string;
-  values: number[]; // Indexed values (base 100)
+  values: Array<number | null>; // Indexed values (base 100)
   finalReturn: number; // Percentage return
 }
 
@@ -88,7 +93,8 @@ export interface YearlyBreakdown {
 // Performance metrics
 export interface PerformanceMetrics {
   totalReturn: number; // Percentage
-  averageAnnualReturn: number; // Average annual return percentage
+  averageAnnualReturn: number; // Time-weighted CAGR percentage
+  annualizedVolatility?: number;
   maxDrawdown: number; // Percentage
   maxDrawdownDate: string;
   bestDay: number;
@@ -96,6 +102,11 @@ export interface PerformanceMetrics {
   finalValue: number;
   initialValue: number;
   totalInvested: number; // Total capital invested (important for PAC)
+  totalInterestPaid?: number;
+  finalDebt?: number;
+  maxEffectiveLeverage?: number;
+  liquidated?: boolean;
+  liquidationDate?: string;
   bestAsset?: string; // Symbol of best performing asset
   bestAssetReturn?: number; // Return of best asset
   worstAsset?: string; // Symbol of worst performing asset
